@@ -7,3 +7,8 @@ node_modules
 # NativeScript application
 hooks
 platforms
+.migration_backup
+.update_backup
+
+# VSCode
+.vscode
