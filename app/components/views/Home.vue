@@ -4,7 +4,7 @@
                 <Button height="40" width="40" borderRadius="30"
                     text="Profile" color="white"
                     backgroundColor="green" ios.position="right"
-                    android.position="popup" />  
+                    android.position="popup" @tap="$goto('Profile')" />  
         </ActionBar> 
         <ScrollView>
             <StackLayout orientation="vertical" width="*" height="*"
