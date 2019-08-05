@@ -15,7 +15,7 @@
 
                 <Button text="View" width="400" height="20%" backgroundColor="darkgreen"
                     marginTop="20" textAlignment="center" color="white"
-                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="$goto('NewTrip')" />
+                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="$goto('Placeholder')" />
                 <Button text="Start Trip" width="400" height="20%"
                     backgroundColor="darkgreen" marginTop="20" textAlignment="center"
                     color="white" fontSize="40" fontWeight="bold"
