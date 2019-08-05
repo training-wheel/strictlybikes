@@ -1,31 +1,31 @@
 import { configureTnsOAuth, TnsOAuthClient } from 'nativescript-oauth2';
 import { TnsOaProviderGoogle } from 'nativescript-oauth2/providers';
 import {
-  ANDROID_CLIENT_ID,
-  REDIRECT_URI,
-  URL_SCHEME
+  WEB_CLIENT_ID,
+  WEB_REDIRECT_URI,
+  WEB_URL_SCHEME,
 } from './config.js';
-const client = null;
+let client = null;
 
 function configureOAuthProviderGoogle () {
   const googleProviderOptions = {
     openIdSupport: 'oid-full',
-    clientId: ANDROID_CLIENT_ID,
-    redirectUri: REDIRECT_URI,
-    urlScheme: URL_SCHEME,
+    clientId: WEB_CLIENT_ID,
+    redirectUri: WEB_REDIRECT_URI,
+    urlScheme: WEB_URL_SCHEME,
     scopes: ["email"],
   };
-  const googleProvider = TnsOaProviderGoogle(googleProviderOptions);
+  const googleProvider = new TnsOaProviderGoogle(googleProviderOptions);
   return googleProvider;
 };
 
-function configureOAuthProviders() {
+export function configureOAuthProviders() {
   const googleProvider = configureOAuthProviderGoogle();
   configureTnsOAuth([googleProvider]);
 }
 
-function tnsOauthLogin(providerType) {
-  client = new new TnsOAuthClient(providerType);
+export function tnsOauthLogin(providerType) {
+  client = new TnsOAuthClient(providerType);
   client.loginWithCompletion(function (tokenResult, error) {
     if (error) {
       console.error(`Back to main page: ${error}`);
@@ -35,12 +35,8 @@ function tnsOauthLogin(providerType) {
   });
 }
 
-function tnsOauthLogout() {
+export function tnsOauthLogout() {
   if (client) {
     client.logout();
   }
 }
-
-exports.configureOAuthProviders = configureOAuthProviders;
-exports.tnsOauthLogin = tnsOauthLogin;
-exports.tnsOauthLogout = tnsOauthLogout;
