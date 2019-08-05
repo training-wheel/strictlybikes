@@ -2,6 +2,9 @@ import Vue from 'nativescript-vue'
 import store from './store';
 import VueDevtools from 'nativescript-vue-devtools'
 import router from './router'
+import { configureOAuthProviders } from './auth/auth-service';
+configureOAuthProviders();
+
 //router function
 Vue.prototype.$router = router
 Vue.prototype.$goto = function (to, options) {
