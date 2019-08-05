@@ -40,5 +40,5 @@ if(TNS_ENV !== 'production') {
 Vue.config.silent = (TNS_ENV === 'production')
 
 new Vue({ 
-  render: h => h('frame', [h(router['Home'])])
+  render: h => h('frame', [h(router['NewTrip'])])
 }).$start()
