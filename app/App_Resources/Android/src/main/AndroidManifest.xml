@@ -17,8 +17,7 @@
                 <action android:name="android.intent.action.VIEW" /> 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.strictlybikes" />
-                <data android:scheme="/oauth2redirect" />
+                <data android:scheme="oauthlogin" android:host="login" />
             </intent-filter>
         </activity>
         <activity android:name="com.tns.ErrorReportActivity" />
