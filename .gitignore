@@ -14,5 +14,10 @@ platforms
 .migration_backup
 .update_backup
 
+# Android build
+local.properties
+.gradle
+strictlybikes.iml
+
 # VSCode
 .vscode
