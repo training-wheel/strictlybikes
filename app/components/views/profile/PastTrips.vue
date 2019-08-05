@@ -1,19 +1,15 @@
 <template>
-  <div>
-
-  </div>
+  <Span>I like turtles</Span>
 </template>
 
 <script>
   export default {
+    name: "PastTrips",
     methods: {
-      name() {
-        
-      }
     },
     data() {
       return {
-        key: value
+
       }
     },
   }
