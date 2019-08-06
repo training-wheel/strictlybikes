@@ -13,7 +13,8 @@ const configureOAuthProviderGoogle = () => {
     clientId: WEB_CLIENT_ID,
     redirectUri: WEB_REDIRECT_URI,
     urlScheme: WEB_URL_SCHEME,
-    scopes: ['profile'],
+    accessType: 'offline',
+    scopes: ['profile', 'email', 'https://www.googleapis.com/auth/plus.login'],
   };
   const googleProvider = new TnsOaProviderGoogle(googleProviderOptions);
   return googleProvider;
@@ -25,8 +26,9 @@ export const configureOAuthProviders = () => {
 }
 
 export const tnsOauthLogin = (providerType) => {
-  client = new TnsOAuthClient(providerType);
+  client = new TnsOAuthClient(providerType, false);
   client.loginWithCompletion((tokenResult, error) => {
+    console.log('ping');
     if (error) {
       console.error(`Back to main page: ${error}`);
     } else {
