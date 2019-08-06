@@ -1,67 +1,57 @@
 <template>
-  <Page class="page">
-    <ActionBar :title="title">
-      <NavigationButton text="Back" android.systemIcon="ic_menu_back" @tap="onNavigationButtonTap"></NavigationButton>
-    </ActionBar>
-    <GridLayout rows="60, 50, *">
-      <PickerField hint="Click here"
-                  ref="apiPicker"
-                  row="0"
-                  padding="10"
-                  for="item in pickerObjects"
-                  textField="description"
-                  valueField="name"
-                  pickerTitle="Select item from list">
-        <v-template>
-          <GridLayout rows="auto, auto, auto">
-            <Label :text="item.id" class="item-template-label red-label" margin="20"></Label>
-            <Label :text="item.name" row="1" class="item-template-label green-label"></Label>
-            <Label :text="item.description" row="2" class="item-template-label green-label" marginBottom="20"></Label>
-            </GridLayout>
-        </v-template>
-      </PickerField>
-      <Button row="1" @tap="checkTap" text="Check picker value APIs"></Button>
-    </GridLayout>
-  </Page>
+    <Page class="page">
+        <ActionBar title="New Trip">
+        </ActionBar>
+        <ScrollView>
+            <StackLayout orientation="vertical" width="*" height="*"
+                backgroundColor="lightgray">
+                <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Snp2FzERPRkmWHji2mDSllE84xMlaLNpubYnDp2umpnOnk92" />
+
+                <RadDataForm :source="form" />
+                <PickerField hint="Condition" :items="pickerItems" ref="apiPicker"></PickerField>
+
+                <Button text="View" width="400" height="20%" backgroundColor="darkgreen"
+                    marginTop="20" textAlignment="center" color="white"
+                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="onViewButtonClick(form)" />
+                <Button text="Start Trip" width="400" height="20%"
+                    backgroundColor="darkgreen" marginTop="20" textAlignment="center"
+                    color="white" fontSize="40" fontWeight="bold"
+                    borderRadius="30" @tap="$goto('ActiveTrip')" />
+            </StackLayout>
+        </ScrollView>
+    </Page>
 </template>
 
 <script>
-import PickerField from "nativescript-picker";
-import * as frameModule from "tns-core-modules/ui/frame";
-import { Button } from "tns-core-modules/ui/button";
-export default {
-  name: "Value APIs",
-  computed: {
-  },
-  created() {
-    for(let i = 0; i < 20; i++) {
-      this.pickerObjects.push({ id: i, name: "Item " + i, description: "Description " + i , imageUrl: "https://picsum.photos/150/70/?random" });
-    }
-  },
-  data() {
-    return {
-      pickerObjects: [],
-      pickerTitle: "Select item from list",
-      title: "Value APIs"
+    import Vue from "nativescript-vue";
+    import RadDataForm from "nativescript-ui-dataform/vue";
+    import PickerField from 'nativescript-picker/vue';
+ 
+    Vue.use(PickerField);
+    Vue.use(RadDataForm);
+
+    export default {
+        methods: {
+            onViewButtonClick(form) {
+                let picker = this.$refs.apiPicker.nativeView;
+                console.log('picker', picker.selectedValue)
+                console.log(form.To, form.From)
+            }
+        },
+        data() {
+            return {
+                pickerItems: [
+                    'Joy',
+                    'Commute',
+                    'Speedy'
+                ],
+                form: {
+                    From: "X",
+                    To: "Y",
+                }
+            };
+        }
     };
-  },
-  methods: {
-    checkTap: function(args) {
-      let picker = this.$refs.apiPicker.nativeView;
-      console.log("text: ", picker.text);
-        console.log("selectedValue: ", picker.selectedValue);
-        console.log("selectedIndex:", picker.selectedIndex);
-        alert({
-            title: "PickerField available APIs:",
-            message: `text: ${picker.text}\n` + `selectedValue: ${picker.selectedValue}\n` + `selectedIndex: ${picker.selectedIndex}`,
-            okButtonText: "OK"
-        });
-    },
-    onNavigationButtonTap() {
-      frameModule.topmost().goBack();
-    },
-  }
-};
 </script>
 
 <style scoped>
