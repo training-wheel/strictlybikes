@@ -1,19 +1,19 @@
-import { configureTnsOAuth, TnsOAuthClient } from 'nativescript-oauth2';
-import { TnsOaProviderGoogle } from 'nativescript-oauth2/providers';
+import { configureTnsOAuth, TnsOAuthClient, ITnsOAuthTokenResult } from 'nativescript-oauth2';
+import { TnsOaProviderGoogle, TnsOaProviderOptionsGoogle } from 'nativescript-oauth2/providers';
 import {
-  WEB_CLIENT_ID,
-  WEB_REDIRECT_URI,
-  WEB_URL_SCHEME,
+  ANDROID_CLIENT_ID,
+  ANDROID_REDIRECT_URI,
+  ANDROID_URL_SCHEME,
 } from './config.js';
-let client = null;
+let client: TnsOAuthClient = null;
 
 const configureOAuthProviderGoogle = () => {
-  const googleProviderOptions = {
+  const googleProviderOptions: TnsOaProviderOptionsGoogle = {
     openIdSupport: 'oid-full',
-    clientId: WEB_CLIENT_ID,
-    redirectUri: WEB_REDIRECT_URI,
-    urlScheme: WEB_URL_SCHEME,
-    scopes: ['profile'],
+    clientId: ANDROID_CLIENT_ID,
+    redirectUri: ANDROID_REDIRECT_URI,
+    urlScheme: ANDROID_URL_SCHEME,
+    scopes: ['profile', 'email'],
   };
   const googleProvider = new TnsOaProviderGoogle(googleProviderOptions);
   return googleProvider;
@@ -26,7 +26,7 @@ export const configureOAuthProviders = () => {
 
 export const tnsOauthLogin = (providerType) => {
   client = new TnsOAuthClient(providerType);
-  client.loginWithCompletion((tokenResult, error) => {
+  client.loginWithCompletion((tokenResult: ITnsOAuthTokenResult, error) => {
     if (error) {
       console.error(`Back to main page: ${error}`);
     } else {
