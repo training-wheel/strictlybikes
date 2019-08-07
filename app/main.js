@@ -7,6 +7,7 @@ configureOAuthProviders();
 
 //router function
 Vue.prototype.$router = router
+Vue.registerElement("Mapbox", () => require("nativescript-mapbox").MapboxView);
 Vue.prototype.$goto = function (to, options) {
   var options = options || { 
     clearHistory: false, 

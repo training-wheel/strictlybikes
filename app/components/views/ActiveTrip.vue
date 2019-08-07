@@ -1,35 +1,57 @@
 <template>
     <Page class="page">
-        <ActionBar title="Active Trip">
-        </ActionBar>
-        <ScrollView>
-            <StackLayout orientation="vertical" width="*" height="*"
-                backgroundColor="lightgray">
-                <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Snp2FzERPRkmWHji2mDSllE84xMlaLNpubYnDp2umpnOnk92" />
-
-                <Button text="End" width="400" height="20%" backgroundColor="darkgreen"
+        <ActionBar class="action-bar" title="Active Trip"></ActionBar>
+        <StackLayout>
+                <Mapbox
+                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    mapStyle="traffic_day"
+                    latitude="37.7397"
+                    longitude="-121.4252"
+                    hideCompass="true"
+                    zoomLevel="12"
+                    showUserLocation="false"
+                    disableZoom="false"
+                    disableRotation="false"
+                    disableScroll="false"
+                    disableTilt="false"
+                    @mapReady="onMapReady($event)"
+                    height=80%
+                    width=*>
+                </Mapbox>
+                <StackLayout orientation="horizontal">
+                <Button text="End" width="50%" height="60%" backgroundColor="#5EB0E5"
                     marginTop="20" textAlignment="center" color="white"
-                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="$goto('Home')" />
-                <Button text="Alert" width="400" height="20%"
-                    backgroundColor="darkgreen" marginTop="20" textAlignment="center"
-                    color="white" fontSize="40" fontWeight="bold"
-                    borderRadius="30" @tap="$goto('PlaceHolderForPopUp')" />
-            </StackLayout>
-        </ScrollView>
+                    fontSize="20" fontWeight="bold" borderRadius="30" @tap="$goto('Home')" />
+                <Button text="Alert" width="50%" height="60%"
+                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                    color="white" fontSize="20" fontWeight="bold"
+                    borderRadius="30" @tap="$goto('PLACEHOLDER')" />
+                    </StackLayout>
+        </StackLayout>
     </Page>
 </template>
 
+
 <script>
-    import Vue from "nativescript-vue"; 
+    import * as utils from "utils/utils";
     export default {
-        methods: {
-            onViewButtonClick() {
-                
-            }
+        data () {
+            return { };
         },
-        data() {
-            return {
-            };
+        methods: {
+            onMapReady(args) {
+                args.map.addMarkers([
+                    {
+                        lat: 37.7397,
+                        lng: -121.4252,
+                        title: "Tracy, CA",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    }
+                ]);
+            }
         }
     };
 </script>
