@@ -52,12 +52,21 @@
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
                 console.log(form.To, form.From)
+                let address = '2316 odin street'
+
+                axios({
+                method: 'GET',
+                url: `https://api.opencagedata.com/geocode/v1/json?key=4b1276c879054864aeed6ec75901de2b&q=611 N Miro Street&pretty=1&no_annotations=1`,
+                })
+                .then(function (response) {
+                    console.log('response', response);
+                });
             },
             onMapReady(args) {
                 args.map.addMarkers([
                     {
-                        lat: 37.7397,
-                        lng: -121.4252,
+                        lat: 29.9643504,
+                        lng: -90.0816426,
                         title: "Tracy, CA",
                         subtitle: "Home of The Polyglot Developer!",
                         onCalloutTap: () => {
