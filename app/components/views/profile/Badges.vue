@@ -5,8 +5,8 @@
       {{ badges.map((badge) => {
         return (
           <StackLayout>
-            <Image :src="badge.image" max horizontalAlignment="center" height=10% />
-            <Label :text="badge.text" horizontalAlignment="center" />
+            <Image :src="badges.image" max horizontalAlignment="center" height=10% />
+            <Label :text="badges.text" horizontalAlignment="center" />
           </StackLayout>
 
         )
