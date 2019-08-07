@@ -1,28 +1,43 @@
 <template>
     <Page class="page">
-        <ActionBar title="New Trip">
-        </ActionBar>
-        <ScrollView>
-            <StackLayout orientation="vertical" width="*" height="*"
-                backgroundColor="lightgray">
-                <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Snp2FzERPRkmWHji2mDSllE84xMlaLNpubYnDp2umpnOnk92" />
-
+        <ActionBar class="action-bar" title="Active Trip"></ActionBar>
+        <StackLayout>
+                <Mapbox
+                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    mapStyle="traffic_day"
+                    latitude="37.7397"
+                    longitude="-121.4252"
+                    hideCompass="true"
+                    zoomLevel="12"
+                    showUserLocation="false"
+                    disableZoom="false"
+                    disableRotation="false"
+                    disableScroll="false"
+                    disableTilt="false"
+                    @mapReady="onMapReady($event)"
+                    height=30%
+                    width=*>
+                </Mapbox>
+                
                 <RadDataForm :source="form" />
                 <PickerField hint="Condition" :items="pickerItems" ref="apiPicker"></PickerField>
-
-                <Button text="View" width="400" height="20%" backgroundColor="darkgreen"
+                
+                <StackLayout orientation="horizontal">
+                <Button text="View" width="50%" height="60%" backgroundColor="#5EB0E5"
                     marginTop="20" textAlignment="center" color="white"
-                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="onCall()" />
-                <Button text="Start Trip" width="400" height="20%"
-                    backgroundColor="darkgreen" marginTop="20" textAlignment="center"
-                    color="white" fontSize="40" fontWeight="bold"
-                    borderRadius="30" @tap="$goto('ActiveTrip')" />
-            </StackLayout>
-        </ScrollView>
+                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="onViewButtonClick(form)" />
+                <Button text="Start Trip" width="50%" height="60%"
+                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                    color="white" fontSize="20" fontWeight="bold"
+                    borderRadius="20" @tap="$goto('ActiveTrip')" />
+                    </StackLayout>
+        </StackLayout>
     </Page>
 </template>
 
+
 <script>
+    import * as utils from "utils/utils";
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
     import PickerField from 'nativescript-picker/vue';
@@ -38,16 +53,18 @@
                 console.log('picker', picker.selectedValue)
                 console.log(form.To, form.From)
             },
-            onCall() {
-                axios({
-                    method: "GET",
-                    url: "https://api.tomtom.com/map/1/staticimage?layer=basic&style=main&format=png&center=4.899886%2C%2052.379031&width=512&height=512&view=Unified&key=vEjGapnUURlnmiz9LAh4GsXnTkbD9UGw",
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                     }).then(result => {
-                console.log('result', result);
-                }, error => {
-                console.error(error);
-                });
+            onMapReady(args) {
+                args.map.addMarkers([
+                    {
+                        lat: 37.7397,
+                        lng: -121.4252,
+                        title: "Tracy, CA",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    }
+                ]);
             }
             
         },
@@ -60,6 +77,7 @@
                 ],
                 form: {
                     From: "X",
+                    To: "Y",
                     To: "Y",
                 }
             };

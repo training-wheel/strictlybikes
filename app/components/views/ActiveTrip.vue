@@ -20,12 +20,12 @@
                 </Mapbox>
                 <StackLayout orientation="horizontal">
                 <Button text="End" width="50%" height="60%" backgroundColor="#5EB0E5"
-                    marginTop="20" textAlignment="center" color="white"
-                    fontSize="20" fontWeight="bold" borderRadius="30" @tap="$goto('Home')" />
+                    marginTop="10" textAlignment="center" color="white"
+                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="$goto('Home')" />
                 <Button text="Alert" width="50%" height="60%"
-                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                    backgroundColor="#5EB0E5" marginTop="10" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="30" @tap="$goto('PLACEHOLDER')" />
+                    borderRadius="20" @tap="$goto('PLACEHOLDER')" />
                     </StackLayout>
         </StackLayout>
     </Page>
