@@ -7,6 +7,7 @@ configureOAuthProviders();
 
 //router function
 Vue.prototype.$router = router
+Vue.registerElement("Mapbox", () => require("nativescript-mapbox").MapboxView);
 Vue.prototype.$goto = function (to, options) {
   var options = options || { 
     clearHistory: false, 
@@ -40,5 +41,5 @@ if(TNS_ENV !== 'production') {
 Vue.config.silent = (TNS_ENV === 'production')
 
 new Vue({ 
-  render: h => h('frame', [h(router['NewTrip'])])
+  render: h => h('frame', [h(router['Home'])])
 }).$start()

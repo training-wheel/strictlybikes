@@ -15,7 +15,7 @@
 
                 <Button text="View" width="400" height="20%" backgroundColor="darkgreen"
                     marginTop="20" textAlignment="center" color="white"
-                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="onViewButtonClick(form)" />
+                    fontSize="40" fontWeight="bold" borderRadius="30" @tap="onCall()" />
                 <Button text="Start Trip" width="400" height="20%"
                     backgroundColor="darkgreen" marginTop="20" textAlignment="center"
                     color="white" fontSize="40" fontWeight="bold"
@@ -29,6 +29,7 @@
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
     import PickerField from 'nativescript-picker/vue';
+    import axios from 'axios'
  
     Vue.use(PickerField);
     Vue.use(RadDataForm);
@@ -39,7 +40,19 @@
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
                 console.log(form.To, form.From)
+            },
+            onCall() {
+                axios({
+                    method: "GET",
+                    url: "https://api.tomtom.com/map/1/staticimage?layer=basic&style=main&format=png&center=4.899886%2C%2052.379031&width=512&height=512&view=Unified&key=vEjGapnUURlnmiz9LAh4GsXnTkbD9UGw",
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                     }).then(result => {
+                console.log('result', result);
+                }, error => {
+                console.error(error);
+                });
             }
+            
         },
         data() {
             return {
