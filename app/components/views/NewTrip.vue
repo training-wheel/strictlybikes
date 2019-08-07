@@ -1,9 +1,6 @@
 <template>
     <Page class="page">
-        <ActionBar title="Home">
-            <Button height="40" width="40" borderRadius="30" text="Profile"
-                color="white" backgroundColor="green" ios.position="right"
-                android.position="popup" @tap="$goto('Profile')" />
+        <ActionBar title="New Trip">
         </ActionBar>
         <ScrollView>
             <StackLayout orientation="vertical" width="*" height="*"
