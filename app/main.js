@@ -1,6 +1,7 @@
 import Vue from 'nativescript-vue';
-import store from './store';
 import VueDevtools from 'nativescript-vue-devtools';
+import * as appSettings from 'tns-core-modules/application-settings';
+import store from './store';
 import router from './router';
 import { configureOAuthProviders } from './auth/auth-service';
 
@@ -42,6 +43,9 @@ if (TNS_ENV !== 'production') {
 // Prints Vue logs when --env.production is *NOT* set while building
 Vue.config.silent = (TNS_ENV === 'production');
 
+const isLoggedIn = appSettings.hasKey('jwt');
+const authRoute = isLoggedIn ? router.Home : router.Login;
+
 new Vue({
-  render: h => h('frame', [h(router.Home)]),
+  render: h => h('frame', [h(authRoute)]),
 }).$start();
