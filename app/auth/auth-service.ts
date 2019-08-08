@@ -1,3 +1,4 @@
+import * as appSettings from 'tns-core-modules/application-settings';
 import { configureTnsOAuth, TnsOAuthClient, ITnsOAuthTokenResult } from 'nativescript-oauth2';
 import { TnsOaProviderGoogle, TnsOaProviderOptionsGoogle } from 'nativescript-oauth2/providers';
 import axios from 'axios';
@@ -31,7 +32,7 @@ export const configureOAuthProviders = () => {
   configureTnsOAuth([googleProvider]);
 }
 
-export const tnsOauthLogin = (providerType) => {
+export const tnsOauthLogin = (providerType, routeCallback) => {
   client = new TnsOAuthClient(providerType);
   client.loginWithCompletion((tokenResult: ITnsOAuthTokenResult, error) => {
     if (error) {
@@ -41,8 +42,10 @@ export const tnsOauthLogin = (providerType) => {
       const { accessToken } = tokenResult;
       strictlyServer.defaults.headers.common['Authorization'] = accessToken;
       strictlyServer.post('/login')
-        .then((user) => {
-          console.log(`user: ${user}`);
+        .then((response) => {
+          const token = response.data;
+          appSettings.setString("jwt", JSON.stringify(token));
+          routeCallback();
         })
         .catch((err) => {
           console.error(`Failed to login: ${err}`);
