@@ -22,11 +22,9 @@
     methods: {
       onLoginTap() {
         console.log("login clicked");
-        tnsOauthLogin('google');
-      }
-    },
-    data() {
-      return {
+        tnsOauthLogin('google', () => {
+          this.$goto('Home');
+        });
       }
     },
   }
