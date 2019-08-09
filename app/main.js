@@ -21,7 +21,7 @@ Vue.prototype.$goto = (to, options) => {
       curve: 'easeIn',
     },
   };
-  that.$navigateTo(that.$router[to]);
+  that.$navigateTo(that.$router[to], options);
 };
 
 // import for the favicons
