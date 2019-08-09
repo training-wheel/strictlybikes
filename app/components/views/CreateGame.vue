@@ -9,9 +9,9 @@
                     longitude="-90.0816426"
                     hideCompass="true"
                     zoomLevel="12"
-                    showUserLocation="false"
+                    showUserLocation="true"
                     disableZoom="false"
-                    disableRotation="false"
+                    disableRotation="true"
                     disableScroll="false"
                     disableTilt="false"
                     @mapReady="onMapReady($event)"
@@ -34,6 +34,7 @@
 
 
 <script>
+    import { Mapbox } from "nativescript-mapbox";
     import * as utils from "utils/utils";
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
@@ -43,6 +44,11 @@
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
+
+    const geolocation = require("nativescript-geolocation");
+    const {
+        Accuracy
+    } = require("tns-core-modules/ui/enums");
 
     export default {
         methods: {
@@ -84,17 +90,43 @@
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
             },
+            getLocation() {
+                geolocation
+                    .getCurrentLocation({
+                        desiredAccuracy: Accuracy.high,
+                        maximumAge: 5000,
+                        timeout: 20000
+                    })
+                    .then(res => {
+                        this.lat = res.latitude;
+                        this.lon = res.longitude;
+                        this.speed = res.speed;
+                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
+                        fetch(
+                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                                res.latitude +
+                                "," +
+                                res.longitude +
+                                "&key=GOOGLE_API_KEY"
+                            )
+                            .then(response => response.json())
+                            .then(r => {
+                                this.addr = r.results[0].formatted_address;
+                            });
+                    });
+            },
             onMapReady(args) {
+                this.mapArgs = args;
                 args.map.addMarkers([
-                    {
-                        lat: 29.9643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
+                    // {
+                    //     lat: 29.9643504,
+                    //     lng: -90.0816426,
+                    //     title: "Tracy, CA",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
+                    // },
                     {
                         lat: 30.0146884,
                         lng: -90.0577187, 
@@ -123,18 +155,22 @@
                         }
                     }
                 ]);
-            }
+            },
             
         },
+        mounted() {
+        geolocation.enableLocationRequest();
+    },
         data() {
             return {
+                mapArgs: null,
                 pickerItems: [
                     15, 35, 55
                 ],
-                // form: {
-                //     From: "X",
-                //     To: "Y",
-                // }
+                lat: "",
+                lon: "",
+                speed: "",
+                addr: ""
             };
         },
     };
