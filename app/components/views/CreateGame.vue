@@ -23,11 +23,11 @@
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
                 
                 <StackLayout orientation="horizontal">
-                <Button text="Start Game" width="100%" height="30%"
+                    <Button text="Create Game" width="100%" height="30%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="20" @tap="$goto('Game')" />
-                    </StackLayout>
+                    borderRadius="20" @tap="handleCreateClick" />
+                </StackLayout>
         </StackLayout>
     </Page>
 </template>
@@ -46,6 +46,40 @@
 
     export default {
         methods: {
+            handleCreateClick(){
+            var testSocket = new SocketIO('https://2fa9f776.ngrok.io');
+            let userTypedInCode = 'game1'
+            // get game data
+            let gameInfo = {
+                lat: "90",
+                long: "90",
+                markerLimit: 3,
+                playerLimit: 2,
+                timeLimit: 100,
+                startTime: 20,
+                code: userTypedInCode,
+            }
+            // make request to server save a game to the DB (sending game info)
+            axios.post('https://2fa9f776.ngrok.io/createGame', gameInfo)
+            .then((result) => {
+                testSocket.connect();
+                testSocket.on('connect', () => {
+                    testSocket.emit('joinGame', {
+                        userId: result.data.userId,
+                        room: userTypedInCode,
+                        });
+                });
+                testSocket.on('join', (response) => {
+                    console.log(response);
+                    
+                })
+            })
+            .catch((err)=>{
+                console.error(err);
+            })
+
+            
+        },
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
@@ -102,10 +136,6 @@
                 //     To: "Y",
                 // }
             };
-        },
-         mounted() {
-            console.log('Nothing gets called before me!');
-            
         },
     };
 </script>
