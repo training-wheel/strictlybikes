@@ -23,11 +23,11 @@
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
                 
                 <StackLayout orientation="horizontal">
-                <Button text="Start Game" width="100%" height="30%"
+                    <Button text="Create Game" width="100%" height="30%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="20" @tap="$goto('Game')" />
-                    </StackLayout>
+                    borderRadius="20" @tap="handleCreateClick" />
+                </StackLayout>
         </StackLayout>
     </Page>
 </template>
@@ -38,26 +38,51 @@
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
     import PickerField from 'nativescript-picker/vue';
+    import { SocketIO } from 'nativescript-socketio';
     import axios from 'axios'
- 
+    
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
     export default {
         methods: {
+            handleCreateClick(){
+            var testSocket = new SocketIO('https://2fa9f776.ngrok.io');
+            let userTypedInCode = 'game1'
+            // get game data
+            let gameInfo = {
+                lat: "90",
+                long: "90",
+                markerLimit: 3,
+                playerLimit: 2,
+                timeLimit: 100,
+                startTime: 20,
+                code: userTypedInCode,
+            }
+            // make request to server save a game to the DB (sending game info)
+            axios.post('https://2fa9f776.ngrok.io/createGame', gameInfo)
+            .then((result) => {
+                testSocket.connect();
+                testSocket.on('connect', () => {
+                    testSocket.emit('joinGame', {
+                        userId: result.data.userId,
+                        room: userTypedInCode,
+                        });
+                });
+                testSocket.on('join', (response) => {
+                    console.log(response);
+                    
+                })
+            })
+            .catch((err)=>{
+                console.error(err);
+            })
+
+            
+        },
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
-                // console.log(form.To, form.From)
-                let address = '2316 odin street'
-
-                // axios({
-                // method: 'GET',
-                // url: `https://api.opencagedata.com/geocode/v1/json?key=4b1276c879054864aeed6ec75901de2b&q=611 N Miro Street&pretty=1&no_annotations=1`,
-                // })
-                // .then(function (response) {
-                //     console.log('response', response);
-                // });
             },
             onMapReady(args) {
                 args.map.addMarkers([
@@ -111,7 +136,7 @@
                 //     To: "Y",
                 // }
             };
-        }
+        },
     };
 </script>
 

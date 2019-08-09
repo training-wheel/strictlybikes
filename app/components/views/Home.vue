@@ -29,9 +29,10 @@
 
 
 
-<script >
+<script >    
   export default {
     methods: {
+        
      
     },
     data() {
