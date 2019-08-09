@@ -38,8 +38,9 @@
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
     import PickerField from 'nativescript-picker/vue';
+    import { SocketIO } from 'nativescript-socketio';
     import axios from 'axios'
- 
+    
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
@@ -48,16 +49,6 @@
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
-                // console.log(form.To, form.From)
-                let address = '2316 odin street'
-
-                // axios({
-                // method: 'GET',
-                // url: `https://api.opencagedata.com/geocode/v1/json?key=4b1276c879054864aeed6ec75901de2b&q=611 N Miro Street&pretty=1&no_annotations=1`,
-                // })
-                // .then(function (response) {
-                //     console.log('response', response);
-                // });
             },
             onMapReady(args) {
                 args.map.addMarkers([
@@ -111,7 +102,11 @@
                 //     To: "Y",
                 // }
             };
-        }
+        },
+         mounted() {
+            console.log('Nothing gets called before me!');
+            
+        },
     };
 </script>
 
