@@ -7,13 +7,8 @@
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
-                    hideCompass="true"
+                    showUserLocation="true"
                     zoomLevel="12"
-                    showUserLocation="false"
-                    disableZoom="false"
-                    disableRotation="false"
-                    disableScroll="false"
-                    disableTilt="false"
                     @mapReady="onMapReady($event)"
                     height=50%
                     width=*>
@@ -43,6 +38,9 @@
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
+
+    const geolocation = require("nativescript-geolocation");
+    const {Accuracy} = require("tns-core-modules/ui/enums");
 
     export default {
         methods: {
@@ -84,17 +82,18 @@
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
             },
-            onMapReady(args) {
-                args.map.addMarkers([
-                    {
-                        lat: 29.9643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
+            onMapReady(readyEvent) {
+                this.mapArgs = readyEvent;
+                readyEvent.map.addMarkers([
+                    // {
+                    //     lat: 29.9643504,
+                    //     lng: -90.0816426,
+                    //     title: "Tracy, CA",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
+                    // },
                     {
                         lat: 30.0146884,
                         lng: -90.0577187, 
@@ -123,21 +122,65 @@
                         }
                     }
                 ]);
-            }
-            
+            },
+            getLocation() {
+                geolocation
+                    .getCurrentLocation({
+                        desiredAccuracy: Accuracy.high,
+                        maximumAge: 5000,
+                        timeout: 20000
+                    })
+                    .then(res => {
+                        this.lati = res.latitude;
+                        this.lon = res.longitude;
+                        this.speed = res.speed;
+
+                        console.log('longitude', this.lon);
+                        console.log('latitude', this.lati);
+
+                       this.mapArgs.map.trackUser({
+                            mode: "FOLLOW", // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
+                            animated: true
+                        });
+                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
+                        fetch(
+                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                                res.latitude +
+                                "," +
+                                res.longitude +
+                                "&key=AIzaSyBs6LSqUOFPrr9P4GCvw1NIbA2y0zVZl8k"
+                            )
+                            .then(response => response.json())
+                            .then(r => {
+                                this.addr = r.results[0].formatted_address;
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('geolocation error', error);
+                    });
+            },
         },
+        mounted() {
+        geolocation.enableLocationRequest();
+    },
         data() {
             return {
+                mapArgs: null,
                 pickerItems: [
                     15, 35, 55
                 ],
-                // form: {
-                //     From: "X",
-                //     To: "Y",
-                // }
+                lati: "",
+                lon: "",
+                speed: "",
+                addr: ""
             };
         },
+        mounted() {
+            console.log('mounted')
+        geolocation.enableLocationRequest();
+        }
     };
+    
 </script>
 
 <style scoped>
