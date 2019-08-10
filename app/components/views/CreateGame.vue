@@ -2,6 +2,7 @@
     <Page class="page">
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
+            
                 <Mapbox
                     accessToken=process.env.MAP_ACCESS_TOKEN
                     mapStyle="traffic_day"
@@ -13,14 +14,13 @@
                     height=50%
                     width=*>
                 </Mapbox>
-                
+                <TextField v-model="textFieldValue" hint="Name Your Game" />
                 <!-- <RadDataForm :source="form" /> -->
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
-                
                 <StackLayout orientation="horizontal">
-                    <Button text="Create Game" width="100%" height="30%"
+                    <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
-                    color="white" fontSize="20" fontWeight="bold"
+                    color="white" fontSize="15" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
                 </StackLayout>
         </StackLayout>
@@ -35,6 +35,11 @@
     import PickerField from 'nativescript-picker/vue';
     import { SocketIO } from 'nativescript-socketio';
     import axios from 'axios'
+    import * as appSettings from 'tns-core-modules/application-settings';
+    const jwt = appSettings.getString('jwt');
+    var timerModule = require("tns-core-modules/timer");
+    var geolocation = require("nativescript-geolocation");
+    geolocation.enableLocationRequest();
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
@@ -45,8 +50,7 @@
     export default {
         methods: {
             handleCreateClick(){
-            var testSocket = new SocketIO('https://2fa9f776.ngrok.io');
-            let userTypedInCode = 'game1'
+            var testSocket = new SocketIO('https://2651945d.ngrok.io');
             // get game data
             let gameInfo = {
                 lat: "90",
@@ -55,28 +59,31 @@
                 playerLimit: 2,
                 timeLimit: 100,
                 startTime: 20,
-                code: userTypedInCode,
+                code: this.textFieldValue,
             }
             // make request to server save a game to the DB (sending game info)
-            axios.post('https://2fa9f776.ngrok.io/createGame', gameInfo)
+            console.log("token::::::: ", jwt);
+            axios.post('https://2651945d.ngrok.io/createGame', gameInfo, {
+                headers: {
+                jwt,
+                }
+            })
             .then((result) => {
                 testSocket.connect();
                 testSocket.on('connect', () => {
                     testSocket.emit('joinGame', {
                         userId: result.data.userId,
-                        room: userTypedInCode,
+                        room: this.textFieldValue,
+                        jwt,
                         });
                 });
                 testSocket.on('join', (response) => {
                     console.log(response);
-                    
                 })
             })
             .catch((err)=>{
                 console.error(err);
             })
-
-            
         },
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
@@ -85,15 +92,6 @@
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
                 readyEvent.map.addMarkers([
-                    // {
-                    //     lat: 29.9643504,
-                    //     lng: -90.0816426,
-                    //     title: "Tracy, CA",
-                    //     subtitle: "Home of The Polyglot Developer!",
-                    //     onCalloutTap: () => {
-                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
-                    //     }
-                    // },
                     {
                         lat: 30.0146884,
                         lng: -90.0577187, 
@@ -103,24 +101,7 @@
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
                         }
                     },
-                    {
-                        lat: 29.6643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        lat: 30.0643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    }
+                    
                 ]);
             },
             getLocation() {
@@ -139,7 +120,9 @@
                         console.log('latitude', this.lati);
 
                        this.mapArgs.map.trackUser({
-                            mode: "FOLLOW", // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
+                        // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
+
+                            mode: "FOLLOW", 
                             animated: true
                         });
                         // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
@@ -159,6 +142,9 @@
                         console.log('geolocation error', error);
                     });
             },
+            onMapReady(args) {
+                this.mapArgs = args;
+            }
         },
         mounted() {
         geolocation.enableLocationRequest();
@@ -172,11 +158,11 @@
                 lati: "",
                 lon: "",
                 speed: "",
-                addr: ""
+                addr: "",
+                textFieldValue: "",
             };
         },
         mounted() {
-            console.log('mounted')
         geolocation.enableLocationRequest();
         }
     };
