@@ -19,14 +19,10 @@
                     width=*>
                 </Mapbox>
                 <StackLayout orientation="horizontal">
-                <Button text="End" width="50%" height="60%" backgroundColor="#5EB0E5"
-                    marginTop="10" textAlignment="center" color="white"
-                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
-                <Button text="Alert" width="50%" height="60%"
-                    backgroundColor="#5EB0E5" marginTop="10" textAlignment="center"
-                    color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="20" @tap="$goto('PLACEHOLDER')" />
-                    </StackLayout>
+                    <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
+                        marginTop="10" textAlignment="center" color="white"
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
+                </StackLayout>
         </StackLayout>
     </Page>
 </template>
@@ -36,22 +32,24 @@
     var mapbox = require("nativescript-mapbox");
     import * as utils from "utils/utils";
     import axios from 'axios';
+    import router from '../../router'
     export default {
         data () {
             return { };
         },
+        props: ['socket'],
+
         methods: {
+            openModal(){
+                console.log("hit p2")
+                this.$showModal(router.Alert, {})
+            },
             onMapReady(args) {
+            this.openModal();
               // console.log('args', args);
                 args.map.addMarkers([
                     {
-                        lat: 29.9643504,
-                        lng: -90.0916426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
+                     
                     },
                 ]);
             },

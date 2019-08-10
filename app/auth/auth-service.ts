@@ -44,7 +44,7 @@ export const tnsOauthLogin = (providerType, routeCallback) => {
       strictlyServer.post('/login')
         .then((response) => {
           const token = response.data;
-          appSettings.setString("jwt", JSON.stringify(token));
+          appSettings.setString("jwt", token);
           routeCallback();
         })
         .catch((err) => {

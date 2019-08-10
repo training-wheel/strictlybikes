@@ -7,7 +7,7 @@
                     backgroundColor="#eb8100" ios.position="right"
                     android.position="popup" @tap="$goto('Profile')" />  
         </ActionBar> 
-
+    
         
         <ScrollView>
             <StackLayout orientation="horizontal" width="*" height="*"
@@ -27,20 +27,21 @@
 </template>
 
 
-
-
 <script >    
 //import socket
     import Vue from 'nativescript-vue';
     import { SocketIO } from 'nativescript-socketio';
-    import axios from 'axios'
-
+    import * as appSettings from 'tns-core-modules/application-settings';
+    const jwt = appSettings.getString('jwt');
+    import axios from 'axios';
+  
   export default {
     methods: {
         handleLobbyClick(){
         // connect socket
-        var socket = new SocketIO('https://2fa9f776.ngrok.io');
+        var socket = new SocketIO('https://2651945d.ngrok.io');
         socket.connect();
+        
         // emit the need for lobby join
         socket.emit('joinLobby', 'lobby');
         //route to the lobby
@@ -54,9 +55,10 @@
     },
     data() {
       return {
-        
+
       }
-    }
+    },
+    
   }
 </script>
 
