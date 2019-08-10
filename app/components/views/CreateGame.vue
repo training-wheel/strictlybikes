@@ -8,7 +8,7 @@
                     latitude="29.9643504"
                     longitude="-90.0816426"
                     showUserLocation="true"
-                    zoomLevel="12"
+                    zoomLevel="9"
                     @mapReady="onMapReady($event)"
                     height=50%
                     width=*>
@@ -25,7 +25,7 @@
                     <Button text="test" width="100%" height="30%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="20" @tap="checkUserMakerLocation()" />
+                    borderRadius="20" @tap="checkUserMakerLocation(markers)" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -105,35 +105,43 @@
                         console.log('longitude', this.lon);
                         console.log('latitude', this.lati);
 
-                       this.mapArgs.map.addMarkers([
-                            {
-                        lat: 29.9643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "New Marker!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                            }
-                        }]);
+                    //    this.mapArgs.map.addMarkers([
+                    //         {
+                    //     lat: 29.96435,
+                    //     lng: -90.081643,
+                    //     title: "Im in the Geolocation!",
+                    //     subtitle: "You cant DELETE ME HAHA!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //         }
+                    //     }]);
                     })
                     .catch((error) => {
                         console.log('geolocation error', error);
                     });
             },
-            checkUserMakerLocation() {
-                console.log(this.markers[0].lat, this.markers[0].lng);
-                //use setinterval to constantly check users location against marker location
-                this.mapArgs.map.getUserLocation().then(
-                    (userLocation) => {
-                        console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
-                        console.log("Current user speed: " +  userLocation.speed);
-                        if(userLocation.location.lat === this.markers[0].lat && userLocation.location.lng === this.markers[0].lng) {
-                            this.mapArgs.map.removeMarkers([1]);
-                            console.log('User location is near marker');
-                        } else {
-                            console.log('User location is not near marker');
-                        }
-                })
+            checkUserMakerLocation(markers) {
+                for(let key in markers) {
+                    console.log(markers[key].lat);
+                    // console.log(markers[key].lat, markers[key].lng);
+                // console.log('markers', markers);
+
+                setInterval(() => {
+					//use setinterval to constantly check users location against marker location
+                    this.mapArgs.map.getUserLocation().then(
+                        (userLocation) => {
+                            console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
+                            console.log("Current user speed: " +  userLocation.speed);
+                            if(userLocation.location.lat === markers[key].lat && userLocation.location.lng === markers[key].lng) {
+                                this.mapArgs.map.removeMarkers([markers[key].id]);
+                                console.log(markers[key].id);
+                                console.log('User location is near marker');
+                            } else {
+                                console.log('User location is not near marker');
+                            }
+                    })
+                }, 5000);
+                }
             }
         },
         mounted() {
@@ -154,27 +162,30 @@
                         }
                     },
                     {
-                        lat: 30.0146884,
-                        lng: -90.0577187, 
-                        title: "Tracy, CA",
+                        id: 2,
+                        lat: 30.014688,
+                        lng: -90.057719, 
+                        title: "Point 1",
                         subtitle: "Home of The Polyglot Developer!",
                         onCalloutTap: () => {
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
                         }
                     },
                     {
-                        lat: 29.6643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
+                        id: 3,
+                        lat: 29.66435,
+                        lng: -90.081643,
+                        title: "Point 2",
                         subtitle: "Home of The Polyglot Developer!",
                         onCalloutTap: () => {
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
                         }
                     },
                     {
-                        lat: 30.0643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
+                        id: 4,
+                        lat: 30.06435,
+                        lng: -90.081643,
+                        title: "Point 3",
                         subtitle: "Home of The Polyglot Developer!",
                         onCalloutTap: () => {
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
