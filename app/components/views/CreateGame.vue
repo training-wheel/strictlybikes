@@ -7,13 +7,8 @@
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
-                    hideCompass="true"
-                    zoomLevel="12"
                     showUserLocation="true"
-                    disableZoom="false"
-                    disableRotation="true"
-                    disableScroll="false"
-                    disableTilt="false"
+                    zoomLevel="12"
                     @mapReady="onMapReady($event)"
                     height=50%
                     width=*>
@@ -34,7 +29,6 @@
 
 
 <script>
-    import { Mapbox } from "nativescript-mapbox";
     import * as utils from "utils/utils";
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
@@ -46,9 +40,7 @@
     Vue.use(RadDataForm);
 
     const geolocation = require("nativescript-geolocation");
-    const {
-        Accuracy
-    } = require("tns-core-modules/ui/enums");
+    const {Accuracy} = require("tns-core-modules/ui/enums");
 
     export default {
         methods: {
@@ -90,34 +82,9 @@
                 let picker = this.$refs.apiPicker.nativeView;
                 console.log('picker', picker.selectedValue)
             },
-            getLocation() {
-                geolocation
-                    .getCurrentLocation({
-                        desiredAccuracy: Accuracy.high,
-                        maximumAge: 5000,
-                        timeout: 20000
-                    })
-                    .then(res => {
-                        this.lat = res.latitude;
-                        this.lon = res.longitude;
-                        this.speed = res.speed;
-                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
-                        fetch(
-                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                                res.latitude +
-                                "," +
-                                res.longitude +
-                                "&key=GOOGLE_API_KEY"
-                            )
-                            .then(response => response.json())
-                            .then(r => {
-                                this.addr = r.results[0].formatted_address;
-                            });
-                    });
-            },
-            onMapReady(args) {
-                this.mapArgs = args;
-                args.map.addMarkers([
+            onMapReady(readyEvent) {
+                this.mapArgs = readyEvent;
+                readyEvent.map.addMarkers([
                     // {
                     //     lat: 29.9643504,
                     //     lng: -90.0816426,
@@ -156,7 +123,42 @@
                     }
                 ]);
             },
-            
+            getLocation() {
+                geolocation
+                    .getCurrentLocation({
+                        desiredAccuracy: Accuracy.high,
+                        maximumAge: 5000,
+                        timeout: 20000
+                    })
+                    .then(res => {
+                        this.lati = res.latitude;
+                        this.lon = res.longitude;
+                        this.speed = res.speed;
+
+                        console.log('longitude', this.lon);
+                        console.log('latitude', this.lati);
+
+                       this.mapArgs.map.trackUser({
+                            mode: "FOLLOW", // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
+                            animated: true
+                        });
+                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
+                        fetch(
+                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                                res.latitude +
+                                "," +
+                                res.longitude +
+                                "&key=AIzaSyBs6LSqUOFPrr9P4GCvw1NIbA2y0zVZl8k"
+                            )
+                            .then(response => response.json())
+                            .then(r => {
+                                this.addr = r.results[0].formatted_address;
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('geolocation error', error);
+                    });
+            },
         },
         mounted() {
         geolocation.enableLocationRequest();
@@ -167,13 +169,18 @@
                 pickerItems: [
                     15, 35, 55
                 ],
-                lat: "",
+                lati: "",
                 lon: "",
                 speed: "",
                 addr: ""
             };
         },
+        mounted() {
+            console.log('mounted')
+        geolocation.enableLocationRequest();
+        }
     };
+    
 </script>
 
 <style scoped>
