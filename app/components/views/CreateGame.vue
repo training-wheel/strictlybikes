@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -17,11 +17,15 @@
                 <!-- <RadDataForm :source="form" /> -->
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
                 
-                <StackLayout orientation="horizontal">
+                <StackLayout orientation="vertical">
                     <Button text="Create Game" width="100%" height="30%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
+                    <Button text="test" width="100%" height="30%"
+                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                    color="white" fontSize="20" fontWeight="bold"
+                    borderRadius="20" @tap="checkUserMakerLocation()" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -68,7 +72,7 @@
                         });
                 });
                 testSocket.on('join', (response) => {
-                    console.log(response);
+                    // console.log(response);
                     
                 })
             })
@@ -84,16 +88,71 @@
             },
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
-                readyEvent.map.addMarkers([
-                    // {
-                    //     lat: 29.9643504,
-                    //     lng: -90.0816426,
-                    //     title: "Tracy, CA",
-                    //     subtitle: "Home of The Polyglot Developer!",
-                    //     onCalloutTap: () => {
-                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
-                    //     }
-                    // },
+                readyEvent.map.addMarkers(this.markers);
+            },
+            getLocation() {
+                geolocation
+                    .getCurrentLocation({
+                        desiredAccuracy: Accuracy.high,
+                        maximumAge: 5000,
+                        timeout: 20000
+                    })
+                    .then(res => {
+                        this.lati = res.latitude;
+                        this.lon = res.longitude;
+                        this.speed = res.speed;
+
+                        console.log('longitude', this.lon);
+                        console.log('latitude', this.lati);
+
+                       this.mapArgs.map.addMarkers([
+                            {
+                        lat: 29.9643504,
+                        lng: -90.0816426,
+                        title: "Tracy, CA",
+                        subtitle: "New Marker!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                            }
+                        }]);
+                    })
+                    .catch((error) => {
+                        console.log('geolocation error', error);
+                    });
+            },
+            checkUserMakerLocation() {
+                console.log(this.markers[0].lat, this.markers[0].lng);
+                //use setinterval to constantly check users location against marker location
+                this.mapArgs.map.getUserLocation().then(
+                    (userLocation) => {
+                        console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
+                        console.log("Current user speed: " +  userLocation.speed);
+                        if(userLocation.location.lat === this.markers[0].lat && userLocation.location.lng === this.markers[0].lng) {
+                            this.mapArgs.map.removeMarkers([1]);
+                            console.log('User location is near marker');
+                        } else {
+                            console.log('User location is not near marker');
+                        }
+                })
+            }
+        },
+        mounted() {
+        geolocation.enableLocationRequest();
+        this.getLocation();
+    },
+        data() {
+            return {
+                markers: [
+                    {
+                        id: 1,
+                        lat: 29.96435,
+                        lng: -90.082643,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
                     {
                         lat: 30.0146884,
                         lng: -90.0577187, 
@@ -121,50 +180,8 @@
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
                         }
                     }
-                ]);
-            },
-            getLocation() {
-                geolocation
-                    .getCurrentLocation({
-                        desiredAccuracy: Accuracy.high,
-                        maximumAge: 5000,
-                        timeout: 20000
-                    })
-                    .then(res => {
-                        this.lati = res.latitude;
-                        this.lon = res.longitude;
-                        this.speed = res.speed;
+                ],
 
-                        console.log('longitude', this.lon);
-                        console.log('latitude', this.lati);
-
-                       this.mapArgs.map.trackUser({
-                            mode: "FOLLOW", // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
-                            animated: true
-                        });
-                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
-                        fetch(
-                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                                res.latitude +
-                                "," +
-                                res.longitude +
-                                "&key=AIzaSyBs6LSqUOFPrr9P4GCvw1NIbA2y0zVZl8k"
-                            )
-                            .then(response => response.json())
-                            .then(r => {
-                                this.addr = r.results[0].formatted_address;
-                        });
-                    })
-                    .catch((error) => {
-                        console.log('geolocation error', error);
-                    });
-            },
-        },
-        mounted() {
-        geolocation.enableLocationRequest();
-    },
-        data() {
-            return {
                 mapArgs: null,
                 pickerItems: [
                     15, 35, 55
