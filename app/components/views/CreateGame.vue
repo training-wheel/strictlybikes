@@ -26,6 +26,10 @@
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
                     borderRadius="20" @tap="checkUserMakerLocation(markers)" />
+                    <Button text="Gameover" width="100%" height="30%"
+                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                    color="white" fontSize="20" fontWeight="bold"
+                    borderRadius="20" @tap="gameover()" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -45,6 +49,7 @@
 
     const geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
+    const timerModule = require("tns-core-modules/timer");
 
     export default {
         methods: {
@@ -122,19 +127,17 @@
             },
             checkUserMakerLocation(markers) {
                 for(let key in markers) {
-                    console.log(markers[key].lat);
-                    // console.log(markers[key].lat, markers[key].lng);
-                // console.log('markers', markers);
+                let {lat, lng, id} = markers[key];
 
-                setInterval(() => {
+                this.timer = timerModule.setInterval(() => {
 					//use setinterval to constantly check users location against marker location
                     this.mapArgs.map.getUserLocation().then(
                         (userLocation) => {
                             console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
                             console.log("Current user speed: " +  userLocation.speed);
-                            if(userLocation.location.lat === markers[key].lat && userLocation.location.lng === markers[key].lng) {
-                                this.mapArgs.map.removeMarkers([markers[key].id]);
-                                console.log(markers[key].id);
+                            if(userLocation.location.lat === lat && userLocation.location.lng === lng) {
+                                this.mapArgs.map.removeMarkers([id]);
+                                console.log(id);
                                 console.log('User location is near marker');
                             } else {
                                 console.log('User location is not near marker');
@@ -142,11 +145,11 @@
                     })
                 }, 5000);
                 }
-            }
+            },
         },
-        mounted() {
-        geolocation.enableLocationRequest();
-        this.getLocation();
+    mounted() {
+    geolocation.enableLocationRequest();
+    this.getLocation();
     },
         data() {
             return {
@@ -192,7 +195,6 @@
                         }
                     }
                 ],
-
                 mapArgs: null,
                 pickerItems: [
                     15, 35, 55
