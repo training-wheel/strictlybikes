@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
+                    :accessToken="mapBoxApi"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -34,17 +34,9 @@
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
 
-
-
     export default {
-        data () {
-            return { 
-                warningShown: null,
-            };
-        },
         mounted() {
             console.log('mounted')
-            this.checkUserMarkerLocation(this.markers);
         },
         created(){
             this.playing();
@@ -97,9 +89,8 @@
             onMapReady(readyEvent) {
                 this.openAlertModal();
                 this.mapArgs = readyEvent;
-                // this.checkUserMarkerLocation(this.markers);
                 readyEvent.map.addMarkers(this.markers);
-
+                this.checkUserMarkerLocation(this.markers);
             },
             getLocation() {
                 geolocation
@@ -123,6 +114,8 @@
         },
         data() {
             return {
+                warningShown: null,
+                mapBoxApi: require('../../config').MAPBOX_API,
                 markers: [
                     {
                         id: 1,
