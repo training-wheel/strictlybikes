@@ -9,7 +9,7 @@
                     latitude="29.9643504"
                     longitude="-90.0816426"
                     showUserLocation="true"
-                    zoomLevel="12"
+                    zoomLevel="9"
                     @mapReady="onMapReady($event)"
                     height=50%
                     width=*>
@@ -17,6 +17,7 @@
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
                 <!-- <RadDataForm :source="form" /> -->
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
+
                 <StackLayout orientation="horizontal">
                     <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
@@ -37,9 +38,6 @@
     import axios from 'axios'
     import * as appSettings from 'tns-core-modules/application-settings';
     const jwt = appSettings.getString('jwt');
-    var timerModule = require("tns-core-modules/timer");
-    var geolocation = require("nativescript-geolocation");
-    geolocation.enableLocationRequest();
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
@@ -91,18 +89,8 @@
             },
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
-                readyEvent.map.addMarkers([
-                    {
-                        lat: 30.0146884,
-                        lng: -90.0577187, 
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    
-                ]);
+                readyEvent.map.addMarkers(this.markers);
+
             },
             getLocation() {
                 geolocation
@@ -118,25 +106,6 @@
 
                         console.log('longitude', this.lon);
                         console.log('latitude', this.lati);
-
-                       this.mapArgs.map.trackUser({
-                        // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
-
-                            mode: "FOLLOW", 
-                            animated: true
-                        });
-                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
-                        fetch(
-                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                                res.latitude +
-                                "," +
-                                res.longitude +
-                                "&key=AIzaSyBs6LSqUOFPrr9P4GCvw1NIbA2y0zVZl8k"
-                            )
-                            .then(response => response.json())
-                            .then(r => {
-                                this.addr = r.results[0].formatted_address;
-                        });
                     })
                     .catch((error) => {
                         console.log('geolocation error', error);
@@ -146,11 +115,54 @@
                 this.mapArgs = args;
             }
         },
-        mounted() {
-        geolocation.enableLocationRequest();
+    mounted() {
+    geolocation.enableLocationRequest();
+    this.getLocation();
     },
         data() {
             return {
+                markers: [
+                    {
+                        id: 1,
+                        lat: 29.96435,
+                        lng: -90.082643,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 2,
+                        lat: 30.014688,
+                        lng: -90.057719, 
+                        title: "Point 1",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 3,
+                        lat: 29.66435,
+                        lng: -90.081643,
+                        title: "Point 2",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 4,
+                        lat: 30.06435,
+                        lng: -90.081643,
+                        title: "Point 3",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    }
+                ],
                 mapArgs: null,
                 pickerItems: [
                     15, 35, 55
