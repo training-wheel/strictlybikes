@@ -17,9 +17,9 @@
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
                 <!-- <RadDataForm :source="form" /> -->
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
-                
-                <StackLayout orientation="vertical">
-                    <Button text="Create Game" width="100%" height="30%"
+
+                <StackLayout orientation="horizontal">
+                    <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="15" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
@@ -90,6 +90,7 @@
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
                 readyEvent.map.addMarkers(this.markers);
+
             },
             getLocation() {
                 geolocation
