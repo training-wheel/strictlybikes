@@ -2,9 +2,8 @@
     <Page class="page">
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
-            
                 <Mapbox
-                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
+                    :accessToken="mapBoxApi"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -37,7 +36,6 @@
     import { SocketIO } from 'nativescript-socketio';
     import axios from 'axios'
     import * as appSettings from 'tns-core-modules/application-settings';
-    const jwt = appSettings.getString('jwt');
     var timerModule = require("tns-core-modules/timer");
     var geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
@@ -50,7 +48,7 @@
         methods: {
             handleCreateClick(){
                 console.log(appSettings);
-            var testSocket = new SocketIO('https://133ddb98.ngrok.io');
+            var testSocket = new SocketIO(this.baseUrl);
             let picker = this.$refs.apiPicker.nativeView;
             // get game data
             let gameInfo = {
@@ -64,9 +62,9 @@
                 radius: picker.selectedValue,
             }
             // make request to server save a game to the DB (sending game info)
-            axios.post('https://133ddb98.ngrok.io/createGame', gameInfo, {
+            axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
-                jwt,
+                jwt: this.jwt,
                 }
             })
             .then((result) => {
@@ -75,7 +73,7 @@
                     testSocket.emit('joinGame', {
                         userId: result.data.userId,
                         room: this.textFieldValue,
-                        jwt,
+                        jwt: this.jwt,
                         });
                 });
                 testSocket.on('join', (response) => {
@@ -181,6 +179,9 @@
                 speed: "",
                 addr: "",
                 textFieldValue: "",
+                jwt: appSettings.getString('jwt'),
+                baseUrl: require('../../config').SERVER_BASE_URL,
+                mapBoxApi: require('../../config').MAPBOX_API,
             };
         },
     };
