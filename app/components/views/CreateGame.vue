@@ -26,10 +26,6 @@
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
                     borderRadius="20" @tap="checkUserMakerLocation(markers)" />
-                    <Button text="Gameover" width="100%" height="30%"
-                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
-                    color="white" fontSize="20" fontWeight="bold"
-                    borderRadius="20" @tap="gameover()" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -128,6 +124,8 @@
             checkUserMakerLocation(markers) {
                 for(let key in markers) {
                 let {lat, lng, id} = markers[key];
+                lng = lng.toPrecision(7);
+                lat = lat.toPrecision(7);
 
                 this.timer = timerModule.setInterval(() => {
 					//use setinterval to constantly check users location against marker location
@@ -135,7 +133,7 @@
                         (userLocation) => {
                             console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
                             console.log("Current user speed: " +  userLocation.speed);
-                            if(userLocation.location.lat === lat && userLocation.location.lng === lng) {
+                            if(userLocation.location.lat.toPrecision(7) === lat && userLocation.location.lng.toPrecision(7) === lng) {
                                 this.mapArgs.map.removeMarkers([id]);
                                 console.log(id);
                                 console.log('User location is near marker');
