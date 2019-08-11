@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
+                    accessToken=process.env.MAP_ACCESS_TOKEN
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
