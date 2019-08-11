@@ -15,10 +15,11 @@
                 </Mapbox>
 
                 <StackLayout orientation="horizontal">
-                <Button text="End" width="50%" height="60%" backgroundColor="#5EB0E5"
-                    marginTop="10" textAlignment="center" color="white"
-                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
-                    </StackLayout>
+
+                    <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
+                        marginTop="10" textAlignment="center" color="white"
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
+                </StackLayout>
         </StackLayout>
     </Page>
 </template>
@@ -36,6 +37,7 @@
 
 
     export default {
+
         methods: {
             openModal(){
                 console.log("hit p2")
@@ -103,6 +105,7 @@
                         onCalloutTap: () => {
                             utils.openUrl("https://www.thepolyglotdeveloper.com");
                         }
+
                     },
                     {
                         id: 2,

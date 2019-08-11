@@ -20,6 +20,7 @@
                 
                 <StackLayout orientation="vertical">
                     <Button text="Create Game" width="100%" height="30%"
+
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="15" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
@@ -38,6 +39,10 @@
     import axios from 'axios'
     import * as appSettings from 'tns-core-modules/application-settings';
     const jwt = appSettings.getString('jwt');
+
+    const timerModule = require("tns-core-modules/timer");
+    const geolocation = require("nativescript-geolocation");
+    geolocation.enableLocationRequest();
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
@@ -90,6 +95,7 @@
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
                 readyEvent.map.addMarkers(this.markers);
+
             },
             getLocation() {
                 geolocation
