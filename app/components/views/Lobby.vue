@@ -18,6 +18,9 @@
 
 <script >
   import { SocketIO } from 'nativescript-socketio';
+  import * as appSettings from 'tns-core-modules/application-settings';
+  const jwt = appSettings.getString('jwt');
+
   import axios from 'axios'
 
   export default {
@@ -30,6 +33,7 @@
       handleJoin(game) {
         this.socket.emit('joinGame', {
           room: game.code,
+          jwt
         });
         this.socket.on('join', (message) => {
           console.log("joined");
@@ -53,7 +57,7 @@
 
       }
     },
-    mounted() {
+    created() {
       this.justJoined();
     }
   }

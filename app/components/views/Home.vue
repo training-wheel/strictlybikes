@@ -13,11 +13,11 @@
             <StackLayout orientation="horizontal" width="*" height="*"
                 backgroundColor="white">
                 <!-- <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz1DzGXXyJPBs5-x2cv4J27YmuyUb0XZLXQPynHYy4qFxGvAKHCw" height="10%"></Image> -->
-                <Button text="Create Game" width="50%" height="20%"
+                <Button text="Create Game" width="50%" height="5%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="20" fontWeight="bold"
                     borderRadius="30" @tap="$goto('CreateGame')" />
-                <Button text="Join Game" width="50%" height="20%"
+                <Button text="Join Game" width="50%" height="5%"
                 backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                 color="white" fontSize="20" fontWeight="bold"
                 borderRadius="30" @tap="handleLobbyClick" />
@@ -39,7 +39,7 @@
     methods: {
         handleLobbyClick(){
         // connect socket
-        var socket = new SocketIO('https://2651945d.ngrok.io');
+        var socket = new SocketIO('https://133ddb98.ngrok.io');
         socket.connect();
         
         // emit the need for lobby join

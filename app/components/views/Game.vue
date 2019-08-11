@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -37,11 +37,39 @@
 
 
     export default {
+        data () {
+            return { 
+                warningShown: null,
+            };
+        },
+        mounted() {
+            console.log('mounted')
+            this.checkUserMarkerLocation(this.markers);
+        },
+        created(){
+            this.playing();
+        },
+        props: ['socket'],
 
         methods: {
-            openModal(){
-                console.log("hit p2")
-                this.$showModal(router.Alert, {})
+            playing(){
+                if(this.socket){
+                    this.socket.on('playing', (message) => {
+                        console.log(message);
+                    });
+                }
+            },
+            openAlertModal(){
+                if(!this.warningShown){
+                    this.$showModal(router.Alert, {props: {socket: this.socket}})
+                    this.warningShown = true;
+                    timerModule.setTimeout(() => {
+                    this.endGame();
+                    }, 10000);
+                }
+            },
+            endGame(){
+                // this.$model.close(router.Alert);
             },
             checkUserMarkerLocation(markers) {
                 for(let key in markers) {
@@ -67,7 +95,7 @@
                 }
             },
             onMapReady(readyEvent) {
-                this.openModal();
+                this.openAlertModal();
                 this.mapArgs = readyEvent;
                 // this.checkUserMarkerLocation(this.markers);
                 readyEvent.map.addMarkers(this.markers);
@@ -107,39 +135,8 @@
                         }
 
                     },
-                    {
-                        id: 2,
-                        lat: 30.014688,
-                        lng: -90.057719, 
-                        title: "Point 1",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        id: 3,
-                        lat: 29.66435,
-                        lng: -90.081643,
-                        title: "Point 2",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        id: 4,
-                        lat: 30.06435,
-                        lng: -90.081643,
-                        title: "Point 3",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    }
                 ],
                 mapArgs: null,
-                props: ['socket'],
                 pickerItems: [
                     15, 35, 55
                 ],
@@ -149,12 +146,9 @@
                 addr: ""
             };
         },
-        mounted() {
-            console.log('mounted')
-            geolocation.enableLocationRequest();
-            this.checkUserMarkerLocation(this.markers);
-        }
+        
     };
+    
 </script>
 
 <style scoped>

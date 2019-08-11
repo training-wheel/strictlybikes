@@ -7,7 +7,7 @@ import {
   ANDROID_REDIRECT_URI,
   ANDROID_URL_SCHEME,
   SERVER_BASE_URL,
-} from './config.js';
+} from '../config.js';
 
 let client: TnsOAuthClient = null;
 

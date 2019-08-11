@@ -4,7 +4,7 @@
         <StackLayout>
             
                 <Mapbox
-                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -38,30 +38,33 @@
     import axios from 'axios'
     import * as appSettings from 'tns-core-modules/application-settings';
     const jwt = appSettings.getString('jwt');
+    var timerModule = require("tns-core-modules/timer");
+    var geolocation = require("nativescript-geolocation");
+    const {Accuracy} = require("tns-core-modules/ui/enums");
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
-    const geolocation = require("nativescript-geolocation");
-    const {Accuracy} = require("tns-core-modules/ui/enums");
 
     export default {
         methods: {
             handleCreateClick(){
-            var testSocket = new SocketIO('https://2651945d.ngrok.io');
+                console.log(appSettings);
+            var testSocket = new SocketIO('https://133ddb98.ngrok.io');
+            let picker = this.$refs.apiPicker.nativeView;
             // get game data
             let gameInfo = {
                 lat: "90",
-                long: "90",
+                long: "30",
                 markerLimit: 3,
                 playerLimit: 2,
                 timeLimit: 100,
                 startTime: 20,
                 code: this.textFieldValue,
+                radius: picker.selectedValue,
             }
             // make request to server save a game to the DB (sending game info)
-            console.log("token::::::: ", jwt);
-            axios.post('https://2651945d.ngrok.io/createGame', gameInfo, {
+            axios.post('https://133ddb98.ngrok.io/createGame', gameInfo, {
                 headers: {
                 jwt,
                 }
@@ -76,6 +79,12 @@
                         });
                 });
                 testSocket.on('join', (response) => {
+                    console.log(response);
+                    this.$goto('Game', {
+                        props: {
+                            socket: this.socket,
+                        }
+                    });
                     console.log(response);
                 })
             })
@@ -165,7 +174,7 @@
                 ],
                 mapArgs: null,
                 pickerItems: [
-                    15, 35, 55
+                    1, 3, 5
                 ],
                 lati: "",
                 lon: "",
@@ -174,9 +183,6 @@
                 textFieldValue: "",
             };
         },
-        mounted() {
-        geolocation.enableLocationRequest();
-        }
     };
     
 </script>
