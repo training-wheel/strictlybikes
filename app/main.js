@@ -47,5 +47,5 @@ const isLoggedIn = appSettings.hasKey('jwt');
 const authRoute = isLoggedIn ? router.Home : router.Login;
 
 new Vue({
-  render: h => h('frame', [h(authRoute)]),
+  render: h => h('frame', [h(router.Game)]),
 }).$start();

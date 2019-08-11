@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -28,7 +28,7 @@
     import * as utils from "utils/utils";
     import Vue from "nativescript-vue";
     import axios from 'axios';
-
+    import router from '../../router'
     const geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
@@ -37,30 +37,11 @@
 
     export default {
         methods: {
-            onMapReady(readyEvent) {
-                this.mapArgs = readyEvent;
-                readyEvent.map.addMarkers(this.markers);
+            openModal(){
+                console.log("hit p2")
+                this.$showModal(router.Alert, {})
             },
-            getLocation() {
-                geolocation
-                    .getCurrentLocation({
-                        desiredAccuracy: Accuracy.high,
-                        maximumAge: 5000,
-                        timeout: 20000
-                    })
-                    .then(res => {
-                        this.lati = res.latitude;
-                        this.lon = res.longitude;
-                        this.speed = res.speed;
-
-                        console.log('longitude', this.lon);
-                        console.log('latitude', this.lati);
-                    })
-                    .catch((error) => {
-                        console.log('geolocation error', error);
-                    });
-            },
-            checkUserMakerLocation(markers) {
+            checkUserMarkerLocation(markers) {
                 for(let key in markers) {
                 let {lat, lng, id} = markers[key];
                 lng = lng.toPrecision(7);
@@ -82,6 +63,32 @@
                     })
                 }, 5000);
                 }
+            },
+            onMapReady(readyEvent) {
+                this.openModal();
+                this.mapArgs = readyEvent;
+                // this.checkUserMarkerLocation(this.markers);
+                readyEvent.map.addMarkers(this.markers);
+
+            },
+            getLocation() {
+                geolocation
+                    .getCurrentLocation({
+                        desiredAccuracy: Accuracy.high,
+                        maximumAge: 5000,
+                        timeout: 20000
+                    })
+                    .then(res => {
+                        this.lati = res.latitude;
+                        this.lon = res.longitude;
+                        this.speed = res.speed;
+
+                        console.log('longitude', this.lon);
+                        console.log('latitude', this.lati);
+                    })
+                    .catch((error) => {
+                        console.log('geolocation error', error);
+                    });
             },
         },
         data() {
@@ -129,6 +136,7 @@
                     }
                 ],
                 mapArgs: null,
+                props: ['socket'],
                 pickerItems: [
                     15, 35, 55
                 ],
@@ -141,8 +149,7 @@
         mounted() {
             console.log('mounted')
             geolocation.enableLocationRequest();
-            this.checkUserMakerLocation(this.markers);
-
+            this.checkUserMarkerLocation(this.markers);
         }
     };
 </script>
