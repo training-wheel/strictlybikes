@@ -5,7 +5,7 @@
         <label :text="name" flexGrow="1" />
         <label :text="totalDist" flexGrow="1" />
         <Badges backgroundColor="#0F62AB" flexGrow="1" />
-        <PastTrips />
+        
     </FlexboxLayout>
   </Page>
 </template>
