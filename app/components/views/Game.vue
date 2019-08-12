@@ -8,7 +8,7 @@
                     latitude="29.9643504"
                     longitude="-90.0816426"
                     showUserLocation="true"
-                    zoomLevel="9"
+                    zoomLevel="11"
                     @mapReady="onMapReady($event)"
                     height=80%
                     width=*>
@@ -39,8 +39,30 @@
 
         methods: {
             playing(){
-                    this.socket.on('playing', (message) => {
-                    console.log(message);
+                    this.socket.on('playing', (markersArray) => {
+                        markersArray.forEach((marker) => {
+                            this.mapArgs.map.addMarkers([{
+                                id: marker.id,
+                                lat: marker.lat,
+                                lng: marker.long,
+                                title: "Marker From the server",
+                                subtitle: "D",
+                                onCalloutTap: () => {
+                                    utils.openUrl("https://www.thepolyglotdeveloper.com");
+                                }
+                            }])
+                            this.markers.push({
+                                id: marker.id,
+                                lat: marker.lat,
+                                lng: marker.long,
+                                title: "Marker From the server",
+                                subtitle: "D",
+                                onCalloutTap: () => {
+                                    utils.openUrl("https://www.thepolyglotdeveloper.com");
+                                }
+                            })
+                        }) 
+                        this.checkUserMarkerLocation(this.markers);
                     });
             },
             openAlertModal(){
@@ -56,24 +78,20 @@
                 // this.$model.close(router.Alert);
             },
             checkUserMarkerLocation(markers) {
+                console.log('starting location check..');
                 for(let key in markers) {
                 let {lat, lng, id} = markers[key];
                 lng = lng.toPrecision(7);
                 lat = lat.toPrecision(7);
 
                 this.timer = timerModule.setInterval(() => {
-					//use setinterval to constantly check users location against marker location
                     this.mapArgs.map.getUserLocation().then(
                         (userLocation) => {
                             console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
                             console.log("Current user speed: " +  userLocation.speed);
                             if(userLocation.location.lat.toPrecision(7) === lat && userLocation.location.lng.toPrecision(7) === lng) {
                                 this.mapArgs.map.removeMarkers([id]);
-                                console.log(id);
-                                console.log('User location is near marker');
-                            } else {
-                                console.log('User location is not near marker');
-                            }
+                            } 
                     })
                 }, 5000);
                 }
@@ -82,7 +100,6 @@
                 this.openAlertModal();
                 this.mapArgs = readyEvent;
                 readyEvent.map.addMarkers(this.markers);
-                this.checkUserMarkerLocation(this.markers);
                 this.playing();
             },
             getLocation() {
@@ -109,19 +126,7 @@
             return {
                 warningShown: null,
                 mapBoxApi: require('../../config').MAPBOX_API,
-                markers: [
-                    {
-                        id: 1,
-                        lat: 29.96435,
-                        lng: -90.082643,
-                        title: "Current Point",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-
-                    },
-                ],
+                markers: [],
                 mapArgs: null,
                 pickerItems: [
                     15, 35, 55

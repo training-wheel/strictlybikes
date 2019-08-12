@@ -49,10 +49,11 @@
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let picker = this.$refs.apiPicker.nativeView;
+            console.log(picker.selectedValue);
             // get game data
             let gameInfo = {
-                lat: "90",
-                long: "30",
+                lat: "29.977936",
+                long: "-90.080559",
                 markerLimit: 3,
                 playerLimit: 2,
                 timeLimit: 100,
@@ -76,7 +77,7 @@
                         });
                 });
                 socket.on('join', (response) => {
-                    console.log(response);
+                    console.log('response', response);
                     this.$goto('Game', {
                         props: {
                             socket: socket,
