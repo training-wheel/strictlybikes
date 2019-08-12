@@ -1,18 +1,13 @@
 <template>
-  <scrollView>
-    <WrapLayout backgroundColor="#08F">
-      
-      {{ badges.map((badge) => {
-        return (
-          <StackLayout>
-            <Image :src="badges.image" max horizontalAlignment="center" height=10% />
-            <Label :text="badges.text" horizontalAlignment="center" />
-          </StackLayout>
+  <ListView for="badge in badges" >
+    <v-template>
+      <WrapLayout>
+        <Image :src="badge.image" height="20%" width="20%"  />
+        <Label :text="badge.text" color="#ffffff" fontWeight="bold" />
+      </WrapLayout>
 
-        )
-      }) }}
-    </WrapLayout>
-  </scrollView>
+    </v-template>
+  </ListView>
 </template>
 
 <script>
@@ -26,12 +21,19 @@
     },
     data() {
       return {
-        done: 50,
-        max: 100,
+        
         badges: [
           {
-            text: "First mile",
-            image: "https://www.pokemoncenter.com/wcsstore/PokemonCatalogAssetStore/images/catalog/products/P3025/710-02306/P3025_710-02306_05.jpg",
+            text: "5 wins",
+            image: "~/assets/badges/5Badge.png",
+          },
+          {
+            text: "10 wins",
+            image: "~/assets/badges/10 Badge.png"
+          },
+          {
+            text: "15 wins",
+            image: "~/assets/badges/15Badge.png"
           }
         ]
       }
