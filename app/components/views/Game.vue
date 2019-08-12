@@ -35,21 +35,13 @@
     const timerModule = require("tns-core-modules/timer");
 
     export default {
-        mounted() {
-            console.log('mounted')
-        },
-        created(){
-            this.playing();
-        },
         props: ['socket'],
 
         methods: {
             playing(){
-                if(this.socket){
                     this.socket.on('playing', (message) => {
-                        console.log(message);
+                    console.log(message);
                     });
-                }
             },
             openAlertModal(){
                 if(!this.warningShown){
@@ -91,6 +83,7 @@
                 this.mapArgs = readyEvent;
                 readyEvent.map.addMarkers(this.markers);
                 this.checkUserMarkerLocation(this.markers);
+                this.playing();
             },
             getLocation() {
                 geolocation
