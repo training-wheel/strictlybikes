@@ -39,7 +39,7 @@
     var timerModule = require("tns-core-modules/timer");
     var geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
-    
+
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
@@ -47,8 +47,7 @@
     export default {
         methods: {
             handleCreateClick(){
-                console.log(appSettings);
-            var testSocket = new SocketIO(this.baseUrl);
+            var socket = new SocketIO(this.baseUrl);
             let picker = this.$refs.apiPicker.nativeView;
             // get game data
             let gameInfo = {
@@ -68,19 +67,19 @@
                 }
             })
             .then((result) => {
-                testSocket.connect();
-                testSocket.on('connect', () => {
-                    testSocket.emit('joinGame', {
+                socket.connect();
+                socket.on('connect', () => {
+                    socket.emit('joinGame', {
                         userId: result.data.userId,
                         room: this.textFieldValue,
                         jwt: this.jwt,
                         });
                 });
-                testSocket.on('join', (response) => {
+                socket.on('join', (response) => {
                     console.log(response);
                     this.$goto('Game', {
                         props: {
-                            socket: this.socket,
+                            socket: socket,
                         }
                     });
                     console.log(response);
@@ -95,9 +94,6 @@
                 console.log('picker', picker.selectedValue)
             },
             onMapReady(readyEvent) {
-                this.mapArgs = readyEvent;
-                readyEvent.map.addMarkers(this.markers);
-
             },
             getLocation() {
                 geolocation
@@ -118,59 +114,13 @@
                         console.log('geolocation error', error);
                     });
             },
-            onMapReady(args) {
-                this.mapArgs = args;
-            }
         },
-    mounted() {
+    created() {
     geolocation.enableLocationRequest();
     this.getLocation();
     },
         data() {
             return {
-                markers: [
-                    {
-                        id: 1,
-                        lat: 29.96435,
-                        lng: -90.082643,
-                        title: "Current Point",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        id: 2,
-                        lat: 30.014688,
-                        lng: -90.057719, 
-                        title: "Point 1",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        id: 3,
-                        lat: 29.66435,
-                        lng: -90.081643,
-                        title: "Point 2",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        id: 4,
-                        lat: 30.06435,
-                        lng: -90.081643,
-                        title: "Point 3",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    }
-                ],
-                mapArgs: null,
                 pickerItems: [
                     1, 3, 5
                 ],
