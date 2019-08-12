@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
+                    :accessToken="mapBoxApi"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -52,8 +52,8 @@
             console.log(picker.selectedValue);
             // get game data
             let gameInfo = {
-                lat: "90",
-                long: "30",
+                lat: "29.977936",
+                long: "-90.080559",
                 markerLimit: 3,
                 playerLimit: 2,
                 timeLimit: 100,
