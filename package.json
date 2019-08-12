@@ -27,6 +27,7 @@
     "save": "^2.4.0",
     "tns-core-modules": "~6.0.0",
     "typescript": "^3.5.3",
+    "vue-timers": "^2.0.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -61,10 +62,10 @@
   "license": "MIT",
   "nativescript": {
     "id": "org.nativescript.application",
-    "tns-ios": {
+    "tns-android": {
       "version": "6.0.1"
     },
-    "tns-android": {
+    "tns-ios": {
       "version": "6.0.1"
     }
   }

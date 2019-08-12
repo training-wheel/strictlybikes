@@ -7,7 +7,7 @@ import {
   ANDROID_REDIRECT_URI,
   ANDROID_URL_SCHEME,
   SERVER_BASE_URL,
-} from './config.js';
+} from '../config.js';
 
 let client: TnsOAuthClient = null;
 
@@ -44,7 +44,7 @@ export const tnsOauthLogin = (providerType, routeCallback) => {
       strictlyServer.post('/login')
         .then((response) => {
           const token = response.data;
-          appSettings.setString("jwt", JSON.stringify(token));
+          appSettings.setString("jwt", token);
           routeCallback();
         })
         .catch((err) => {

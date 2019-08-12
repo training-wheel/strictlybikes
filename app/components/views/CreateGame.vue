@@ -3,24 +3,24 @@
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    accessToken=process.env.MAP_ACCESS_TOKEN
+                    :accessToken="mapBoxApi"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
                     showUserLocation="true"
-                    zoomLevel="12"
+                    zoomLevel="9"
                     @mapReady="onMapReady($event)"
                     height=50%
                     width=*>
                 </Mapbox>
-                
+                <TextField v-model="textFieldValue" hint="Name Your Game" />
                 <!-- <RadDataForm :source="form" /> -->
                 <PickerField hint="Radius" :items="pickerItems" ref="apiPicker"></PickerField>
-                
+
                 <StackLayout orientation="horizontal">
-                    <Button text="Create Game" width="100%" height="30%"
+                    <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
-                    color="white" fontSize="20" fontWeight="bold"
+                    color="white" fontSize="15" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
                 </StackLayout>
         </StackLayout>
@@ -35,48 +35,60 @@
     import PickerField from 'nativescript-picker/vue';
     import { SocketIO } from 'nativescript-socketio';
     import axios from 'axios'
+    import * as appSettings from 'tns-core-modules/application-settings';
+    var timerModule = require("tns-core-modules/timer");
+    var geolocation = require("nativescript-geolocation");
+    const {Accuracy} = require("tns-core-modules/ui/enums");
     
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
-    const geolocation = require("nativescript-geolocation");
-    const {Accuracy} = require("tns-core-modules/ui/enums");
 
     export default {
         methods: {
             handleCreateClick(){
-            var testSocket = new SocketIO('https://2fa9f776.ngrok.io');
-            let userTypedInCode = 'game1'
+                console.log(appSettings);
+            var testSocket = new SocketIO(this.baseUrl);
+            let picker = this.$refs.apiPicker.nativeView;
             // get game data
             let gameInfo = {
                 lat: "90",
-                long: "90",
+                long: "30",
                 markerLimit: 3,
                 playerLimit: 2,
                 timeLimit: 100,
                 startTime: 20,
-                code: userTypedInCode,
+                code: this.textFieldValue,
+                radius: picker.selectedValue,
             }
             // make request to server save a game to the DB (sending game info)
-            axios.post('https://2fa9f776.ngrok.io/createGame', gameInfo)
+            axios.post(`${this.baseUrl}/createGame`, gameInfo, {
+                headers: {
+                jwt: this.jwt,
+                }
+            })
             .then((result) => {
                 testSocket.connect();
                 testSocket.on('connect', () => {
                     testSocket.emit('joinGame', {
                         userId: result.data.userId,
-                        room: userTypedInCode,
+                        room: this.textFieldValue,
+                        jwt: this.jwt,
                         });
                 });
                 testSocket.on('join', (response) => {
                     console.log(response);
-                    
+                    this.$goto('Game', {
+                        props: {
+                            socket: this.socket,
+                        }
+                    });
+                    console.log(response);
                 })
             })
             .catch((err)=>{
                 console.error(err);
             })
-
-            
         },
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
@@ -84,44 +96,8 @@
             },
             onMapReady(readyEvent) {
                 this.mapArgs = readyEvent;
-                readyEvent.map.addMarkers([
-                    // {
-                    //     lat: 29.9643504,
-                    //     lng: -90.0816426,
-                    //     title: "Tracy, CA",
-                    //     subtitle: "Home of The Polyglot Developer!",
-                    //     onCalloutTap: () => {
-                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
-                    //     }
-                    // },
-                    {
-                        lat: 30.0146884,
-                        lng: -90.0577187, 
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        lat: 29.6643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    },
-                    {
-                        lat: 30.0643504,
-                        lng: -90.0816426,
-                        title: "Tracy, CA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
-                    }
-                ]);
+                readyEvent.map.addMarkers(this.markers);
+
             },
             getLocation() {
                 geolocation
@@ -137,48 +113,77 @@
 
                         console.log('longitude', this.lon);
                         console.log('latitude', this.lati);
-
-                       this.mapArgs.map.trackUser({
-                            mode: "FOLLOW", // "NONE" | "FOLLOW" | "FOLLOW_WITH_HEADING" | "FOLLOW_WITH_COURSE"
-                            animated: true
-                        });
-                        // get the address (REQUIRES YOUR OWN GOOGLE MAP API KEY!)
-                        fetch(
-                                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                                res.latitude +
-                                "," +
-                                res.longitude +
-                                "&key=AIzaSyBs6LSqUOFPrr9P4GCvw1NIbA2y0zVZl8k"
-                            )
-                            .then(response => response.json())
-                            .then(r => {
-                                this.addr = r.results[0].formatted_address;
-                        });
                     })
                     .catch((error) => {
                         console.log('geolocation error', error);
                     });
             },
+            onMapReady(args) {
+                this.mapArgs = args;
+            }
         },
-        mounted() {
-        geolocation.enableLocationRequest();
+    mounted() {
+    geolocation.enableLocationRequest();
+    this.getLocation();
     },
         data() {
             return {
+                markers: [
+                    {
+                        id: 1,
+                        lat: 29.96435,
+                        lng: -90.082643,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 2,
+                        lat: 30.014688,
+                        lng: -90.057719, 
+                        title: "Point 1",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 3,
+                        lat: 29.66435,
+                        lng: -90.081643,
+                        title: "Point 2",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    },
+                    {
+                        id: 4,
+                        lat: 30.06435,
+                        lng: -90.081643,
+                        title: "Point 3",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+                    }
+                ],
                 mapArgs: null,
                 pickerItems: [
-                    15, 35, 55
+                    1, 3, 5
                 ],
                 lati: "",
                 lon: "",
                 speed: "",
-                addr: ""
+                addr: "",
+                textFieldValue: "",
+                jwt: appSettings.getString('jwt'),
+                baseUrl: require('../../config').SERVER_BASE_URL,
+                mapBoxApi: require('../../config').MAPBOX_API,
             };
         },
-        mounted() {
-            console.log('mounted')
-        geolocation.enableLocationRequest();
-        }
     };
     
 </script>

@@ -1,6 +1,6 @@
 # Config
 .env
-app/auth/config.js
+app/config.js
 
 # JetBrains project files
 .idea
