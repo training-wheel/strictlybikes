@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    :accessToken="mapBoxApi"
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjanoxZ3dsMXUwMGthM29udDZyYmR1azkzIn0.dTFjDdkaX0N-YgfOgLLoOQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -49,6 +49,7 @@
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let picker = this.$refs.apiPicker.nativeView;
+            console.log(picker.selectedValue);
             // get game data
             let gameInfo = {
                 lat: "90",
@@ -76,7 +77,7 @@
                         });
                 });
                 socket.on('join', (response) => {
-                    console.log(response);
+                    console.log('response', response);
                     this.$goto('Game', {
                         props: {
                             socket: socket,

@@ -3,7 +3,7 @@
         <ActionBar class="action-bar" title="Game"></ActionBar>
         <StackLayout>
                 <Mapbox
-                    :accessToken="mapBoxApi"
+                    accessToken="sk.eyJ1Ijoic3RyaWN0bHliaWtlcyIsImEiOiJjano3azBncjUwaW1tM21taWZzdnNkYTExIn0.4QrrCpVn9PVSZWLK51evCQ"
                     mapStyle="traffic_day"
                     latitude="29.9643504"
                     longitude="-90.0816426"
@@ -40,7 +40,7 @@
         methods: {
             playing(){
                     this.socket.on('playing', (message) => {
-                    console.log(message);
+                    console.log('message', message);
                     });
             },
             openAlertModal(){
@@ -121,6 +121,39 @@
                         }
 
                     },
+                    {
+                        id: 1,
+                        lat: 29.97627547895124,
+                        lng: -90.08806161667722,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+
+                    },
+                    {
+                        id: 1,
+                        lat: 29.971040805707712,
+                        lng: -90.08158966382989,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+
+                    },
+                    {
+                        id: 1,
+                        lat: 29.972480229021784,
+                        lng: -90.07679487450551,
+                        title: "Current Point",
+                        subtitle: "Home of The Polyglot Developer!",
+                        onCalloutTap: () => {
+                            utils.openUrl("https://www.thepolyglotdeveloper.com");
+                        }
+
+                    }
                 ],
                 mapArgs: null,
                 pickerItems: [
