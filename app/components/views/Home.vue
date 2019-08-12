@@ -39,7 +39,7 @@
     methods: {
         handleLobbyClick(){
         // connect socket
-        var socket = new SocketIO('https://133ddb98.ngrok.io');
+        var socket = new SocketIO(this.baseUrl);
         socket.connect();
         
         // emit the need for lobby join
@@ -55,7 +55,7 @@
     },
     data() {
       return {
-
+          baseUrl: require('../../config').SERVER_BASE_URL,
       }
     },
     
