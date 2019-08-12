@@ -8,7 +8,7 @@
                     latitude="29.9643504"
                     longitude="-90.0816426"
                     showUserLocation="true"
-                    zoomLevel="9"
+                    zoomLevel="11"
                     @mapReady="onMapReady($event)"
                     height=80%
                     width=*>
@@ -39,8 +39,31 @@
 
         methods: {
             playing(){
-                    this.socket.on('playing', (message) => {
-                    console.log('message', message);
+                    this.socket.on('playing', (markersArray) => {
+                        markersArray.forEach((marker) => {
+                            this.mapArgs.map.addMarkers([{
+                                id: 10,
+                                lat: marker.lat,
+                                lng: marker.long,
+                                title: "Marker From the server",
+                                subtitle: "yaya!!!",
+                                onCalloutTap: () => {
+                                    utils.openUrl("https://www.thepolyglotdeveloper.com");
+                                }
+                            }])
+                        }) 
+                    console.log('markersArray', markersArray);
+                    // this.mapArgs.map.addMarkers([{
+                    //     id: 10,
+                    //     lat: markersArray[0].lat,
+                    //     lng: markersArray[0].long,
+                    //     title: "heyPop",
+                    //     subtitle: "yaya!!!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
+
+                    // }]);
                     });
             },
             openAlertModal(){
@@ -110,50 +133,50 @@
                 warningShown: null,
                 mapBoxApi: require('../../config').MAPBOX_API,
                 markers: [
-                    {
-                        id: 1,
-                        lat: 29.96435,
-                        lng: -90.082643,
-                        title: "HAHA",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
+                    // {
+                    //     id: 1,
+                    //     lat: 29.96435,
+                    //     lng: -90.082643,
+                    //     title: "HAHA",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
 
-                    },
-                    {
-                        id: 2,
-                        lat: 29.976275,
-                        lng: -90.088062,
-                        title: "Are you fast enough",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
+                    // },
+                    // {
+                    //     id: 2,
+                    //     lat: 29.976275,
+                    //     lng: -90.088062,
+                    //     title: "Are you fast enough",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
 
-                    },
-                    {
-                        id: 3,
-                        lat: 29.971040805707712,
-                        lng: -90.08158966382989,
-                        title: "Be the first one",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
+                    // },
+                    // {
+                    //     id: 3,
+                    //     lat: 29.971040805707712,
+                    //     lng: -90.08158966382989,
+                    //     title: "Be the first one",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
 
-                    },
-                    {
-                        id: 4,
-                        lat: 29.972480229021784,
-                        lng: -90.07679487450551,
-                        title: "Diamond",
-                        subtitle: "Home of The Polyglot Developer!",
-                        onCalloutTap: () => {
-                            utils.openUrl("https://www.thepolyglotdeveloper.com");
-                        }
+                    // },
+                    // {
+                    //     id: 4,
+                    //     lat: 29.972480229021784,
+                    //     lng: -90.07679487450551,
+                    //     title: "Diamond",
+                    //     subtitle: "Home of The Polyglot Developer!",
+                    //     onCalloutTap: () => {
+                    //         utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    //     }
 
-                    }
+                    // }
                 ],
                 mapArgs: null,
                 pickerItems: [
