@@ -30,9 +30,11 @@
     import Vue from "nativescript-vue";
     import axios from 'axios';
     import router from '../../router'
+    import * as appSettings from 'tns-core-modules/application-settings';
     const geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
+    const jwt = appSettings.getString('jwt');
 
     export default {
         props: ['socket'],
@@ -40,6 +42,12 @@
         methods: {
             playing(){
                     this.socket.on('playing', (markersArray) => {
+                        this.socket.on('hit', (username) => {
+                            console.log("username", username);
+                        })
+                        this.socket.on('end', () => {
+                            this.endGame();
+                        })
                         markersArray.forEach((marker) => {
                             this.mapArgs.map.addMarkers([{
                                 id: marker.id,
@@ -75,10 +83,13 @@
                 }
             },
             endGame(){
-                // this.$model.close(router.Alert);
+                console.log("end the game now")
+                this.$showModal(router.Summary, {});
             },
             checkUserMarkerLocation(markers) {
                 console.log('starting location check..');
+                // let deletedMarkers = [];
+                // && !deletedMarkers.includes(id)
                 for(let key in markers) {
                 let {lat, lng, id} = markers[key];
                 lng = lng.toPrecision(7);
@@ -87,10 +98,17 @@
                 this.timer = timerModule.setInterval(() => {
                     this.mapArgs.map.getUserLocation().then(
                         (userLocation) => {
-                            console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
-                            console.log("Current user speed: " +  userLocation.speed);
-                            if(userLocation.location.lat.toPrecision(7) === lat && userLocation.location.lng.toPrecision(7) === lng) {
+                            // console.log("Current user location: " +  userLocation.location.lat + ", " + userLocation.location.lng);
+                            // console.log("Current user speed: " +  userLocation.speed);
+                            if(userLocation.location.lat.toPrecision(7) === lat && userLocation.location.lng.toPrecision(7) === lng ) {
                                 this.mapArgs.map.removeMarkers([id]);
+                                // deletedMarkers.push(id);
+                                // console.log("same place", this.socket);
+                                this.socket.emit('markerHit', {
+                                    id,
+                                    jwt,
+                                })
+                                window.navigator.vibrate(200);
                             } 
                     })
                 }, 5000);

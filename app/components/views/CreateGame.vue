@@ -49,7 +49,7 @@
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let picker = this.$refs.apiPicker.nativeView;
-            console.log(picker.selectedValue);
+            // console.log(picker.selectedValue);
             // get game data
             let gameInfo = {
                 lat: "29.977936",

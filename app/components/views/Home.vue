@@ -10,7 +10,7 @@
     
         
         <ScrollView>
-            <StackLayout orientation="horizontal" width="*" height="*"
+            <StackLayout orientation="vertical" width="*" height="*"
                 backgroundColor="white">
                 <!-- <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz1DzGXXyJPBs5-x2cv4J27YmuyUb0XZLXQPynHYy4qFxGvAKHCw" height="10%"></Image> -->
                 <Button text="Create Game" width="50%" height="5%"
