@@ -2,9 +2,8 @@
   <Page class="page">
     <FlexboxLayout height="98%" flexDirection="column">
       <StackLayout>
-        <Label :text="name + '\'s Profile'" flexGrow=".3" fontSize="30" color="#000000" fontWeight="bold" horizontalAlignment="center" />
-        <Image src="https://avatars1.githubusercontent.com/u/45217649?s=460&v=4" height="20%" width="auto" />
-        <Label text="Hello there. I like potatoes. Potatoes. Potatoes." horizontalAlignment="center" />
+        <Label :text="username + '\'s Profile'" flexGrow=".3" fontSize="30" color="#000000" fontWeight="bold" horizontalAlignment="center" />
+        <Image :src="imageUrl" height="20%" width="auto" />
         <Label text="Badges" fontSize="30" color="black" />
         <Badges backgroundColor="#0F62AB" />
         <PastGames />
@@ -15,8 +14,11 @@
 </template>
 
 <script>
-import Badges from "./Badges";
-import PastGames from "./PastGames";
+  import Badges from "./Badges";
+  import PastGames from "./PastGames";
+  import axios from 'axios';
+  import * as appSettings from 'tns-core-modules/application-settings';
+
   export default {
     name: "Profile",
 
@@ -24,7 +26,6 @@ import PastGames from "./PastGames";
       Badges,
       PastGames
     },
-
     methods: {
       name() {
         
@@ -32,11 +33,31 @@ import PastGames from "./PastGames";
     },
     data() {
       return {
-        name: "Miguel",
-        totalDist: 10,
-
+        baseUrl: require('../../../config').SERVER_BASE_URL,
+        username: '',
+        imageUrl: '',
+        userMetrics: [],
+        userBadges: [],
       }
     },
+    mounted() {
+      const token = appSettings.getString('jwt');
+      axios.get(`${this.baseUrl}/profile`, {
+        headers: {
+          jwt: token,
+        }
+      })
+        .then((result) => {
+          const { username, imageUrl, userMetrics, userBadges } = result.data;
+          this.username = username;
+          this.imageUrl = imageUrl;
+          this.userMetrics = userMetrics;
+          this.userBadges = userBadges;
+        })
+        .catch((err) => {
+          console.error(`Failed to fetch profile: ${err}`);
+        });
+    }
   }
 </script>
 
