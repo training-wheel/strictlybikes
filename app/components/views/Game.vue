@@ -5,7 +5,7 @@
             <Label :text="room" class="action-label" color="white"></Label>
             <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
           </StackLayout>
-        <Button text="Leaderbaord" width="100%" height="60%" backgroundColor="#5EB0E5"
+            <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
                         marginTop="10" textAlignment="center" color="white"
                         fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />    
 
