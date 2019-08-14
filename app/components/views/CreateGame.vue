@@ -97,6 +97,7 @@
             onMapReady(readyEvent) {
             },
             getLocation() {
+                geolocation.enableLocationRequest();
                 geolocation
                     .getCurrentLocation({
                         desiredAccuracy: Accuracy.high,
@@ -117,7 +118,7 @@
             },
         },
     created() {
-    geolocation.enableLocationRequest();
+    
     this.getLocation();
     },
         data() {
