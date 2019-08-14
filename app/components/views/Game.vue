@@ -35,19 +35,22 @@
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
     const jwt = appSettings.getString('jwt');
+    const Toast = require("nativescript-toast");
 
     export default {
       props: ['socket'],
 
       methods: {
         playing() {
-          this.socket.on('playing', (markersArray) => {
-            this.socket.on('hit', (username) => {
-              console.log("username", username);
+          this.socket.on('hit', (username) => {
+              console.log(username);
+              Toast.makeText(`${username} hit a marker!`).show();
             })
             this.socket.on('end', () => {
               this.endGame();
             })
+          this.socket.on('playing', (markersArray) => {
+            
             markersArray.forEach((marker) => {
               this.mapArgs.map.addMarkers([{
                 id: marker.id,
@@ -92,7 +95,7 @@
           this.$showModal(router.Summary, {});
         },
         checkUserMarkerLocation(markers) {
-          console.log('starting location ..');
+          console.log('starting location timeout..');
           let deletedMarkers = [];
           for (let key in markers) {
             let {
@@ -100,9 +103,8 @@
               lng,
               id
             } = markers[key];
-            lng = lng.toPrecision(6);
-            lat = lat.toPrecision(6);
-            console.log("type of lng", typeof lng);
+            lng = lng.toPrecision(5);
+            lat = lat.toPrecision(5);
 
             this.timer = timerModule.setInterval(() => {
               geolocation.getCurrentLocation({
@@ -110,10 +112,9 @@
                   timeout: 20000
                 }).then(
                   (userLocation) => {
-                    if (userLocation.latitude.toPrecision(6) == lat && userLocation.longitude.toPrecision(6) == lng && !deletedMarkers.includes(id)) {
-                      console.log(" YOU ARE CLOSE ");
+                    if (userLocation.latitude.toPrecision(5) == lat && userLocation.longitude.toPrecision(5) == lng && !deletedMarkers.includes(id)) {
+                      deletedMarkers.push(id);
                       this.mapArgs.map.removeMarkers([id]);
-                      console.log([id]);
                       this.socket.emit('markerHit', {
                         id,
                         jwt,
@@ -144,9 +145,6 @@
               this.lati = res.latitude;
               this.lon = res.longitude;
               this.speed = res.speed;
-
-              console.log('longitude', this.lon);
-              console.log('latitude', this.lati);
             })
             .catch((error) => {
               console.log('geolocation error', error);
@@ -159,9 +157,6 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           mapArgs: null,
-          pickerItems: [
-            15, 35, 55
-          ],
           lati: "",
           lon: "",
           speed: "",

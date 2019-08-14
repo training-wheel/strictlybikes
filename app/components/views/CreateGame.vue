@@ -64,8 +64,8 @@
                 code: this.textFieldValue,
                 radius: radius.selectedValue,
                 markerLimit: markerLimit.selectedValue,
-                timeLimit: timeLimit.selectedValue,
-                playerLimit: playerLimit.selectedValue * 60000,
+                timeLimit: timeLimit.selectedValue * 600000,
+                playerLimit: playerLimit.selectedValue,
             }
             // make request to server save a game to the DB (sending game info)
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
