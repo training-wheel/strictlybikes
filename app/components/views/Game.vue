@@ -18,7 +18,7 @@
 
                     <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
                         marginTop="10" textAlignment="center" color="white"
-                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -83,6 +83,9 @@
             })
             this.warningShown = true;
           }
+        },
+        onLeaveGame(){
+          this.$goto('Home');
         },
         endGame() {
           console.log("end the game now")
