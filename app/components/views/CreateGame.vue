@@ -129,6 +129,7 @@
                 jwt: appSettings.getString('jwt'),
                 baseUrl: require('../../config').SERVER_BASE_URL,
                 mapBoxApi: require('../../config').MAPBOX_API,
+                selectedBarIndex: 0,
             };
         },
     };
