@@ -43,11 +43,27 @@
 
     export default {
         methods: {
+            getGameInfo(){
+                if(this.selectedBarIndex === 0){
+                    //Alley-Cat
+                    return {
+
+                    }
+                }else if (this.selectedBarIndex === 1){
+                    //Time attack
+                    return {
+
+                    }
+                }else {
+                    return {
+                    //Team Sprint
+                    }
+                }
+            },
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
            
-            // console.log(picker.selectedValue);
-            // get game data
+            // set game data equal to a result from a function that takes in a number corrisponding to the index of the item that was clicked
             let gameInfo = {
                 lat: "29.977936",
                 long: "-90.080559",
@@ -120,7 +136,21 @@
     },
         data() {
             return {
-                
+                segmentedBarItems: (function() {
+                    var segmentedBarModule = require(
+                        "tns-core-modules/ui/segmented-bar");
+                    let segmentedBarItem1 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem1.title = "Item 1";
+                    let segmentedBarItem2 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem2.title = "Item 2";
+                    let segmentedBarItem3 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem3.title = "Item 3";
+                    return [
+                        segmentedBarItem1,
+                        segmentedBarItem2,
+                        segmentedBarItem3
+                    ];
+                })(),
                 lati: "",
                 lon: "",
                 speed: "",
