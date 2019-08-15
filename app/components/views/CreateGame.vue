@@ -13,8 +13,7 @@
                     height=50%
                     width=*>
                 </Mapbox>
-                <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex"
-                    @selectedIndexChange="onSelectedIndexChange" />
+                <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex" />
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
                     <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
@@ -43,20 +42,42 @@
 
     export default {
         methods: {
-            getGameInfo(){
-                if(this.selectedBarIndex === 0){
+            getGameInfo() {
+                if (this.selectedBarIndex === 0) {
                     //Alley-Cat
                     return {
-
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 2,
+                        markerLimit: 3,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 2,
                     }
-                }else if (this.selectedBarIndex === 1){
+                } else if (this.selectedBarIndex === 1) {
                     //Time attack
                     return {
-
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 1,
+                        markerLimit: 10,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 2,
                     }
-                }else {
+                } else {
                     return {
-                    //Team Sprint
+                        //Team Sprint
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 5,
+                        markerLimit: 10,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 4,
                     }
                 }
             },
@@ -64,16 +85,7 @@
             var socket = new SocketIO(this.baseUrl);
            
             // set game data equal to a result from a function that takes in a number corrisponding to the index of the item that was clicked
-            let gameInfo = {
-                lat: "29.977936",
-                long: "-90.080559",
-                startTime: 20,
-                code: this.textFieldValue,
-                radius: radius.selectedValue,
-                markerLimit: markerLimit.selectedValue,
-                timeLimit: 5 * 600000,
-                playerLimit: playerLimit.selectedValue,
-            }
+            let gameInfo = this.getGameInfo();
             // make request to server save a game to the DB (sending game info)
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
