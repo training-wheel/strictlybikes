@@ -91,18 +91,19 @@
           if (!this.warningShown) {
             this.$showModal(router.Alert, {
               props: {
-                socket: this.socket
+                socket: this.socket,
+                
               }
             })
             this.warningShown = true;
           }
         },
         showLeaderboard(){
-            console.log("this.gameData", this.gameData);
             this.$showModal(router.Leaderboard, {
                 props: {
                 gameData: this.gameData,
-                socket: this.socket
+                socket: this.socket,
+                players: this.players,
               }
             });
         },
