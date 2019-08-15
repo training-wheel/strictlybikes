@@ -14,14 +14,6 @@
                     width=*>
                 </Mapbox>
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
-                    <GridLayout rows="auto" columns="*">
-                        <PickerField row="0" col="0" hint="Radius" :items="radius" ref="radius"></PickerField>
-                        <PickerField row="0" col="1" hint="Marker Count" :items="markerCounts" ref="markerCount" horizontalAlignment="right"></PickerField>
-                    </GridLayout>
-                    <GridLayout rows="auto" columns="*">
-                        <PickerField row="1" col="0" hint="Player Limit" :items="playerLimits" ref="playerLimit"></PickerField>
-                        <PickerField row="1" col="1" hint="Time Limit" :items="timeLimits" ref="timeLimit" horizontalAlignment="right"></PickerField>
-                    </GridLayout>
                     <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="15" fontWeight="bold"
@@ -51,10 +43,7 @@
         methods: {
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
-            let radius = this.$refs.radius.nativeView;
-            let markerLimit = this.$refs.markerCount.nativeView;
-            let playerLimit = this.$refs.playerLimit.nativeView;
-            let timeLimit = this.$refs.timeLimit.nativeView;
+           
             // console.log(picker.selectedValue);
             // get game data
             let gameInfo = {
@@ -64,7 +53,7 @@
                 code: this.textFieldValue,
                 radius: radius.selectedValue,
                 markerLimit: markerLimit.selectedValue,
-                timeLimit: timeLimit.selectedValue * 600000,
+                timeLimit: 5 * 600000,
                 playerLimit: playerLimit.selectedValue,
             }
             // make request to server save a game to the DB (sending game info)
@@ -125,23 +114,11 @@
             },
         },
     created() {
-    
     this.getLocation();
     },
         data() {
             return {
-                radius: [
-                    1, 3, 5
-                ],
-                playerLimits: [
-                    1, 2, 3, 4
-                ],
-                markerCounts: [
-                    1, 3, 5
-                ],
-                timeLimits: [
-                    1, 3, 5
-                ],
+                
                 lati: "",
                 lon: "",
                 speed: "",
@@ -157,9 +134,6 @@
 </script>
 
 <style scoped>
-    .right{
-    horizontal-align: right;
-    }
     .home-panel {
         vertical-align: center;
         font-size: 20;
