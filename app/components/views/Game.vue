@@ -119,7 +119,6 @@
                   timeout: 20000
                 }).then(
                   (userLocation) => {
-                    console.log(userLocation.latitude, userLocation.longitude);
               this.mapArgs.map.addMarkers([{
                 id: 10000,
                 lat: userLocation.latitude,
@@ -153,7 +152,7 @@
                 .catch((err) => {
                   console.error("location err in game", err);
                 })
-            }, 5000);
+            }, 1000);
           }
         },
         onMapReady(readyEvent) {
