@@ -13,6 +13,8 @@
                     height=50%
                     width=*>
                 </Mapbox>
+                <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex"
+                    @selectedIndexChange="onSelectedIndexChange" />
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
                     <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
