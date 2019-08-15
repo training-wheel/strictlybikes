@@ -87,6 +87,7 @@
                     this.$goto('Game', {
                         props: {
                             socket: socket,
+                            room: this.textFieldValue,
                         }
                     });
                     console.log(response);

@@ -1,6 +1,12 @@
 <template>
     <Page class="page">
-        <ActionBar class="action-bar" title="Game"></ActionBar>
+        <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
+          <StackLayout orientation="horizontal" android:horizontalAlignment="right" backgroundColor="#58B0E5">
+            <Label :text="room" class="action-label" color="white"></Label>
+            <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
+          </StackLayout>
+         
+        </ActionBar>
         <StackLayout>
                 <Mapbox
                     :accessToken="mapBoxApi"
@@ -38,7 +44,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket'],
+      props: ['socket', 'room'],
 
       methods: {
         playing() {
@@ -114,6 +120,7 @@
                   (userLocation) => {
                     if (userLocation.latitude.toPrecision(5) == lat && userLocation.longitude.toPrecision(5) == lng && !deletedMarkers.includes(id)) {
                       deletedMarkers.push(id);
+                      this.securedMarkers += 1;
                       this.mapArgs.map.removeMarkers([id]);
                       this.socket.emit('markerHit', {
                         id,
@@ -162,6 +169,7 @@
           speed: "",
           addr: "",
           timer: null,
+          securedMarkers: 0,
         };
       },
 
