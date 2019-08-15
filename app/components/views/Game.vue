@@ -54,6 +54,7 @@
           this.socket.on('hit', (username) => {
               console.log(username);
               Toast.makeText(`${username} hit a marker!`).show();
+              this.players[username].score++;
             })
             this.socket.on('end', () => {
               this.endGame();
