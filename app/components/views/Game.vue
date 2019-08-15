@@ -55,8 +55,9 @@
             this.socket.on('end', () => {
               this.endGame();
             })
-          this.socket.on('playing', (markersArray) => {
-            
+          this.socket.on('playing', (results) => {
+            const { markersArray, players } = results;
+            this.players = players;
             markersArray.forEach((marker) => {
               this.mapArgs.map.addMarkers([{
                 id: marker.id,
@@ -163,6 +164,7 @@
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
+          players: {},
           mapArgs: null,
           lati: "",
           lon: "",
