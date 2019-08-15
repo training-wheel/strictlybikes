@@ -146,8 +146,7 @@
                         jwt,
                       })
                     }
-
-                  this.markers.pop();
+                    this.mapArgs.map.removeMarkers([10000]);
                   })
                 .catch((err) => {
                   console.error("location err in game", err);
