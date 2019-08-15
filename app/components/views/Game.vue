@@ -6,9 +6,8 @@
             <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
           </StackLayout>
             <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
-                        marginTop="10" textAlignment="center" color="white"
-                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />    
-
+                    marginTop="10" textAlignment="center" color="white"
+                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
         </ActionBar>
         <StackLayout>
                 <Mapbox
@@ -48,7 +47,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room', 'gameMode'],
+      props: ['socket', 'room', 'gameMode', 'gameData'],
 
       methods: {
         playing() {
@@ -99,7 +98,13 @@
           }
         },
         showLeaderboard(){
-            this.$showModal(router.Leaderboard);
+            console.log("this.gameData", this.gameData);
+            this.$showModal(router.Leaderboard, {
+                props: {
+                gameData: this.gameData,
+                socket: this.socket
+              }
+            });
         },
         onLeaveGame(){
           this.$goto('Home');
@@ -196,6 +201,7 @@
       },
       data() {
         return {
+          userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
