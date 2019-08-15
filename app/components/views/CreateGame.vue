@@ -152,11 +152,11 @@
                     var segmentedBarModule = require(
                         "tns-core-modules/ui/segmented-bar");
                     let segmentedBarItem1 = new segmentedBarModule.SegmentedBarItem();
-                    segmentedBarItem1.title = "Item 1";
+                    segmentedBarItem1.title = "Alley Cat";
                     let segmentedBarItem2 = new segmentedBarModule.SegmentedBarItem();
-                    segmentedBarItem2.title = "Item 2";
+                    segmentedBarItem2.title = "Time Attack";
                     let segmentedBarItem3 = new segmentedBarModule.SegmentedBarItem();
-                    segmentedBarItem3.title = "Item 3";
+                    segmentedBarItem3.title = "Team Sprint";
                     return [
                         segmentedBarItem1,
                         segmentedBarItem2,
