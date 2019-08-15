@@ -85,7 +85,11 @@
               })
             })
             geolocation.enableLocationRequest();
+<<<<<<< HEAD
             this.checkUserMarkerLocation();
+=======
+            this.checkUserMarkerLocation(this.markers);
+>>>>>>> uncommented geolocation
           });
         },
         openAlertModal() {
