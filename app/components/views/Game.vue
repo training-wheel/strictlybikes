@@ -81,7 +81,7 @@
               })
             })
             geolocation.enableLocationRequest();
-            this.checkUserMarkerLocation(this.markers);
+            this.checkUserMarkerLocation();
           });
         },
         openAlertModal() {
@@ -101,15 +101,15 @@
           console.log("end the game now")
           this.$showModal(router.Summary, {});
         },
-        checkUserMarkerLocation(markers) {
+        checkUserMarkerLocation() {
           console.log('starting location timeout..');
           let deletedMarkers = [];
-          for (let key in markers) {
+          for (let key in this.markers) {
             let {
               lat,
               lng,
               id
-            } = markers[key];
+            } = this.markers[key];
             lng = lng.toPrecision(5);
             lat = lat.toPrecision(5);
 
@@ -119,7 +119,26 @@
                   timeout: 20000
                 }).then(
                   (userLocation) => {
-                    if (userLocation.latitude.toPrecision(5) == lat && userLocation.longitude.toPrecision(5) == lng && !deletedMarkers.includes(id)) {
+                    console.log(userLocation.latitude, userLocation.longitude);
+              this.mapArgs.map.addMarkers([{
+                id: 10000,
+                lat: userLocation.latitude,
+                lng: userLocation.longitude,
+                title: "FROM MAKIYAH",
+                onCalloutTap: () => {
+                  utils.openUrl("https://www.thepolyglotdeveloper.com");
+                }
+              }])
+              this.markers.push({
+                id: 10000,
+                lat: userLocation.latitude,
+                lng: userLocation.longitude,
+                title: "FROM MAKIYAH",
+                onCalloutTap: () => {
+                  utils.openUrl("https://www.thepolyglotdeveloper.com");
+                }
+              })
+                    if (userLocation.latitude.toPrecision(5) == lat && userLocation.longitude.toPrecision(5) == lng && !deletedMarkers.includes(id) && id!== 10000) {
                       deletedMarkers.push(id);
                       this.securedMarkers += 1;
                       this.mapArgs.map.removeMarkers([id]);
@@ -128,6 +147,8 @@
                         jwt,
                       })
                     }
+
+                  this.markers.pop();
                   })
                 .catch((err) => {
                   console.error("location err in game", err);
