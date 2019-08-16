@@ -1,36 +1,32 @@
 <template>
-    <Page class="page">
-        <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
-          <StackLayout orientation="horizontal" android:horizontalAlignment="right" backgroundColor="#58B0E5">
-            <Label :text="room" class="action-label" color="white"></Label>
-            <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
-          </StackLayout>
-            <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
-                    marginTop="10" textAlignment="center" color="white"
-                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
-            <Label :text="minutes + ':' + seconds"/>
-        </ActionBar>
-        <StackLayout>
-                <Mapbox
-                    :accessToken="mapBoxApi"
-                    mapStyle="traffic_day"
-                    latitude="29.9643504"
-                    longitude="-90.0816426"
-                    showUserLocation="true"
-                    zoomLevel="11"
-                    @mapReady="onMapReady($event)"
-                    height=80%
-                    width=*>
-                </Mapbox>
-
-                <StackLayout orientation="horizontal">
-
-                    <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
-                        marginTop="10" textAlignment="center" color="white"
-                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
-                </StackLayout>
+  <Page class="page">
+    <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
+      <StackLayout orientation="horizontal" backgroundColor="#58B0E5">
+      <StackLayout horizontalAlignment="left">
+        <Label :text="minutes + ':' + seconds" />
+        <Label :text="room" class="action-label" color="white"></Label>
+        <Label :text="'My Count : ' + securedMarkers " class="action-label" color="white"></Label>
+      </StackLayout>
+        <StackLayout orientation="horizontal" horizontalAlignment="right" backgroundColor="#58B0E5">
+          <Button text="Leaderboard" width="60%" height="60%" backgroundColor="#5EB0E5" marginTop="10"
+            textAlignment="center" color="white" fontSize="20" fontWeight="bold" borderRadius="20"
+            @tap="showLeaderboard()" />
         </StackLayout>
-    </Page>
+      </StackLayout>
+
+    </ActionBar>
+    <StackLayout>
+      <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
+        showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=80% width=*>
+      </Mapbox>
+
+      <StackLayout orientation="horizontal">
+
+        <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5" marginTop="10" textAlignment="center"
+          color="white" fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+      </StackLayout>
+    </StackLayout>
+  </Page>
 </template>
 
 
@@ -216,18 +212,12 @@
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
-                    onCalloutTap: () => {
-                      utils.openUrl("https://github.com/training-wheel");
-                    }
                   }]);
                   this.markers.push({
                     id: 10000,
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
-                    onCalloutTap: () => {
-                      utils.openUrl("https://github.com/training-wheel");
-                    }
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
                     && userLocation.longitude.toPrecision(5) == lng
@@ -245,7 +235,7 @@
                   this.playerPath.push(currentLocation);
                 })
                 .catch((err) => {
-                //   console.error("location err in game", err);
+                  console.error("location err in game", err);
                 })
             }, 1000);
           }
@@ -289,8 +279,8 @@
           addr: "",
           timer: null,
           securedMarkers: 0,
-          minutes: "",
-          seconds: "",
+          minutes: "00",
+          seconds: "00",
         };
       },
 
