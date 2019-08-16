@@ -177,14 +177,15 @@
           this.$goto('Home');
         },
         endGame() {
-          const { room } = this;
+          const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
             path,
+            topSpeed,
             room,
             jwt,
           }
-          this.socket.emit('polyline', options);
+          this.socket.emit('gameStats', options);
           this.$showModal(router.Summary, {});
         },
         checkUserMarkerLocation() {
@@ -275,6 +276,7 @@
           players: {},
           mapArgs: null,
           playerPath: [],
+          topSpeed: 0,
           lati: "",
           lon: "",
           speed: "",
