@@ -1,45 +1,49 @@
-<template>
-  <ScrollView orientation="horizontal" height="40%">
-    <ListView for="game in pastGames">
-      <v-template>
-        <StackLayout>
-          <Image :src='game.map' />
-          <Label :text='game.radius' />
-        </StackLayout>
-      </v-template>
-    </ListView>
-  </ScrollView>
-</template>
+// <template>
+//   <ScrollView height="40%" orientation="horizontal">
+//     <Mapbox
+//       :accessToken="mapBoxApi"
+//       mapStyle="traffic_day"
+//       latitude="29.9643504"
+//       longitude="-90.0816426"
+//       showUserLocation="true"
+//       zoomLevel="9"
+//       @mapReady="onMapReady($events)"
+//       height=50%
+//       width=*>
+//       </Mapbox>
+//   </ScrollView>
+// </template>
 
-<script>
-  export default {
-    name: "PastGames",
-    methods: {
-    },
-    data() {
-      return {
-        pastGames: [
-          {
-            map: 'https://miro.medium.com/max/700/0*yPSQlTHRvLaIVBcG.jpg',
-            radius: 3,
-            markerNumber: 4
-          },
-          {
-            map: 'https://miro.medium.com/max/700/0*yPSQlTHRvLaIVBcG.jpg',
-            radius: 3,
-            markerNumber: 4
-          },
-          {
-            map: 'https://miro.medium.com/max/700/0*yPSQlTHRvLaIVBcG.jpg',
-            radius: 3,
-            markerNumber: 4
-          },
-        ]
-      }
-    },
-  }
-</script>
+// <script>
+//   export default {
 
-<style lang="scss" scoped>
+//     props: {
+//       gameMarkers: {
+//         type: Array,
+//       },
 
-</style>
+//       gameInfo: {
+//         type: Array,
+//       },
+//     },
+//     name: "PastGames",
+//     methods: {
+//       check: function() {
+//         console.log(this.gameMarkers[0]);
+//       },
+//       onMapReady(readyEvent) {
+
+//       },
+//     },
+//     data() {
+//       return {
+//         mapboxApi: require('../../../config').MAPBOX_API,
+        
+//       }
+//     },
+//   }
+// </script>
+
+// <style lang="scss" scoped>
+
+// </style>
