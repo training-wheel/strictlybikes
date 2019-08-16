@@ -52,7 +52,7 @@
                         code: this.textFieldValue,
                         radius: 2,
                         markerLimit: 3,
-                        timeLimit: 60000 * 60,
+                        timeLimit: 60 * 60,
                         playerLimit: 1,
                         mode: "alleycat"
                     }
@@ -66,8 +66,8 @@
                         code: this.textFieldValue,
                         radius: 1,
                         markerLimit: 15,
-                        timeLimit: 60000 * 15,
-                        playerLimit: 2,
+                        timeLimit: 60 * 15,
+                        playerLimit: 1,
                         mode: "timeattack"
                     }
                     this.game = "timeattack";
@@ -80,8 +80,8 @@
                         code: this.textFieldValue,
                         radius: 5,
                         markerLimit: 10,
-                        timeLimit: 60000 * 30,
-                        playerLimit: 2,
+                        timeLimit: 60 * 30,
+                        playerLimit: 4,
                         mode: "teamsprint"
                     }
                     this.game = "teamsprint";
