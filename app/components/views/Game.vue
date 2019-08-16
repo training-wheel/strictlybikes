@@ -37,6 +37,7 @@
     import axios from 'axios';
     import router from '../../router'
     import * as appSettings from 'tns-core-modules/application-settings';
+    import polyline from '@mapbox/polyline';
     const geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
@@ -98,11 +99,17 @@
           this.$goto('Home');
         },
         endGame() {
-          console.log("end the game now")
+          const { room } = this;
+          const path = polyline.encode(this.playerPath);
+          const options = {
+            path,
+            room,
+            jwt,
+          }
+          this.socket.emit('polyline', options);
           this.$showModal(router.Summary, {});
         },
         checkUserMarkerLocation() {
-          console.log('starting location timeout..');
           let deletedMarkers = [];
           for (let key in this.markers) {
             let {
@@ -117,37 +124,40 @@
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
-                }).then(
-                  (userLocation) => {
-              this.mapArgs.map.addMarkers([{
-                id: 10000,
-                lat: userLocation.latitude,
-                lng: userLocation.longitude,
-                title: "FROM MAKIYAH",
-                onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
-                }
-              }])
-              this.markers.push({
-                id: 10000,
-                lat: userLocation.latitude,
-                lng: userLocation.longitude,
-                title: "FROM MAKIYAH",
-                onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
-                }
-              })
-                    if (userLocation.latitude.toPrecision(5) == lat && userLocation.longitude.toPrecision(5) == lng && !deletedMarkers.includes(id) && id!== 10000) {
-                      deletedMarkers.push(id);
-                      this.securedMarkers += 1;
-                      this.mapArgs.map.removeMarkers([id]);
-                      this.socket.emit('markerHit', {
-                        id,
-                        jwt,
-                      })
+                }).then((userLocation) => {
+                  this.mapArgs.map.addMarkers([{
+                    id: 10000,
+                    lat: userLocation.latitude,
+                    lng: userLocation.longitude,
+                    title: "FROM MAKIYAH",
+                    onCalloutTap: () => {
+                      utils.openUrl("https://www.thepolyglotdeveloper.com");
                     }
-                    this.mapArgs.map.removeMarkers([10000]);
-                  })
+                  }]);
+                  this.markers.push({
+                    id: 10000,
+                    lat: userLocation.latitude,
+                    lng: userLocation.longitude,
+                    title: "FROM MAKIYAH",
+                    onCalloutTap: () => {
+                      utils.openUrl("https://www.thepolyglotdeveloper.com");
+                    }
+                  });
+                  if (userLocation.latitude.toPrecision(5) == lat
+                    && userLocation.longitude.toPrecision(5) == lng
+                    && !deletedMarkers.includes(id) && id!== 10000) {
+                    deletedMarkers.push(id);
+                    this.securedMarkers += 1;
+                    this.mapArgs.map.removeMarkers([id]);
+                    this.socket.emit('markerHit', {
+                      id,
+                      jwt,
+                    })
+                  }
+                  this.mapArgs.map.removeMarkers([10000]);
+                  const currentLocation = [userLocation.latitude, userLocation.longitude];
+                  this.playerPath.push(currentLocation);
+                })
                 .catch((err) => {
                   console.error("location err in game", err);
                 })
@@ -185,6 +195,7 @@
           markers: [],
           players: {},
           mapArgs: null,
+          playerPath: [],
           lati: "",
           lon: "",
           speed: "",
