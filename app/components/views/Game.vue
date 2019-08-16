@@ -49,7 +49,6 @@
       methods: {
         playing() {
           this.socket.on('hit', (username) => {
-            console.log(username);
             Toast.makeText(`${username} hit a marker!`).show();
 
             this.players.forEach((player) => {
@@ -181,14 +180,16 @@
           this.$goto('Home');
         },
         endGame() {
-          const { room } = this;
+          timerModule.clearInterval(this.timer);
+          const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
             path,
+            topSpeed,
             room,
             jwt,
           }
-          this.socket.emit('polyline', options);
+          this.socket.emit('gameStats', options);
           this.$showModal(router.Summary, {});
         },
         checkUserMarkerLocation() {
@@ -233,6 +234,11 @@
                   this.mapArgs.map.removeMarkers([10000]);
                   const currentLocation = [userLocation.latitude, userLocation.longitude];
                   this.playerPath.push(currentLocation);
+
+                  const { speed } = userLocation;
+                  if (speed > this.topSpeed) {
+                    this.topSpeed = speed;
+                  }
                 })
                 .catch((err) => {
                   console.error("location err in game", err);
@@ -273,6 +279,7 @@
           players: {},
           mapArgs: null,
           playerPath: [],
+          topSpeed: 0,
           lati: "",
           lon: "",
           speed: "",
