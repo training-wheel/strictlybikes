@@ -54,6 +54,7 @@
                         markerLimit: 3,
                         timeLimit: 5 * 600000,
                         playerLimit: 2,
+                        mode: "alleycat"
                     }
                     this.game = "alleycat";
                 } else if (this.selectedBarIndex === 1) {
@@ -65,8 +66,9 @@
                         code: this.textFieldValue,
                         radius: 1,
                         markerLimit: 15,
-                        timeLimit: 5 * 600000,
+                        timeLimit: 1 * 90000,
                         playerLimit: 2,
+                        mode: "timeattack"
                     }
                     this.game = "timeattack";
                 } else {
@@ -80,6 +82,7 @@
                         markerLimit: 10,
                         timeLimit: 5 * 600000,
                         playerLimit: 4,
+                        mode: "teamsprint"
                     }
                     this.game = "teamsprint";
                 }

@@ -52,53 +52,103 @@
       methods: {
         playing() {
           this.socket.on('hit', (username) => {
-              console.log(username);
-              Toast.makeText(`${username} hit a marker!`).show();
+            console.log(username);
+            Toast.makeText(`${username} hit a marker!`).show();
 
-              this.players.forEach((player) => {
-                if(player.username === username) {
-                  player.score++;
-                }
-              })
+            this.players.forEach((player) => {
+              if (player.username === username) {
+                player.score++;
+              }
+            })
 
-            })
-            this.socket.on('end', () => {
-              this.endGame();
-            })
+          })
+          this.socket.on('end', () => {
+            this.endGame();
+          })
           this.socket.on('playing', (results) => {
-            const { markersArray, players } = results;
-            if(markersArray.length === 15){
-              // declare 3 rounds of markers
-              const round1 = markersArray.slice(0, 5);
-              const round2 = markersArray.slice(5, 10);
-              const round3 = markersArray.slice(10, 15);
+            const {
+              markersArray,
+              players
+            } = results;
+            if (markersArray.length === 15) {
+              var round1 = markersArray.slice(0, 5);
+              var round2 = markersArray.slice(5, 10);
+              var round3 = markersArray.slice(10, 15);
+              round1.forEach((marker) => {
+                this.mapArgs.map.addMarkers([{
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                }])
+                this.markers.push({
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                })
+              })
+              this.socket.on('update markers', (wave) => {
+                console.log("heeheh", wave);
+                if (wave === 2) {
+                const oldMarkers = round1.map(x => x.id);
+                  this.mapArgs.map.removeMarkers(oldMarkers);
+                  //render round 2nd wave of markers
+                  console.log("change markers", wave);
+                  round2.forEach((marker) => {
+                    this.mapArgs.map.addMarkers([{
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    }])
+                    this.markers.push({
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    })
+                  })
+                }
+                if (wave === 3) {
+                  const oldMarkers = round2.map(x => x.id);
+                  this.mapArgs.map.removeMarkers(oldMarkers);
+                  console.log("change markers", wave);
+                  round3.forEach((marker) => {
+                    this.mapArgs.map.addMarkers([{
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    }])
+                    this.markers.push({
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    })
+                  })
+                  //render round 3rd wave of markers
+                }
+              });
               // place the first 5
-
-              // start timer
-              // reomve after time
-              // place 5 more
+            } else {
+              markersArray.forEach((marker) => {
+                this.mapArgs.map.addMarkers([{
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                }])
+                this.markers.push({
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                })
+              })
             }
             this.players = players;
-            markersArray.forEach((marker) => {
-              this.mapArgs.map.addMarkers([{
-                id: marker.id,
-                lat: marker.lat,
-                lng: marker.long,
-                title: "Checkpoint",
-                onCalloutTap: () => {
-                  utils.openUrl("https://github.com/training-wheel");
-                }
-              }])
-              this.markers.push({
-                id: marker.id,
-                lat: marker.lat,
-                lng: marker.long,
-                title: "Checkpoint",
-                onCalloutTap: () => {
-                  utils.openUrl("https://github.com/training-wheel");
-                }
-              })
-            })
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
           });
