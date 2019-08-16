@@ -55,6 +55,7 @@
                         timeLimit: 5 * 600000,
                         playerLimit: 2,
                     }
+                    this.game = "alleycat";
                 } else if (this.selectedBarIndex === 1) {
                     //Time attack
                     return {
@@ -67,6 +68,7 @@
                         timeLimit: 5 * 600000,
                         playerLimit: 2,
                     }
+                    this.game = "timeattack";
                 } else {
                     return {
                         //Team Sprint
@@ -79,6 +81,7 @@
                         timeLimit: 5 * 600000,
                         playerLimit: 4,
                     }
+                    this.game = "teamsprint";
                 }
             },
             handleCreateClick(){
@@ -107,6 +110,7 @@
                         props: {
                             socket: socket,
                             room: this.textFieldValue,
+                            gameMode: this.gameMode,
                         }
                     });
                     console.log(response);
@@ -172,6 +176,7 @@
                 baseUrl: require('../../config').SERVER_BASE_URL,
                 mapBoxApi: require('../../config').MAPBOX_API,
                 selectedBarIndex: 0,
+                gameMode: "",
             };
         },
     };

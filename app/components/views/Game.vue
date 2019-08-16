@@ -45,7 +45,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room'],
+      props: ['socket', 'room', 'gameMode'],
 
       methods: {
         playing() {
