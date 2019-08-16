@@ -13,6 +13,8 @@
   </Frame>
 </template>
 
+
+
 <script>
 const Vue = require('nativescript-vue');
 const timerModule = require("tns-core-modules/timer");
