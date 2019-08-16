@@ -67,6 +67,17 @@
             })
           this.socket.on('playing', (results) => {
             const { markersArray, players } = results;
+            if(markersArray.length === 15){
+              // declare 3 rounds of markers
+              const round1 = markersArray.slice(0, 5);
+              const round2 = markersArray.slice(5, 10);
+              const round3 = markersArray.slice(10, 15);
+              // place the first 5
+
+              // start timer
+              // reomve after time
+              // place 5 more
+            }
             this.players = players;
             markersArray.forEach((marker) => {
               this.mapArgs.map.addMarkers([{
