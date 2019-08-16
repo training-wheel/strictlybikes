@@ -73,20 +73,18 @@
                 id: marker.id,
                 lat: marker.lat,
                 lng: marker.long,
-                title: "Marker From the server",
-                subtitle: "D",
+                title: "Checkpoint",
                 onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
+                  utils.openUrl("https://github.com/training-wheel");
                 }
               }])
               this.markers.push({
                 id: marker.id,
                 lat: marker.lat,
                 lng: marker.long,
-                title: "Marker From the server",
-                subtitle: "D",
+                title: "Checkpoint",
                 onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
+                  utils.openUrl("https://github.com/training-wheel");
                 }
               })
             })
@@ -148,18 +146,18 @@
                     id: 10000,
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
-                    title: "FROM MAKIYAH",
+                    title: "Current Location",
                     onCalloutTap: () => {
-                      utils.openUrl("https://www.thepolyglotdeveloper.com");
+                      utils.openUrl("https://github.com/training-wheel");
                     }
                   }]);
                   this.markers.push({
                     id: 10000,
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
-                    title: "FROM MAKIYAH",
+                    title: "Current Location",
                     onCalloutTap: () => {
-                      utils.openUrl("https://www.thepolyglotdeveloper.com");
+                      utils.openUrl("https://github.com/training-wheel");
                     }
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
