@@ -86,10 +86,7 @@
             },
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
-           
-            // set game data equal to a result from a function that takes in a number corrisponding to the index of the item that was clicked
             let gameInfo = this.getGameInfo();
-            // make request to server save a game to the DB (sending game info)
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
                 jwt: this.jwt,
