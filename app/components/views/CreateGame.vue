@@ -52,8 +52,8 @@
                         code: this.textFieldValue,
                         radius: 2,
                         markerLimit: 3,
-                        timeLimit: 5 * 600000,
-                        playerLimit: 2,
+                        timeLimit: 60 * 60,
+                        playerLimit: 1,
                         mode: "alleycat"
                     }
                     this.game = "alleycat";
@@ -66,8 +66,8 @@
                         code: this.textFieldValue,
                         radius: 1,
                         markerLimit: 15,
-                        timeLimit: 1 * 90000,
-                        playerLimit: 2,
+                        timeLimit: 60 * 15,
+                        playerLimit: 1,
                         mode: "timeattack"
                     }
                     this.game = "timeattack";
@@ -80,7 +80,7 @@
                         code: this.textFieldValue,
                         radius: 5,
                         markerLimit: 10,
-                        timeLimit: 5 * 600000,
+                        timeLimit: 60 * 30,
                         playerLimit: 4,
                         mode: "teamsprint"
                     }
@@ -112,6 +112,7 @@
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
                             gameData: response,
+                            gameLength: gameInfo.timeLimit,
                         }
                     });
                     console.log('response', response);
