@@ -7,6 +7,10 @@
         <Label textWrap="true"
           :text="this.results"
           class="h2 description-label"></Label>
+          <Label v-if="players[0]" :text="`First Place. ${players[0]}`" />
+          <Label v-if="players[1]" :text="`Second Place. ${players[1]}`" />
+          <Label v-if="players[2]" :text="`Third Place. ${players[2]}`" />
+          <Label v-if="players[3]" :text="`Fourth Place. ${players[3]}`" />
           <Button class="btn btn-outline" text="Close Modal" @tap="$modal.close()" />
       </StackLayout>
     </Page>
