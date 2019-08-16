@@ -48,7 +48,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room', 'gameMode', 'gameData'],
+      props: ['socket', 'room', 'gameMode', 'gameData', 'gameLength'],
 
       methods: {
         playing() {
@@ -289,7 +289,6 @@
           addr: "",
           timer: null,
           securedMarkers: 0,
-          gameLength: 60 * 5,
           minutes: "",
           seconds: "",
         };
