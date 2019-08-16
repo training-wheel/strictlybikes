@@ -64,7 +64,7 @@
                         startTime: 20,
                         code: this.textFieldValue,
                         radius: 1,
-                        markerLimit: 10,
+                        markerLimit: 15,
                         timeLimit: 5 * 600000,
                         playerLimit: 2,
                     }
