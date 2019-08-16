@@ -56,7 +56,11 @@ var timerModule = require("tns-core-modules/timer");
           });
       },
     },
-    
+    created() {
+          console.log('modal mounted!');
+          console.log(JSON.stringify(this.players));
+          this.results = this.showLeaderboard(this.players);
+        },
     data() {
       return {
         results: [],
