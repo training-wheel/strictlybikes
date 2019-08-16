@@ -112,6 +112,7 @@
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
                             gameData: response,
+                            gameLength: gameInfo.timeLimit,
                         }
                     });
                     console.log('response', response);
