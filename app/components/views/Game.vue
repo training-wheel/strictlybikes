@@ -54,7 +54,13 @@
           this.socket.on('hit', (username) => {
               console.log(username);
               Toast.makeText(`${username} hit a marker!`).show();
-              this.players[username].score++;
+
+              this.players.forEach((player) => {
+                if(player.username === username) {
+                  player.score++;
+                }
+              })
+
             })
             this.socket.on('end', () => {
               this.endGame();
@@ -85,11 +91,7 @@
               })
             })
             geolocation.enableLocationRequest();
-<<<<<<< HEAD
             this.checkUserMarkerLocation();
-=======
-            this.checkUserMarkerLocation(this.markers);
->>>>>>> uncommented geolocation
           });
         },
         openAlertModal() {
@@ -176,7 +178,7 @@
                   this.playerPath.push(currentLocation);
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                //   console.error("location err in game", err);
                 })
             }, 1000);
           }
