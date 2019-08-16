@@ -108,9 +108,10 @@
                             socket: socket,
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
+                            gameData: response,
                         }
                     });
-                    console.log(response);
+                    console.log('response', response);
                 })
             })
             .catch((err)=>{

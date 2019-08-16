@@ -10,8 +10,8 @@ import { SocketIO } from "nativescript-socketio";
 import * as appSettings from "tns-core-modules/application-settings";
 import LobbyGame from "./LobbyGame";
 const jwt = appSettings.getString("jwt");
-
 import axios from "axios";
+
 
 export default {
   props: ["socket"],
@@ -32,7 +32,8 @@ export default {
         console.log("joined");
         this.$goto("Game", {
           props: {
-            socket: this.socket
+            socket: this.socket,
+            gameData: game,
           }
         });
       });

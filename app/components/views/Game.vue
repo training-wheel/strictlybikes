@@ -5,7 +5,9 @@
             <Label :text="room" class="action-label" color="white"></Label>
             <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
           </StackLayout>
-         
+            <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
+                    marginTop="10" textAlignment="center" color="white"
+                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
         </ActionBar>
         <StackLayout>
                 <Mapbox
@@ -45,13 +47,20 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room', 'gameMode'],
+      props: ['socket', 'room', 'gameMode', 'gameData'],
 
       methods: {
         playing() {
           this.socket.on('hit', (username) => {
               console.log(username);
               Toast.makeText(`${username} hit a marker!`).show();
+
+              this.players.forEach((player) => {
+                if(player.username === username) {
+                  player.score++;
+                }
+              })
+
             })
             this.socket.on('end', () => {
               this.endGame();
@@ -89,11 +98,21 @@
           if (!this.warningShown) {
             this.$showModal(router.Alert, {
               props: {
-                socket: this.socket
+                socket: this.socket,
+                
               }
             })
             this.warningShown = true;
           }
+        },
+        showLeaderboard(){
+            this.$showModal(router.Leaderboard, {
+                props: {
+                gameData: this.gameData,
+                socket: this.socket,
+                players: this.players,
+              }
+            });
         },
         onLeaveGame(){
           this.$goto('Home');
@@ -159,7 +178,7 @@
                   this.playerPath.push(currentLocation);
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                //   console.error("location err in game", err);
                 })
             }, 1000);
           }
@@ -190,6 +209,7 @@
       },
       data() {
         return {
+          userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
