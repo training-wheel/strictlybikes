@@ -9,7 +9,7 @@
           <Label v-if="players[1]" :text="`Second Place - ${this.results[1]}`" class="h2 description-label" />
           <Label v-if="players[2]" :text="`Third Place - ${this.results[2]}`" class="h2 description-label" />
           <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]}`" class="h2 description-label" />
-          <Button class="btn btn-outline" text="Close Modal" @tap="$modal.close()" color="black"/>
+          <Button class="btn btn-outline" text="Close Modal" @tap="$modal.close()" color="black" backgroundColor="#58B0E5" />
       </StackLayout>
     </Page>
   </Frame>
