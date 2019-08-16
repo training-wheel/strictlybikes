@@ -1,71 +1,63 @@
 <template>
-    <Page class="page">
-        <ActionBar title="Lobby">
-        </ActionBar>
-        <ScrollView>
-            <StackLayout orientation="vertical" width="*" height="*" backgroundColor="white">
-                <ListView for="game in games" style="height:1250px">
-                    <v-template>
-
-                        <Button :text="game.code" @tap="handleJoin(game)" width="80%" height="20%" backgroundColor="#5EB0E5" marginTop="20"
-                    textAlignment="center" color="white" fontSize="20" fontWeight="bold" borderRadius="30"/>
-                    </v-template>
-                </ListView>
-            </StackLayout>
-        </ScrollView>
-    </Page>
+  <Page class="page">
+    <ActionBar title="Lobby"></ActionBar>
+    <LobbyGame v-bind:games="games" v-bind:handleJoin="handleJoin" />
+  </Page>
 </template>
 
 <script >
-  import { SocketIO } from 'nativescript-socketio';
-  import * as appSettings from 'tns-core-modules/application-settings';
-  const jwt = appSettings.getString('jwt');
+import { SocketIO } from "nativescript-socketio";
+import * as appSettings from "tns-core-modules/application-settings";
+import LobbyGame from "./LobbyGame";
+const jwt = appSettings.getString("jwt");
+import axios from "axios";
 
-  import axios from 'axios'
 
-  export default {
-    props: ['socket'],
-    methods: {
-      addRoom(games) {
-        games = JSON.parse(games);
-        this.games = games;
-      },
-      handleJoin(game) {
-        this.socket.emit('joinGame', {
-          room: game.code,
-          jwt
-        });
-        this.socket.on('join', (message) => {
-          console.log("joined");
-          this.$goto('Game', {
-            props: {
-              socket: this.socket
-            }
-          });
-        });
-      },
-      justJoined() {
-        this.socket.on('newGame', (gameData) => {
-          this.addRoom(gameData);
-        });
-      }
-
+export default {
+  props: ["socket"],
+  components: {
+    LobbyGame,
+  },
+  methods: {
+    addRoom(games) {
+      games = JSON.parse(games);
+      this.games = games;
     },
-    data() {
-      return {
-        games: [],
-
-      }
+    handleJoin(game) {
+      this.socket.emit("joinGame", {
+        room: game.code,
+        jwt
+      });
+      this.socket.on("join", message => {
+        console.log("joined");
+        this.$goto("Game", {
+          props: {
+            socket: this.socket,
+            gameData: game,
+          }
+        });
+      });
     },
-    created() {
-      this.justJoined();
+    justJoined() {
+      this.socket.on("newGame", gameData => {
+        this.addRoom(gameData);
+      });
     }
+  },
+  data() {
+    return {
+      games: []
+    };
+  },
+  created() {
+    this.justJoined();
   }
+};
 </script>
 
 <style scoped>
-    ActionBar {
-        background-color: #5EB0E5;
-        color: #ffffff;
-    }
+ActionBar {
+  background-color: #5eb0e5;
+  color: white;
+}
 </style>

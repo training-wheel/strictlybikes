@@ -6,6 +6,7 @@ import Profile from '../components/views/profile/Profile'
 import Login from '../components/views/Login'
 import Alert from '../components/pop-ups/Alert'
 import Summary from '../components/pop-ups/Summary'
+import Leaderboard from '../components/pop-ups/Leaderboard'
 
 const router = {
   Login,
@@ -16,5 +17,6 @@ const router = {
   Profile,
   Alert,
   Summary,
+  Leaderboard,
 };
 export default router;

@@ -1,6 +1,14 @@
 <template>
     <Page class="page">
-        <ActionBar class="action-bar" title="Game"></ActionBar>
+        <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
+          <StackLayout orientation="horizontal" android:horizontalAlignment="right" backgroundColor="#58B0E5">
+            <Label :text="room" class="action-label" color="white"></Label>
+            <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
+          </StackLayout>
+            <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
+                    marginTop="10" textAlignment="center" color="white"
+                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
+        </ActionBar>
         <StackLayout>
                 <Mapbox
                     :accessToken="mapBoxApi"
@@ -18,7 +26,7 @@
 
                     <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
                         marginTop="10" textAlignment="center" color="white"
-                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onDirectionCall()" />
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
                 </StackLayout>
         </StackLayout>
     </Page>
@@ -31,96 +39,207 @@
     import axios from 'axios';
     import router from '../../router'
     import * as appSettings from 'tns-core-modules/application-settings';
+    import polyline from '@mapbox/polyline';
     const geolocation = require("nativescript-geolocation");
     const {Accuracy} = require("tns-core-modules/ui/enums");
     const timerModule = require("tns-core-modules/timer");
     const jwt = appSettings.getString('jwt');
+    const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket'],
+      props: ['socket', 'room', 'gameMode', 'gameData'],
 
       methods: {
         playing() {
-          this.socket.on('playing', (markersArray) => {
-            this.socket.on('hit', (username) => {
-              console.log("username", username);
+          this.socket.on('hit', (username) => {
+            console.log(username);
+            Toast.makeText(`${username} hit a marker!`).show();
+
+            this.players.forEach((player) => {
+              if (player.username === username) {
+                player.score++;
+              }
             })
-            this.socket.on('end', () => {
-              this.endGame();
-            })
-            markersArray.forEach((marker) => {
-              this.mapArgs.map.addMarkers([{
-                id: marker.id,
-                lat: marker.lat,
-                lng: marker.long,
-                title: "Marker From the server",
-                subtitle: "D",
-                onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
-                }
-              }])
-              this.markers.push({
-                id: marker.id,
-                lat: marker.lat,
-                lng: marker.long,
-                title: "Marker From the server",
-                subtitle: "D",
-                onCalloutTap: () => {
-                  utils.openUrl("https://www.thepolyglotdeveloper.com");
-                }
+
+          })
+          this.socket.on('end', () => {
+            this.endGame();
+          })
+          this.socket.on('playing', (results) => {
+            const {
+              markersArray,
+              players
+            } = results;
+            if (markersArray.length === 15) {
+              var round1 = markersArray.slice(0, 5);
+              var round2 = markersArray.slice(5, 10);
+              var round3 = markersArray.slice(10, 15);
+              round1.forEach((marker) => {
+                this.mapArgs.map.addMarkers([{
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                }])
+                this.markers.push({
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                })
               })
-            })
+              this.socket.on('update markers', (wave) => {
+                console.log("heeheh", wave);
+                if (wave === 2) {
+                const oldMarkers = round1.map(x => x.id);
+                  this.mapArgs.map.removeMarkers(oldMarkers);
+                  //render round 2nd wave of markers
+                  console.log("change markers", wave);
+                  round2.forEach((marker) => {
+                    this.mapArgs.map.addMarkers([{
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    }])
+                    this.markers.push({
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    })
+                  })
+                }
+                if (wave === 3) {
+                  const oldMarkers = round2.map(x => x.id);
+                  this.mapArgs.map.removeMarkers(oldMarkers);
+                  console.log("change markers", wave);
+                  round3.forEach((marker) => {
+                    this.mapArgs.map.addMarkers([{
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    }])
+                    this.markers.push({
+                      id: marker.id,
+                      lat: marker.lat,
+                      lng: marker.long,
+                      title: "Checkpoint",
+                    })
+                  })
+                  //render round 3rd wave of markers
+                }
+              });
+              // place the first 5
+            } else {
+              markersArray.forEach((marker) => {
+                this.mapArgs.map.addMarkers([{
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                }])
+                this.markers.push({
+                  id: marker.id,
+                  lat: marker.lat,
+                  lng: marker.long,
+                  title: "Checkpoint",
+                })
+              })
+            }
+            this.players = players;
             geolocation.enableLocationRequest();
-            this.checkUserMarkerLocation(this.markers);
+            this.checkUserMarkerLocation();
           });
         },
         openAlertModal() {
           if (!this.warningShown) {
             this.$showModal(router.Alert, {
               props: {
-                socket: this.socket
+                socket: this.socket,
+                
               }
             })
             this.warningShown = true;
           }
         },
+        showLeaderboard(){
+            this.$showModal(router.Leaderboard, {
+                props: {
+                gameData: this.gameData,
+                socket: this.socket,
+                players: this.players,
+              }
+            });
+        },
+        onLeaveGame(){
+          this.$goto('Home');
+        },
         endGame() {
-          console.log("end the game now")
+          const { room } = this;
+          const path = polyline.encode(this.playerPath);
+          const options = {
+            path,
+            room,
+            jwt,
+          }
+          this.socket.emit('polyline', options);
           this.$showModal(router.Summary, {});
         },
-        checkUserMarkerLocation(markers) {
-          console.log('starting location ..');
+        checkUserMarkerLocation() {
           let deletedMarkers = [];
-          for (let key in markers) {
+          for (let key in this.markers) {
             let {
               lat,
               lng,
               id
-            } = markers[key];
-            lng = lng.toPrecision(6);
-            lat = lat.toPrecision(6);
-            console.log("type of lng", typeof lng);
+            } = this.markers[key];
+            lng = lng.toPrecision(5);
+            lat = lat.toPrecision(5);
 
             this.timer = timerModule.setInterval(() => {
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
-                }).then(
-                  (userLocation) => {
-                    if (userLocation.latitude.toPrecision(6) == lat && userLocation.longitude.toPrecision(6) == lng && !deletedMarkers.includes(id)) {
-                      console.log(" YOU ARE CLOSE ");
-                      this.mapArgs.map.removeMarkers([id]);
-                      console.log([id]);
-                      this.socket.emit('markerHit', {
-                        id,
-                        jwt,
-                      })
+                }).then((userLocation) => {
+                  this.mapArgs.map.addMarkers([{
+                    id: 10000,
+                    lat: userLocation.latitude,
+                    lng: userLocation.longitude,
+                    title: "Current Location",
+                    onCalloutTap: () => {
+                      utils.openUrl("https://github.com/training-wheel");
                     }
-                  })
-                .catch((err) => {
-                  console.error("location err in game", err);
+                  }]);
+                  this.markers.push({
+                    id: 10000,
+                    lat: userLocation.latitude,
+                    lng: userLocation.longitude,
+                    title: "Current Location",
+                    onCalloutTap: () => {
+                      utils.openUrl("https://github.com/training-wheel");
+                    }
+                  });
+                  if (userLocation.latitude.toPrecision(5) == lat
+                    && userLocation.longitude.toPrecision(5) == lng
+                    && !deletedMarkers.includes(id) && id!== 10000) {
+                    deletedMarkers.push(id);
+                    this.securedMarkers += 1;
+                    this.mapArgs.map.removeMarkers([id]);
+                    this.socket.emit('markerHit', {
+                      id,
+                      jwt,
+                    })
+                  }
+                  this.mapArgs.map.removeMarkers([10000]);
+                  const currentLocation = [userLocation.latitude, userLocation.longitude];
+                  this.playerPath.push(currentLocation);
                 })
-            }, 5000);
+                .catch((err) => {
+                //   console.error("location err in game", err);
+                })
+            }, 1000);
           }
         },
         onMapReady(readyEvent) {
@@ -141,9 +260,6 @@
               this.lati = res.latitude;
               this.lon = res.longitude;
               this.speed = res.speed;
-
-              console.log('longitude', this.lon);
-              console.log('latitude', this.lati);
             })
             .catch((error) => {
               console.log('geolocation error', error);
@@ -152,18 +268,19 @@
       },
       data() {
         return {
+          userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
+          players: {},
           mapArgs: null,
-          pickerItems: [
-            15, 35, 55
-          ],
+          playerPath: [],
           lati: "",
           lon: "",
           speed: "",
           addr: "",
           timer: null,
+          securedMarkers: 0,
         };
       },
 
