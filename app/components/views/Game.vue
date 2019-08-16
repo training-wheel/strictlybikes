@@ -190,7 +190,11 @@
             jwt,
           }
           this.socket.emit('gameStats', options);
-          this.$showModal(router.Summary, {});
+          this.$showModal(router.Summary, {
+            props: {
+              players: this.players,
+            }
+          });
         },
         checkUserMarkerLocation() {
           let deletedMarkers = [];
