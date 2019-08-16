@@ -13,15 +13,8 @@
                     height=50%
                     width=*>
                 </Mapbox>
+                <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex" />
                 <TextField v-model="textFieldValue" hint="Name Your Game" />
-                    <GridLayout rows="auto" columns="*">
-                        <PickerField row="0" col="0" hint="Radius" :items="radius" ref="radius"></PickerField>
-                        <PickerField row="0" col="1" hint="Marker Count" :items="markerCounts" ref="markerCount" horizontalAlignment="right"></PickerField>
-                    </GridLayout>
-                    <GridLayout rows="auto" columns="*">
-                        <PickerField row="1" col="0" hint="Player Limit" :items="playerLimits" ref="playerLimit"></PickerField>
-                        <PickerField row="1" col="1" hint="Time Limit" :items="timeLimits" ref="timeLimit" horizontalAlignment="right"></PickerField>
-                    </GridLayout>
                     <Button text="Create Game" width="100%" height="25%"
                     backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
                     color="white" fontSize="15" fontWeight="bold"
@@ -49,25 +42,51 @@
 
     export default {
         methods: {
+            getGameInfo() {
+                if (this.selectedBarIndex === 0) {
+                    //Alley-Cat
+                    return {
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 2,
+                        markerLimit: 3,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 2,
+                    }
+                    this.game = "alleycat";
+                } else if (this.selectedBarIndex === 1) {
+                    //Time attack
+                    return {
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 1,
+                        markerLimit: 10,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 2,
+                    }
+                    this.game = "timeattack";
+                } else {
+                    return {
+                        //Team Sprint
+                        lat: "29.977936",
+                        long: "-90.080559",
+                        startTime: 20,
+                        code: this.textFieldValue,
+                        radius: 5,
+                        markerLimit: 10,
+                        timeLimit: 5 * 600000,
+                        playerLimit: 4,
+                    }
+                    this.game = "teamsprint";
+                }
+            },
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
-            let radius = this.$refs.radius.nativeView;
-            let markerLimit = this.$refs.markerCount.nativeView;
-            let playerLimit = this.$refs.playerLimit.nativeView;
-            let timeLimit = this.$refs.timeLimit.nativeView;
-            // console.log(picker.selectedValue);
-            // get game data
-            let gameInfo = {
-                lat: "29.977936",
-                long: "-90.080559",
-                startTime: 20,
-                code: this.textFieldValue,
-                radius: radius.selectedValue,
-                markerLimit: markerLimit.selectedValue,
-                timeLimit: timeLimit.selectedValue * 600000,
-                playerLimit: playerLimit.selectedValue,
-            }
-            // make request to server save a game to the DB (sending game info)
+            let gameInfo = this.getGameInfo();
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
                 jwt: this.jwt,
@@ -88,6 +107,7 @@
                         props: {
                             socket: socket,
                             room: this.textFieldValue,
+                            gameMode: this.gameMode,
                         }
                     });
                     console.log(response);
@@ -125,23 +145,25 @@
             },
         },
     created() {
-    
     this.getLocation();
     },
         data() {
             return {
-                radius: [
-                    1, 3, 5
-                ],
-                playerLimits: [
-                    1, 2, 3, 4
-                ],
-                markerCounts: [
-                    1, 3, 5
-                ],
-                timeLimits: [
-                    1, 3, 5
-                ],
+                segmentedBarItems: (function() {
+                    var segmentedBarModule = require(
+                        "tns-core-modules/ui/segmented-bar");
+                    let segmentedBarItem1 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem1.title = "Alley Cat";
+                    let segmentedBarItem2 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem2.title = "Time Attack";
+                    let segmentedBarItem3 = new segmentedBarModule.SegmentedBarItem();
+                    segmentedBarItem3.title = "Team Sprint";
+                    return [
+                        segmentedBarItem1,
+                        segmentedBarItem2,
+                        segmentedBarItem3
+                    ];
+                })(),
                 lati: "",
                 lon: "",
                 speed: "",
@@ -150,6 +172,8 @@
                 jwt: appSettings.getString('jwt'),
                 baseUrl: require('../../config').SERVER_BASE_URL,
                 mapBoxApi: require('../../config').MAPBOX_API,
+                selectedBarIndex: 0,
+                gameMode: "",
             };
         },
     };
@@ -157,9 +181,6 @@
 </script>
 
 <style scoped>
-    .right{
-    horizontal-align: right;
-    }
     .home-panel {
         vertical-align: center;
         font-size: 20;

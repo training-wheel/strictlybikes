@@ -57,6 +57,6 @@ export default {
 <style scoped>
 ActionBar {
   background-color: #5eb0e5;
-  color: #ffffff;
+  color: white;
 }
 </style>
