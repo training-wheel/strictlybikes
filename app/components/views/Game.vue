@@ -52,7 +52,6 @@
       methods: {
         playing() {
           this.socket.on('hit', (username) => {
-            console.log(username);
             Toast.makeText(`${username} hit a marker!`).show();
 
             this.players.forEach((player) => {
@@ -89,12 +88,10 @@
                 })
               })
               this.socket.on('update markers', (wave) => {
-                console.log("heeheh", wave);
                 if (wave === 2) {
                 const oldMarkers = round1.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
                   //render round 2nd wave of markers
-                  console.log("change markers", wave);
                   round2.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -113,7 +110,6 @@
                 if (wave === 3) {
                   const oldMarkers = round2.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
-                  console.log("change markers", wave);
                   round3.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -177,6 +173,7 @@
           this.$goto('Home');
         },
         endGame() {
+          timerModule.clearInterval(this.timer);
           const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
@@ -236,9 +233,14 @@
                   this.mapArgs.map.removeMarkers([10000]);
                   const currentLocation = [userLocation.latitude, userLocation.longitude];
                   this.playerPath.push(currentLocation);
+
+                  const { speed } = userLocation;
+                  if (speed > this.topSpeed) {
+                    this.topSpeed = speed;
+                  }
                 })
                 .catch((err) => {
-                //   console.error("location err in game", err);
+                  console.error("location err in game", err);
                 })
             }, 1000);
           }
