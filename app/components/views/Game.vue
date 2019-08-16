@@ -8,6 +8,7 @@
             <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
                     marginTop="10" textAlignment="center" color="white"
                     fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
+            <Label :text="minutes + ':' + seconds"/>
         </ActionBar>
         <StackLayout>
                 <Mapbox
@@ -59,16 +60,16 @@
               if (player.username === username) {
                 player.score++;
               }
-            })
-
+            });
           })
           this.socket.on('end', () => {
             this.endGame();
           })
           this.socket.on('playing', (results) => {
+            this.startTimer(this.gameLength);
             const {
               markersArray,
-              players
+              players,
             } = results;
             if (markersArray.length === 15) {
               var round1 = markersArray.slice(0, 5);
@@ -89,12 +90,9 @@
                 })
               })
               this.socket.on('update markers', (wave) => {
-                console.log("heeheh", wave);
                 if (wave === 2) {
                 const oldMarkers = round1.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
-                  //render round 2nd wave of markers
-                  console.log("change markers", wave);
                   round2.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -113,7 +111,6 @@
                 if (wave === 3) {
                   const oldMarkers = round2.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
-                  console.log("change markers", wave);
                   round3.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -128,11 +125,11 @@
                       title: "Checkpoint",
                     })
                   })
-                  //render round 3rd wave of markers
                 }
               });
-              // place the first 5
-            } else {
+            } else if(this.gameMode === "teamsprint"){
+
+            }else {
               markersArray.forEach((marker) => {
                 this.mapArgs.map.addMarkers([{
                   id: marker.id,
@@ -152,6 +149,17 @@
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
           });
+        },
+        startTimer(duration) {
+          timerModule.setInterval(() => {
+            let minutesInHere = parseInt(duration / 60, 10)
+            let secondsInHere = parseInt(duration % 60, 10);
+            this.minutes = minutesInHere < 10 ? "0" + minutesInHere : minutesInHere;
+            this.seconds = secondsInHere < 10 ? "0" + secondsInHere : secondsInHere;
+            if (--duration < 0) {
+              duration = 0;
+            }
+          }, 1000);
         },
         openAlertModal() {
           if (!this.warningShown) {
@@ -281,6 +289,9 @@
           addr: "",
           timer: null,
           securedMarkers: 0,
+          gameLength: 60 * 5,
+          minutes: "",
+          seconds: "",
         };
       },
 
