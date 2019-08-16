@@ -20,13 +20,12 @@
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=80% width=*>
       </Mapbox>
 
-      <StackLayout orientation="horizontal">
-
-        <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5" marginTop="10" textAlignment="center"
-          color="white" fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
-      </StackLayout>
-    </StackLayout>
-  </Page>
+                    <Button text="Leave Game" width="100%" height="60%" backgroundColor="#5EB0E5"
+                        marginTop="10" textAlignment="center" color="white"
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+                </StackLayout>
+        </StackLayout>
+    </Page>
 </template>
 
 
