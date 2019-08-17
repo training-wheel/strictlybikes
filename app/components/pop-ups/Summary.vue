@@ -9,6 +9,7 @@
         <Label v-if="players[1]" :text="`Second Place - ${this.results[1]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
         <Label v-if="players[2]" :text="`Third Place - ${this.results[2]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
         <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
+        <Label :text="`Your Top Speed! -> ${this.topSpeed}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
         
         <Label textWrap="true" text="Hope You Had Fun" class="h2 description-label"></Label>
         <Label textWrap="true" text="Head over to the Lobby play again!" class="h2 description-label"></Label>
@@ -27,7 +28,7 @@ var timerModule = require("tns-core-modules/timer");
   export default {
     mounted(){
     },
-    props: ['socket', 'players'],
+    props: ['socket', 'players', 'topSpeed'],
     methods: {
       showLeaderboard(array) {
             let newArray = [];

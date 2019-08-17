@@ -9,7 +9,7 @@
           <Label v-if="players[1]" :text="`Second Place - ${this.results[1]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
           <Label v-if="players[2]" :text="`Third Place - ${this.results[2]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
           <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
-          <Label :text="`Your Top Speed! -> ${this.topSpeed}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
+          
 
           <Button class="btn btn-outline" text="Close" @tap="$modal.close()" color="white" backgroundColor="#58B0E5" />
       </StackLayout>
