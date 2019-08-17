@@ -46,21 +46,13 @@ const timerModule = require("tns-core-modules/timer");
               }
               return comparison;
           })
-          console.log('current', array);
             array.forEach((player) => {
               newArray.push(player.username);
             })
             return newArray;
           },
-          showModal() {
-            console.log('log', this.players);
-          }
         },
         created() {
-          console.log('modal mounted!');
-          console.log(JSON.stringify(this.players));
-          console.log('team', JSON.stringify(this.team));
-
           if(this.gameMode === 'teamsprint') {
             this.results = this.showLeaderboard(this.team);  
           } else {

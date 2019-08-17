@@ -51,7 +51,6 @@ var timerModule = require("tns-core-modules/timer");
               }
               return comparison;
           })
-          console.log('current', array);
             array.forEach((player) => {
               newArray.push(player.username);
             })
