@@ -200,6 +200,8 @@
             props: {
               players: this.players,
               topSpeed: this.topSpeed,
+              gameMode: this.gameInfo.mode,
+              team: this.team,
             }
           });
           this.socket.emit('gameStats', options);
