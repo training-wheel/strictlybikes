@@ -54,7 +54,14 @@
               if (player.username === username) {
                 player.score++;
               }
-            });
+            })
+            this.team.forEach((team) => {
+              if(team.color === username) {
+                team.score++;
+                console.log('here', team);
+              }
+            })
+
           })
           this.socket.on('end', () => {
             this.endGame();
@@ -167,11 +174,14 @@
           }
         },
         showLeaderboard(){
+          console.log("this.gameMode", this.gameMode)
             this.$showModal(router.Leaderboard, {
                 props: {
                 gameData: this.gameData,
                 socket: this.socket,
                 players: this.players,
+                team: this.team,
+                gameMode: this.gameMode
               }
             });
         },
@@ -281,7 +291,7 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           players: {},
-          team: {blue: 0, orange: 0},
+          team: [{color: 'blue', score: 0}, {color: 'orange', score: 0}],
           mapArgs: null,
           playerPath: [],
           topSpeed: 0,
