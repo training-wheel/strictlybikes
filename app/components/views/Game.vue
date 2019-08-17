@@ -191,6 +191,7 @@
           this.$showModal(router.Summary, {
             props: {
               players: this.players,
+              topSpeed: this.topSpeed,
             }
           });
           this.socket.emit('gameStats', options);
