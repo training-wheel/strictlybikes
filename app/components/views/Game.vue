@@ -20,13 +20,12 @@
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=80% width=*>
       </Mapbox>
 
-      <StackLayout orientation="horizontal">
-
-        <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5" marginTop="10" textAlignment="center"
-          color="white" fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
-      </StackLayout>
-    </StackLayout>
-  </Page>
+                    <Button text="Leave Game" width="100%" height="60%" backgroundColor="#5EB0E5"
+                        marginTop="10" textAlignment="center" color="white"
+                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+                </StackLayout>
+        </StackLayout>
+    </Page>
 </template>
 
 
@@ -44,7 +43,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room', 'gameMode', 'gameData', 'gameLength'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
 
       methods: {
         playing() {
@@ -55,7 +54,14 @@
               if (player.username === username) {
                 player.score++;
               }
-            });
+            })
+            this.team.forEach((team) => {
+              if(team.username === username) {
+                team.score++;
+                console.log('here', team);
+              }
+            })
+
           })
           this.socket.on('end', () => {
             this.endGame();
@@ -170,9 +176,10 @@
         showLeaderboard(){
             this.$showModal(router.Leaderboard, {
                 props: {
-                gameData: this.gameData,
                 socket: this.socket,
                 players: this.players,
+                team: this.team,
+                gameMode: this.gameInfo.mode
               }
             });
         },
@@ -189,8 +196,15 @@
             room,
             jwt,
           }
+          this.$showModal(router.Summary, {
+            props: {
+              players: this.players,
+              topSpeed: this.topSpeed,
+              gameMode: this.gameInfo.mode,
+              team: this.team,
+            }
+          });
           this.socket.emit('gameStats', options);
-          this.$showModal(router.Summary, {});
         },
         checkUserMarkerLocation() {
           let deletedMarkers = [];
@@ -241,7 +255,7 @@
                   }
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                  // console.error("location err in game", err);
                 })
             }, 1000);
           }
@@ -277,6 +291,7 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           players: {},
+          team: [{username: 'blue', score: 0}, {username: 'orange', score: 0}],
           mapArgs: null,
           playerPath: [],
           topSpeed: 0,
