@@ -43,7 +43,7 @@
     const Toast = require("nativescript-toast");
 
     export default {
-      props: ['socket', 'room', 'gameMode', 'gameData', 'gameLength'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
 
       methods: {
         playing() {
@@ -174,10 +174,8 @@
           }
         },
         showLeaderboard(){
-          console.log("this.gameMode", this.gameMode)
             this.$showModal(router.Leaderboard, {
                 props: {
-                gameData: this.gameData,
                 socket: this.socket,
                 players: this.players,
                 team: this.team,
@@ -255,7 +253,7 @@
                   }
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                  // console.error("location err in game", err);
                 })
             }, 1000);
           }
