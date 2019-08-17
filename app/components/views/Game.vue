@@ -45,6 +45,7 @@
     const timerModule = require("tns-core-modules/timer");
     const jwt = appSettings.getString('jwt');
     const Toast = require("nativescript-toast");
+    const Vibrate = require("nativescript-vibrate").Vibrate;
 
     export default {
       props: ['socket', 'room', 'gameMode', 'gameData'],
@@ -54,6 +55,8 @@
           this.socket.on('hit', (username) => {
             console.log(username);
             Toast.makeText(`${username} hit a marker!`).show();
+
+            this.vibrator.vibrate(200, 200, 300);
 
             this.players.forEach((player) => {
               if (player.username === username) {
@@ -281,6 +284,7 @@
           addr: "",
           timer: null,
           securedMarkers: 0,
+          vibrator: new Vibrate(),
         };
       },
 
