@@ -1,30 +1,26 @@
 <template>
-    <Page class="page">
-        <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
-          <StackLayout orientation="horizontal" android:horizontalAlignment="right" backgroundColor="#58B0E5">
-            <Label :text="room" class="action-label" color="white"></Label>
-            <Label :text="'My Markers : ' + securedMarkers + '/' + this.markers.length + '  '" class="action-label" color="white"></Label>
-          </StackLayout>
-            <Button text="Leaderboard" width="100%" height="60%" backgroundColor="#5EB0E5"
-                    marginTop="10" textAlignment="center" color="white"
-                    fontSize="20" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" />
-        </ActionBar>
-        <StackLayout>
-                <Mapbox
-                    :accessToken="mapBoxApi"
-                    mapStyle="traffic_day"
-                    latitude="29.9643504"
-                    longitude="-90.0816426"
-                    showUserLocation="true"
-                    zoomLevel="11"
-                    @mapReady="onMapReady($event)"
-                    height=80%
-                    width=*>
-                </Mapbox>
+  <Page class="page">
+    <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
+      <StackLayout orientation="horizontal" backgroundColor="#58B0E5">
+      <StackLayout horizontalAlignment="left">
+        <Label :text="minutes + ':' + seconds" />
+        <Label :text="room" class="action-label" color="white"></Label>
+        <Label :text="'My Count : ' + securedMarkers " class="action-label" color="white"></Label>
+      </StackLayout>
+        <StackLayout orientation="horizontal" horizontalAlignment="right" backgroundColor="#58B0E5">
+          <Button text="Leaderboard" width="60%" height="60%" backgroundColor="#5EB0E5" marginTop="10"
+            textAlignment="center" color="white" fontSize="20" fontWeight="bold" borderRadius="20"
+            @tap="showLeaderboard()" />
+        </StackLayout>
+      </StackLayout>
 
-                <StackLayout orientation="horizontal">
+    </ActionBar>
+    <StackLayout>
+      <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
+        showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=80% width=*>
+      </Mapbox>
 
-                    <Button text="End" width="100%" height="60%" backgroundColor="#5EB0E5"
+                    <Button text="Leave Game" width="100%" height="60%" backgroundColor="#5EB0E5"
                         marginTop="10" textAlignment="center" color="white"
                         fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
                 </StackLayout>
@@ -48,12 +44,11 @@
     const Vibrate = require("nativescript-vibrate").Vibrate;
 
     export default {
-      props: ['socket', 'room', 'gameMode', 'gameData'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
 
       methods: {
         playing() {
           this.socket.on('hit', (username) => {
-            console.log(username);
             Toast.makeText(`${username} hit a marker!`).show();
 
             this.vibrator.vibrate(200, 200, 300);
@@ -63,15 +58,22 @@
                 player.score++;
               }
             })
+            this.team.forEach((team) => {
+              if(team.username === username) {
+                team.score++;
+                console.log('here', team);
+              }
+            })
 
           })
           this.socket.on('end', () => {
             this.endGame();
           })
           this.socket.on('playing', (results) => {
+            this.startTimer(this.gameLength);
             const {
               markersArray,
-              players
+              players,
             } = results;
             if (markersArray.length === 15) {
               var round1 = markersArray.slice(0, 5);
@@ -92,12 +94,9 @@
                 })
               })
               this.socket.on('update markers', (wave) => {
-                console.log("heeheh", wave);
                 if (wave === 2) {
                 const oldMarkers = round1.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
-                  //render round 2nd wave of markers
-                  console.log("change markers", wave);
                   round2.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -116,7 +115,6 @@
                 if (wave === 3) {
                   const oldMarkers = round2.map(x => x.id);
                   this.mapArgs.map.removeMarkers(oldMarkers);
-                  console.log("change markers", wave);
                   round3.forEach((marker) => {
                     this.mapArgs.map.addMarkers([{
                       id: marker.id,
@@ -131,11 +129,11 @@
                       title: "Checkpoint",
                     })
                   })
-                  //render round 3rd wave of markers
                 }
               });
-              // place the first 5
-            } else {
+            } else if(this.gameMode === "teamsprint"){
+
+            }else {
               markersArray.forEach((marker) => {
                 this.mapArgs.map.addMarkers([{
                   id: marker.id,
@@ -156,6 +154,17 @@
             this.checkUserMarkerLocation();
           });
         },
+        startTimer(duration) {
+          timerModule.setInterval(() => {
+            let minutesInHere = parseInt(duration / 60, 10)
+            let secondsInHere = parseInt(duration % 60, 10);
+            this.minutes = minutesInHere < 10 ? "0" + minutesInHere : minutesInHere;
+            this.seconds = secondsInHere < 10 ? "0" + secondsInHere : secondsInHere;
+            if (--duration < 0) {
+              duration = 0;
+            }
+          }, 1000);
+        },
         openAlertModal() {
           if (!this.warningShown) {
             this.$showModal(router.Alert, {
@@ -170,9 +179,10 @@
         showLeaderboard(){
             this.$showModal(router.Leaderboard, {
                 props: {
-                gameData: this.gameData,
                 socket: this.socket,
                 players: this.players,
+                team: this.team,
+                gameMode: this.gameInfo.mode
               }
             });
         },
@@ -180,15 +190,24 @@
           this.$goto('Home');
         },
         endGame() {
-          const { room } = this;
+          timerModule.clearInterval(this.timer);
+          const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
             path,
+            topSpeed,
             room,
             jwt,
           }
-          this.socket.emit('polyline', options);
-          this.$showModal(router.Summary, {});
+          this.$showModal(router.Summary, {
+            props: {
+              players: this.players,
+              topSpeed: this.topSpeed,
+              gameMode: this.gameInfo.mode,
+              team: this.team,
+            }
+          });
+          this.socket.emit('gameStats', options);
         },
         checkUserMarkerLocation() {
           let deletedMarkers = [];
@@ -211,18 +230,12 @@
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
-                    onCalloutTap: () => {
-                      utils.openUrl("https://github.com/training-wheel");
-                    }
                   }]);
                   this.markers.push({
                     id: 10000,
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
-                    onCalloutTap: () => {
-                      utils.openUrl("https://github.com/training-wheel");
-                    }
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
                     && userLocation.longitude.toPrecision(5) == lng
@@ -238,9 +251,14 @@
                   this.mapArgs.map.removeMarkers([10000]);
                   const currentLocation = [userLocation.latitude, userLocation.longitude];
                   this.playerPath.push(currentLocation);
+
+                  const { speed } = userLocation;
+                  if (speed > this.topSpeed) {
+                    this.topSpeed = speed;
+                  }
                 })
                 .catch((err) => {
-                //   console.error("location err in game", err);
+                  // console.error("location err in game", err);
                 })
             }, 1000);
           }
@@ -276,8 +294,10 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           players: {},
+          team: [{username: 'blue', score: 0}, {username: 'orange', score: 0}],
           mapArgs: null,
           playerPath: [],
+          topSpeed: 0,
           lati: "",
           lon: "",
           speed: "",
@@ -285,6 +305,8 @@
           timer: null,
           securedMarkers: 0,
           vibrator: new Vibrate(),
+          minutes: "00",
+          seconds: "00",
         };
       },
 

@@ -45,6 +45,7 @@
             getGameInfo() {
                 if (this.selectedBarIndex === 0) {
                     //Alley-Cat
+                    this.gameMode = "alleycat";
                     return {
                         lat: "29.977936",
                         long: "-90.080559",
@@ -52,13 +53,13 @@
                         code: this.textFieldValue,
                         radius: 2,
                         markerLimit: 3,
-                        timeLimit: 5 * 600000,
+                        timeLimit: 60 * 60,
                         playerLimit: 2,
                         mode: "alleycat"
                     }
-                    this.game = "alleycat";
                 } else if (this.selectedBarIndex === 1) {
                     //Time attack
+                    this.gameMode = "timeattack";
                     return {
                         lat: "29.977936",
                         long: "-90.080559",
@@ -66,12 +67,13 @@
                         code: this.textFieldValue,
                         radius: 1,
                         markerLimit: 15,
-                        timeLimit: 1 * 90000,
-                        playerLimit: 2,
+                        timeLimit: 60 * 15,
+                        playerLimit: 1,
                         mode: "timeattack"
                     }
-                    this.game = "timeattack";
+                    
                 } else {
+                    this.gameMode = "teamsprint";
                     return {
                         //Team Sprint
                         lat: "29.977936",
@@ -80,16 +82,16 @@
                         code: this.textFieldValue,
                         radius: 5,
                         markerLimit: 10,
-                        timeLimit: 5 * 600000,
+                        timeLimit: 60 * 30,
                         playerLimit: 4,
                         mode: "teamsprint"
                     }
-                    this.game = "teamsprint";
                 }
             },
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let gameInfo = this.getGameInfo();
+            console.log('gameInfo', gameInfo);
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
                 jwt: this.jwt,
@@ -111,7 +113,8 @@
                             socket: socket,
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
-                            gameData: response,
+                            gameLength: gameInfo.timeLimit,
+                            gameInfo: gameInfo
                         }
                     });
                     console.log('response', response);

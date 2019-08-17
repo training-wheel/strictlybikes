@@ -33,7 +33,7 @@ export default {
         this.$goto("Game", {
           props: {
             socket: this.socket,
-            gameData: game,
+            gameInfo: game,
           }
         });
       });

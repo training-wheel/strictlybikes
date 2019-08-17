@@ -2,13 +2,15 @@
   <Page class="page">
     <FlexboxLayout height="98%" flexDirection="column">
       <StackLayout>
-        <Label :text="username + '\'s Profile'" flexGrow=".3" fontSize="30" color="#000000" fontWeight="bold" horizontalAlignment="center" />
+        <Label :text="username" flexGrow=".3" color="#000000" fontWeight="bold" horizontalAlignment="center" />
         <Image :src="imageUrl" height="20%" width="auto" />
-        <Label text="Badges" fontSize="30" color="black" />
+        <Label text="Badges" color="bold" textAlignment="center" />
         <Badges backgroundColor="#0F62AB" :userBadges="userBadges" />
-        <Label text="Previous Games" flexGrow=".3" fontSize="30" color="#000000" fontWeight="bold" horizontalAlignment="center" />
-        <Button @tap="chooseMap(1)" >Next Game</Button>
-        <Button @tap="chooseMap(-1)" >Previous Game</Button>
+        <Label text="Previous Games" flexGrow=".3" color="#000000" fontWeight="bold" horizontalAlignment="center" />
+        <FlexboxLayout flexDirection="row" justifyContent="center">
+          <Button width="30%" @tap="chooseMap(1)" >Next Game</Button>
+          <Button width="30%" @tap="chooseMap(-1)" >Previous Game</Button>
+        </FlexboxLayout>
         <Mapbox 
           :accessToken="mapBoxApi" 
           mapStyle="traffic_day" 
@@ -29,10 +31,10 @@
 
 <script>
   import Badges from "./Badges";
-  
   import axios from 'axios';
   import * as appSettings from 'tns-core-modules/application-settings';
-import { PassThrough } from 'stream';
+  import { PassThrough } from 'stream';
+  import polyline from '@mapbox/polyline';
   const mapBoxApi = require('../../../config').MAPBOX_API;
   const geolocation = require("nativescript-geolocation");
   const {Accuracy} = require("tns-core-modules/ui/enums");
@@ -48,17 +50,36 @@ import { PassThrough } from 'stream';
         const markerList = [];
         this.gameStats[this.currentGame].markers.forEach((marker) => {
           const indiv = {lat: marker.lat, lng: marker.long, id: marker.id};
-          console.log(indiv);
           markerList.push(indiv);
         })
         this.mapArgs = eventList;
         eventList.map.addMarkers(
           markerList,
         );
+        this.chooseUser(this.username);
+      },
+      chooseUser(selectedUser) {
+        this.selectedUser = selectedUser;
+        this.mapArgs.map.removePolylines();
+        this.gameStats[this.currentGame].info.players.forEach((player) => {
+          if (player.username === selectedUser) {
+            const decodedPolyline = polyline.decode(player.polyline);
+            const formattedPolyline = decodedPolyline.map((coord) => {
+              const [lat, lng] = coord
+              const coordObject = { lat, lng };
+              return coordObject;
+            });
+            this.mapArgs.map.addPolyline({
+              width: 3,
+              color: 'orange',
+              points: formattedPolyline,
+            });
+          }
+        });
       },
       chooseMap(num) {
         if(num > 0) {
-          if(this.currentGame < this.gameStats.length) {
+          if(this.currentGame < this.gameStats.length - 1) {
             this.currentGame++;
             this.mapArgs.map.removeMarkers();
             this.onMapReady(this.mapArgs);
@@ -82,8 +103,7 @@ import { PassThrough } from 'stream';
         gameStats: [],
         mapArgs: null,
         currentGame: 0,
-
-        
+        selectedUser: '',
       }
     },
     mounted() {
@@ -94,15 +114,24 @@ import { PassThrough } from 'stream';
         }
       })
         .then((result) => {
-          const { username, imageUrl, userMetrics, userBadges, gameInfo, gameMarkers } = result.data;
+          const { players, username, imageUrl, userMetrics, userBadges, gameInfo, gameMarkers } = result.data;
           this.username = username;
+          this.selectedUser = username;
           this.imageUrl = imageUrl;
           this.userMetrics = userMetrics;
           this.userBadges = userBadges;
           
 
           const gameStats = {};
-
+          players.forEach((playerArray) => {
+            const { gameId } = playerArray[0];
+            for (let i = 0; i < gameInfo.length; i += 1) {
+              if (gameInfo[i].id === gameId) {
+                gameInfo[i].players = playerArray;
+                return;
+              }
+            }
+          });
           gameInfo.forEach((game) => {
             if(!gameStats[game.id]) {
               gameStats[game.id] = {};
@@ -115,10 +144,6 @@ import { PassThrough } from 'stream';
           for(let key in gameStats) {
             this.gameStats.push(gameStats[key]);
           }
-          
-          
-          
-          
         })
         .catch((err) => {
           console.error(`Failed to fetch profile: ${err}`);
