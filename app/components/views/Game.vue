@@ -281,6 +281,7 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           players: {},
+          teams: {blue: 0, orange: 0},
           mapArgs: null,
           playerPath: [],
           topSpeed: 0,
