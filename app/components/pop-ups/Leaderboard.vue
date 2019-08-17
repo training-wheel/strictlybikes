@@ -24,7 +24,7 @@ const Vue = require('nativescript-vue');
 const timerModule = require("tns-core-modules/timer");
 
   export default {
-    props: ['socket','gameData', 'players', 'topSpeed'],
+    props: ['socket','gameData', 'players'],
     methods: {
           showLeaderboard(array) {
             let newArray = [];
@@ -52,7 +52,6 @@ const timerModule = require("tns-core-modules/timer");
         created() {
           console.log('modal mounted!');
           console.log(JSON.stringify(this.players));
-          // console.log('speed', this.topSpeed);
           this.results = this.showLeaderboard(this.players);
         },
     data() {
