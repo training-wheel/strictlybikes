@@ -54,7 +54,7 @@
                         radius: 2,
                         markerLimit: 3,
                         timeLimit: 60 * 60,
-                        playerLimit: 1,
+                        playerLimit: 2,
                         mode: "alleycat"
                     }
                 } else if (this.selectedBarIndex === 1) {
