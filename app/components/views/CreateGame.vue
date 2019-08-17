@@ -45,6 +45,7 @@
             getGameInfo() {
                 if (this.selectedBarIndex === 0) {
                     //Alley-Cat
+                    this.gameMode = "alleycat";
                     return {
                         lat: "29.977936",
                         long: "-90.080559",
@@ -56,9 +57,9 @@
                         playerLimit: 1,
                         mode: "alleycat"
                     }
-                    this.game = "alleycat";
                 } else if (this.selectedBarIndex === 1) {
                     //Time attack
+                    this.gameMode = "timeattack";
                     return {
                         lat: "29.977936",
                         long: "-90.080559",
@@ -70,8 +71,9 @@
                         playerLimit: 1,
                         mode: "timeattack"
                     }
-                    this.game = "timeattack";
+                    
                 } else {
+                    this.gameMode = "teamsprint";
                     return {
                         //Team Sprint
                         lat: "29.977936",
@@ -84,7 +86,6 @@
                         playerLimit: 4,
                         mode: "teamsprint"
                     }
-                    this.game = "teamsprint";
                 }
             },
             handleCreateClick(){
