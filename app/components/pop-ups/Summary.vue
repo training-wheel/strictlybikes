@@ -36,7 +36,7 @@ var timerModule = require("tns-core-modules/timer");
   export default {
     mounted(){
     },
-    props: ['socket', 'players', 'topSpeed'],
+    props: ['socket', 'players', 'topSpeed', 'gameMode'],
     methods: {
       showLeaderboard(array) {
             let newArray = [];
