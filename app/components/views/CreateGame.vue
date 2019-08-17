@@ -91,6 +91,7 @@
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let gameInfo = this.getGameInfo();
+            console.log('gameInfo', gameInfo);
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
                 jwt: this.jwt,
@@ -112,8 +113,8 @@
                             socket: socket,
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
-                            gameData: response,
                             gameLength: gameInfo.timeLimit,
+                            gameInfo: gameInfo
                         }
                     });
                     console.log('response', response);
