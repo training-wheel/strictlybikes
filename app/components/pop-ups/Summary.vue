@@ -68,7 +68,11 @@ var timerModule = require("tns-core-modules/timer");
       },
     },
     created() {
-          this.results = this.showLeaderboard(this.players);
+          if(this.gameMode === 'teamsprint') {
+            this.results = this.showLeaderboard(this.team);  
+          } else {
+            this.results = this.showLeaderboard(this.players);
+          }
         },
     data() {
       return {
