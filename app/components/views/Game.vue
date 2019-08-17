@@ -188,12 +188,12 @@
             room,
             jwt,
           }
-          this.socket.emit('gameStats', options);
           this.$showModal(router.Summary, {
             props: {
               players: this.players,
             }
           });
+          this.socket.emit('gameStats', options);
         },
         checkUserMarkerLocation() {
           let deletedMarkers = [];
