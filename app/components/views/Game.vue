@@ -56,7 +56,7 @@
               }
             })
             this.team.forEach((team) => {
-              if(team.color === username) {
+              if(team.username === username) {
                 team.score++;
                 console.log('here', team);
               }
@@ -291,7 +291,7 @@
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
           players: {},
-          team: [{color: 'blue', score: 0}, {color: 'orange', score: 0}],
+          team: [{username: 'blue', score: 0}, {username: 'orange', score: 0}],
           mapArgs: null,
           playerPath: [],
           topSpeed: 0,
