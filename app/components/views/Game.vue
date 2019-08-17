@@ -179,7 +179,7 @@
                 socket: this.socket,
                 players: this.players,
                 team: this.team,
-                gameMode: this.gameMode
+                gameMode: this.gameInfo.mode
               }
             });
         },
