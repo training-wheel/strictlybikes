@@ -76,6 +76,7 @@ var timerModule = require("tns-core-modules/timer");
     data() {
       return {
         results: [],
+        scores: [],
       }
     },
   }
