@@ -260,7 +260,7 @@
                 .catch((err) => {
                   // console.error("location err in game", err);
                 })
-            }, 1000);
+            }, 2500);
           }
         },
         onMapReady(readyEvent) {
