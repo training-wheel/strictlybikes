@@ -1,7 +1,7 @@
 <template>
-  <Page class="page" backgroundColor="red">
+  <Page class="page" id="homeBackground">
     <ActionBar title="Lobby" class="action-bar"></ActionBar>
-    <LobbyGame v-bind:games="games" v-bind:handleJoin="handleJoin" backgroundColor="red"/>
+    <LobbyGame v-bind:games="games" v-bind:handleJoin="handleJoin" />
   </Page>
 </template>
 
