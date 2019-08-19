@@ -1,7 +1,6 @@
 import Vue from 'nativescript-vue';
 import VueDevtools from 'nativescript-vue-devtools';
 import * as appSettings from 'tns-core-modules/application-settings';
-import store from './store';
 import router from './router';
 import { configureOAuthProviders } from './auth/auth-service';
 
@@ -11,7 +10,6 @@ configureOAuthProviders();
 Vue.prototype.$router = router;
 Vue.registerElement('Mapbox', () => require('nativescript-mapbox').MapboxView);
 Vue.prototype.$goto = (to, options) => {
-  console.log(to);
   const that = Vue.prototype;
   options = options || {
     clearHistory: false,
