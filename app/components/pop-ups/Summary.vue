@@ -53,6 +53,7 @@ var timerModule = require("tns-core-modules/timer");
           })
             array.forEach((player) => {
               newArray.push(player.username);
+              this.scores.push(player.score);
             })
             return newArray;
           },
