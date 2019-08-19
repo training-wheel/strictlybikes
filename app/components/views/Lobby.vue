@@ -1,7 +1,7 @@
 <template>
-  <Page class="page">
-    <ActionBar title="Lobby"></ActionBar>
-    <LobbyGame v-bind:games="games" v-bind:handleJoin="handleJoin" />
+  <Page class="page" backgroundColor="red">
+    <ActionBar title="Lobby" class="action-bar"></ActionBar>
+    <LobbyGame v-bind:games="games" v-bind:handleJoin="handleJoin" backgroundColor="red"/>
   </Page>
 </template>
 
@@ -56,8 +56,5 @@ export default {
 </script>
 
 <style scoped>
-ActionBar {
-  background-color: #5eb0e5;
-  color: white;
-}
+
 </style>
