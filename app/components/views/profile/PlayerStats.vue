@@ -1,26 +1,32 @@
 <template>
   <StackLayout>
-    <Label>Games Played: {games}</Label>
-    <Label>Games Won: {games}</Label>
-    <Label>Games Lost: {losses}</Label>  
-    <Label>Games Lost: {losses}</Label>  
+    <Label>Games Played: {{ gamesPlayed }}</Label>
+    <Label>Games Won: {{ this.wins }}</Label>
+    <Label>Top Speed: {{ topSpeed }}</Label>
+    <label>Win Streak: {{ winStreak }}</label>
     </StackLayout>
 </template>
 
 
 <script>
 export default {
-  name: PlayerStats,
-
+  name: 'PlayerStats',
+  props: {
+    userMetrics: Array,
+  },
   data() {
     return {
-      playerStats: {
-        games: 0,
-        wins: 0, 
-        losses: 0,
-        totalDist: 0,
-      }
+      gamesPlayed: 0,
+      wins: 0, 
+      topSpeed: 0,
+      winStreak: 0,
     }
-  }
+  },
+  created() {
+    this.userMetrics.forEach((metric) => {
+      const { name, value } = metric;
+      this[name] = value;
+    });
+  },
 }
 </script>
