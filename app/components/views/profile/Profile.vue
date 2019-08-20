@@ -1,11 +1,14 @@
 <template>
   <Page class="page">
-    <FlexboxLayout height="98%" flexDirection="column">
+    <FlexboxLayout backgroundColor="#0F62AB" height="98%" flexDirection="column">
       <StackLayout>
-        <Label :text="username" flexGrow=".3" color="#000000" fontWeight="bold" horizontalAlignment="center" />
-        <Image :src="imageUrl" height="20%" width="auto" />
-        <Label text="Badges" color="bold" textAlignment="center" />
-        <Badges backgroundColor="#0F62AB" :userBadges="userBadges" />
+        <Label :text="username" flexGrow=".3" fontWeight="bold" horizontalAlignment="center" />
+        <FlexboxLayout >
+          <Image :src="imageUrl" height="20%" width="auto" />
+          <PlayerStats alignSelf="center" v-if="userMetrics.length > 0" :userMetrics="userMetrics" />
+        </FlexboxLayout>
+        <Label text="Badges" fontWeight="bold" textAlignment="center" />
+        <Badges :userBadges="userBadges" />
         <Label text="Previous Games" flexGrow=".3" color="#000000" fontWeight="bold" horizontalAlignment="center" />
         <FlexboxLayout flexDirection="row" justifyContent="center">
           <Button width="30%" @tap="chooseMap(1)" >Next Game</Button>
@@ -30,7 +33,8 @@
 </template>
 
 <script>
-  import Badges from "./Badges";
+  import PlayerStats from './PlayerStats';
+  import Badges from './Badges';
   import axios from 'axios';
   import * as appSettings from 'tns-core-modules/application-settings';
   import { PassThrough } from 'stream';
@@ -44,6 +48,7 @@
 
     components: {
       Badges,
+      PlayerStats,
     },
     methods: {
       onMapReady(eventList) {

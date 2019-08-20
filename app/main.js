@@ -1,7 +1,6 @@
 import Vue from 'nativescript-vue';
 import VueDevtools from 'nativescript-vue-devtools';
 import * as appSettings from 'tns-core-modules/application-settings';
-import store from './store';
 import router from './router';
 import { configureOAuthProviders } from './auth/auth-service';
 
@@ -10,8 +9,9 @@ configureOAuthProviders();
 // router function
 Vue.prototype.$router = router;
 Vue.registerElement('Mapbox', () => require('nativescript-mapbox').MapboxView);
+Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
+Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
 Vue.prototype.$goto = (to, options) => {
-  console.log(to);
   const that = Vue.prototype;
   options = options || {
     clearHistory: false,
