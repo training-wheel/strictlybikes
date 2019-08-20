@@ -32,18 +32,18 @@
     },
     data() {
       return {
-        badges: [
+        testBadges: [
           {
-            text: "5 wins",
-            image: "~/assets/badges/5WinBadge.png",
+            name: "5 wins",
+            description: "5WinBadge",
           },
           {
-            text: "10 wins",
-            image: "~/assets/badges/10WinBadge.png"
+            name: "10 wins",
+            description: "10WinBadge"
           },
           {
-            text: "15 wins",
-            image: "~/assets/badges/15WinBadge.png"
+            name: "15 wins",
+            description: "15WinBadge"
           }
         ]
       }
