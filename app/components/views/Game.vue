@@ -1,31 +1,26 @@
 <template>
-  <Page class="page">
-    <ActionBar title="Game" backgroundColor="#58B0E5" class="action-bar">
-      <StackLayout orientation="horizontal" backgroundColor="#58B0E5">
-      <StackLayout horizontalAlignment="left">
-        <Label :text="minutes + ':' + seconds" />
-        <Label :text="room" class="action-label" color="white"></Label>
-        <Label :text="'My Count : ' + securedMarkers " class="action-label" color="white"></Label>
-      </StackLayout>
-        <StackLayout orientation="horizontal" horizontalAlignment="right" backgroundColor="#58B0E5">
-          <Button text="Leaderboard" width="60%" height="60%" backgroundColor="#5EB0E5" marginTop="10"
-            textAlignment="center" color="white" fontSize="20" fontWeight="bold" borderRadius="20"
-            @tap="showLeaderboard()" />
+  <Page class="page" id="homeBackground">
+    <ActionBar class="action-bar" title="Game" backgroundColor="#58B0E5">
+      <DockLayout width="auto" height="*" stretchLastChild="false">
+        <StackLayout orientation="vertical" >
+          <Label :text="room" class="action-label" color="white" dock="left"></Label>
+          <Label :text="'My Markers : ' + securedMarkers + '  '" class="action-label" color="white" dock="left"></Label>
         </StackLayout>
-      </StackLayout>
-
+        <Label :text="minutes + ':' + seconds" dock="center"/>
+        <Button text="Leaderboard" width="32%" height="30" backgroundColor="#ff9933" marginTop="5" color="white"
+          fontSize="10" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" dock="right" />
+      </DockLayout>
     </ActionBar>
-    <StackLayout>
-      <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-        showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=80% width=*>
-      </Mapbox>
 
-                    <Button text="Leave Game" width="100%" height="60%" backgroundColor="#5EB0E5"
-                        marginTop="10" textAlignment="center" color="white"
-                        fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
-                </StackLayout>
-        </StackLayout>
-    </Page>
+    <StackLayout>
+    <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
+      showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
+    </Mapbox>
+
+    <Button text="Leave Game" width="85%" height="10%" backgroundColor="#ff9933" marginTop="10" textAlignment="center"
+      color="white" fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+    </StackLayout>
+  </Page>
 </template>
 
 
@@ -302,7 +297,7 @@
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
           markers: [],
-          players: {},
+          players: [],
           team: [{username: 'blue', score: 0}, {username: 'orange', score: 0}],
           mapArgs: null,
           playerPath: [],

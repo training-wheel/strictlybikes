@@ -1,12 +1,11 @@
 <template>
   <Page>
     <FlexboxLayout class="page">
-      <StackLayout class="form">
+      <StackLayout class="form" flex>
         <Image
-          class="logo"
           src="https://cdn.pixabay.com/photo/2019/04/02/21/47/cyclist-4098989_960_720.png"
         />
-        <Label class="header" text="Strictly Bikes" />
+        <Label class="login-header" text="Scatter" />
         <TextField
           v-if="newUser"
           v-model="username"
@@ -14,7 +13,7 @@
           @returnPress="onSignUp"
           returnKeyType="done"
         />
-        <Button v-else text="Login" @tap="onLoginTap" class="btn btn-primary m-t-20" />
+        <Button v-else text="Login" @tap="onLoginTap" class="button-blue" />
       </StackLayout>
     </FlexboxLayout>
   </Page>
@@ -67,6 +66,7 @@
 </script>
 
 <style lang="scss" scoped>
+@import "app/app.scss";
 .page {
   align-items: center;
   flex-direction: column;
@@ -85,14 +85,7 @@
   font-weight: bold;
 }
 
-.header {
-  horizontal-align: center;
-  font-size: 40;
-  font-weight: 600;
-  margin-bottom: 70;
-  text-align: center;
-  color: #5eb0e5;
-}
+
 
 .input-field {
   margin-bottom: 25;
@@ -107,14 +100,7 @@
   font-size: 54;
 }
 
-.btn-primary {
-  height: 50;
-  margin: 30 5 15 5;
-  background-color: #5eb0e5;
-  border-radius: 5;
-  font-size: 20;
-  font-weight: 600;
-}
+
 
 .login-label {
   horizontal-align: center;

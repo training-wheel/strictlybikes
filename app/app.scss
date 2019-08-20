@@ -1,10 +1,46 @@
-// NativeScript core theme
-// @see https://docs.nativescript.org/ui/theme
-@import '~nativescript-theme-core/scss/sky';
+$blue: #58B0E5;
+$orange: #ff9933;
 
-// Override variables here
 
-@import '~nativescript-theme-core/scss/index';
+.button-blue {
+  background-color: $blue;
+  height: 50;
+  // margin: 15 5 30 5;
+  border-radius: 20;
+  font-size: 20;
+  font-weight: 600;
+  color: white;
+}
+.button-orange {
+  background-color: $orange;
+}
 
-// Global SCSS styling
-// @see https://docs.nativescript.org/ui/styling
+.login-image {
+  height: 40;
+  width: 30;
+}
+
+.login-header {
+  margin: auto;
+  font-size: 40;
+  font-weight: 600;
+  margin-bottom: 5;
+  text-align: center;
+  color: $blue;
+}
+
+.action-bar {
+  height: 44;
+  background-color: $blue;
+  color: white;
+  font-weight: bold;
+}
+
+#homeBackground {
+  background-image: url("https://hookagency.com/wp-content/uploads/2015/11/light-blue-gradient-ui-gradient.jpg");
+  background-size: contain;
+}
+.flexer {
+  flex-direction: row-reverse;
+}
+
