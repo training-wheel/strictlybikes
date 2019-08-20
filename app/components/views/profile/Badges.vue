@@ -1,27 +1,37 @@
 <template>
-  <ListView for="badge in badges" height="30%" >
-    <v-template>
-      <WrapLayout >
-        <Image :src="badge.image" height="10%" width="10%"  />
-        <Label :text="badge.text" color="#ffffff" fontWeight="bold" />
-      </WrapLayout>
-
-    </v-template>
-  </ListView>
+  <GridLayout height="10%" >
+    <Carousel v-if="userBadges.length" height="100" color="white" @pageChanged="onBadgeChange"
+      android:indicatorAnimation="slide" indicatorColor="#fff"
+      indicatorOffset="0, -10" showIndicator="true" >
+      <CarouselItem v-for="(badge, i) in userBadges" :key="i" verticalAligment="middle" >
+        <GridLayout>
+          <FlexboxLayout>
+            <img :src="`~/assets/badges/${badge.name}.png`" />
+            <Label :text="badge.description" />
+          </FlexboxLayout>
+        </GridLayout>
+      </CarouselItem>
+    </Carousel>
+  </GridLayout>
 </template>
 
 <script>
+  import carousel from 'nativescript-carousel';
+
   export default {
     name: "Badges",
-    
-    methods: {
-      name() {
-        
-      }
+    props: {
+      userBadges: Array,
+    },
+
+    watch: {
+      async userBadges(to) {
+        await this.$nextTick()
+        this.$refs.myCarousel.nativeView.refresh();
+      },
     },
     data() {
       return {
-        
         badges: [
           {
             text: "5 wins",
