@@ -9,6 +9,8 @@ configureOAuthProviders();
 // router function
 Vue.prototype.$router = router;
 Vue.registerElement('Mapbox', () => require('nativescript-mapbox').MapboxView);
+Vue.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
+Vue.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
 Vue.prototype.$goto = (to, options) => {
   const that = Vue.prototype;
   options = options || {
