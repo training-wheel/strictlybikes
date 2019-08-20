@@ -20,7 +20,7 @@
 
   export default {
     name: "Badges",
-    props: {
+    props: { 
       userBadges: Array,
     },
 
