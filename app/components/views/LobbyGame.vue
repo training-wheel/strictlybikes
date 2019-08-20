@@ -1,6 +1,6 @@
 <template>
     <ScrollView>
-      <StackLayout orientation="vertical" width="*" height="*" backgroundColor="white">
+      <StackLayout orientation="vertical" width="*" height="*" >
         <ListView for="game in games" style="height:1250px">
           <v-template>
             <FlexboxLayout
