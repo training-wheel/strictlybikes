@@ -155,7 +155,8 @@
           });
         },
         startTimer(duration) {
-          timerModule.setInterval(() => {
+          this.gameTime = timerModule.setInterval(() => {
+            console.log('Tock');
             let minutesInHere = parseInt(duration / 60, 10)
             let secondsInHere = parseInt(duration % 60, 10);
             this.minutes = minutesInHere < 10 ? "0" + minutesInHere : minutesInHere;
@@ -188,9 +189,15 @@
         },
         onLeaveGame(){
           this.$goto('Home');
+          this.timer.forEach((timer) => {
+            timerModule.clearInterval(timer);
+          })
         },
         endGame() {
-          timerModule.clearInterval(this.timer);
+          this.timer.forEach((timer) => {
+            timerModule.clearInterval(timer);
+          })
+          timerModule.clearInterval(this.gameTime);
           const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
@@ -220,7 +227,8 @@
             lng = lng.toPrecision(5);
             lat = lat.toPrecision(5);
 
-            this.timer = timerModule.setInterval(() => {
+            const timer = timerModule.setInterval(() => {
+              console.log('Tick');
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
@@ -261,6 +269,7 @@
                   // console.error("location err in game", err);
                 })
             }, 1000);
+            this.timer.push(timer);
           }
         },
         onMapReady(readyEvent) {
@@ -302,7 +311,8 @@
           lon: "",
           speed: "",
           addr: "",
-          timer: null,
+          gameTime: null,
+          timer: [],
           securedMarkers: 0,
           vibrator: new Vibrate(),
           minutes: "00",
