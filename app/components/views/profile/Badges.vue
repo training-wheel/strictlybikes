@@ -1,6 +1,6 @@
 <template>
   <GridLayout height="10%" >
-    <Carousel v-if="userBadges.length" height="100" color="white" @pageChanged="onBadgeChange"
+    <Carousel v-if="userBadges.length" height="100" color="white"
       android:indicatorAnimation="slide" indicatorColor="#fff"
       indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(badge, i) in userBadges" :key="i" verticalAligment="middle" >
