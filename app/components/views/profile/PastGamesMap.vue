@@ -1,16 +1,23 @@
 <template>
   <StackLayout>
-    <FlexboxLayout flexDirection="row" justifyContent="center">
+    <!-- <FlexboxLayout flexDirection="row" justifyContent="center">
       <Button width="30%" @tap="chooseMap(1)" >Next Game</Button>
       <Button width="30%" @tap="chooseMap(-1)" >Previous Game</Button>
-    </FlexboxLayout>
+    </FlexboxLayout> -->
+    <Carousel v-if="gameStats.length > 0" height="50" @pageChanged="changeGameEvent"
+      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
+      <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
+        <Label :text="game.info.code" />
+        <Label :text="game.info.mode" />
+      </CarouselItem >
+    </Carousel>
     <Mapbox
       :accessToken="mapBoxApi" 
       mapStyle="traffic_day"
       latitude="29.9643504"
       longitude="-90.0816426"
       showUserLocation="true"
-      zoomLevel="9"
+      zoomLevel="12"
       @mapReady="onMapReady($event)"
       height=*
       width=*>
@@ -19,6 +26,7 @@
 </template>
 
 <script>
+  import carousel from 'nativescript-carousel';
   import polyline from '@mapbox/polyline';
   const mapBoxApi = require('../../../config').MAPBOX_API;
 
@@ -26,6 +34,12 @@
     name: 'PastGamesMap',
     props: {
       gameStats: Array,
+    },
+    watch: {
+      async gameStats(to) {
+        await this.$nextTick()
+        this.$refs.myCarousel.nativeView.refresh();
+      }
     },
     data() {
       return {
@@ -67,19 +81,12 @@
           }
         });
       },
-      chooseMap(num) {
-        if(num > 0) {
-          if(this.currentGame < this.gameStats.length - 1) {
-            this.currentGame++;
-            this.mapArgs.map.removeMarkers();
-            this.onMapReady(this.mapArgs);
-          } 
-          } else if(num < 0 && this.currentGame > 0) {
-            this.currentGame--;
-            this.mapArgs.map.removeMarkers();
-            this.onMapReady(this.mapArgs);
-        }
-      }
+      changeGameEvent(event) {
+        const { index } = event;
+        this.currentGame = index;
+        this.mapArgs.map.removeMarkers();
+        this.onMapReady(this.mapArgs);
+      },
     },
   }
 </script>
