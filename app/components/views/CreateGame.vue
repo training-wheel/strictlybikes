@@ -1,5 +1,5 @@
 <template>
-    <Page class="page">
+    <Page class="page" id="homeBackground">
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
         <StackLayout>
                 <Mapbox
@@ -14,9 +14,9 @@
                     width=*>
                 </Mapbox>
                 <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex" />
-                <TextField v-model="textFieldValue" hint="Name Your Game" />
-                    <Button text="Create Game" width="100%" height="25%"
-                    backgroundColor="#5EB0E5" marginTop="20" textAlignment="center"
+                <TextField v-model="textFieldValue" hint="Name Your Game" class="text-field"/>
+                <Button text="Create Game" width="90%" height="15%"
+                    backgroundColor="#ff9933" marginTop="20" textAlignment="center"
                     color="white" fontSize="15" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
         </StackLayout>
@@ -188,6 +188,19 @@
 </script>
 
 <style scoped>
+    .text-field {
+        placeholder-color: white;
+        color: white;
+        text-color: white;
+    }
+
+    segmented-bar {
+        selected-background-color: #ff9933;
+        font-size: 15;
+        color: white;
+        font-weight: bold;
+    }
+
     .home-panel {
         vertical-align: center;
         font-size: 20;
