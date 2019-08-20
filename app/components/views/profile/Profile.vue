@@ -45,7 +45,7 @@
         gameStats: [],
       }
     },
-    mounted() {
+    created() {
       const token = appSettings.getString('jwt');
       axios.get(`${this.baseUrl}/profile`, {
         headers: {
