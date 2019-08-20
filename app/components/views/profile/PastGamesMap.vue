@@ -1,14 +1,13 @@
 <template>
   <StackLayout>
-    <!-- <FlexboxLayout flexDirection="row" justifyContent="center">
-      <Button width="30%" @tap="chooseMap(1)" >Next Game</Button>
-      <Button width="30%" @tap="chooseMap(-1)" >Previous Game</Button>
-    </FlexboxLayout> -->
-    <Carousel v-if="gameStats.length > 0" height="50" @pageChanged="changeGameEvent"
-      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
+    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent"
+      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, 0" showIndicator="true" >
       <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
-        <Label :text="game.info.code" />
-        <Label :text="game.info.mode" />
+        <FlexboxLayout justifyContent="space-around">
+          <Label :text="`${game.info.code}`" />
+          <Label :text="`${game.info.mode} race`" />
+          <Label :text="` with ${game.info.markerLimit} Checkpoints`" />
+        </FlexboxLayout>
       </CarouselItem >
     </Carousel>
     <Mapbox
