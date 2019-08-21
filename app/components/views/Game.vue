@@ -74,7 +74,6 @@
                 team.score++;
               }
             })
-
           })
           this.socket.on('end', () => {
             this.endGame();
