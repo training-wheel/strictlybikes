@@ -183,10 +183,11 @@
             });
         },
         onLeaveGame(){
-          this.$goto('Home');
           this.timer.forEach((timer) => {
             timerModule.clearInterval(timer);
           })
+          timerModule.clearInterval(this.gameTime);
+          this.$goto('Home');
         },
         endGame() {
           this.timer.forEach((timer) => {
