@@ -1,5 +1,12 @@
 <template>
   <Page class="page">
+    <ActionBar class="action-bar" title="Home">
+      <DockLayout width="auto" height="*" stretchLastChild="false">
+        <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
+        <Button height="40" borderRadius="30" text="Logout" color="white" backgroundColor="#eb8100"
+            ios.position="right" @tap="onLogout" dock="right" marginRight="10"/>
+      </DockLayout>
+    </ActionBar>
     <FlexboxLayout backgroundColor="#0F62AB" height="98%" flexDirection="column">
       <StackLayout>
         <Label :text="username" flexGrow=".3" fontWeight="bold" horizontalAlignment="center" />
@@ -23,6 +30,7 @@
   import PastGamesMap from './PastGamesMap';
   import axios from 'axios';
   import * as appSettings from 'tns-core-modules/application-settings';
+  import { tnsOauthLogout } from '../../../auth/auth-service';
   import { PassThrough } from 'stream';
   const geolocation = require("nativescript-geolocation");
   const {Accuracy} = require("tns-core-modules/ui/enums");
@@ -44,6 +52,13 @@
         userBadges: [],
         gameStats: [],
       }
+    },
+    methods: {
+      onLogout() {
+        tnsOauthLogout();
+        appSettings.remove('jwt');
+        this.$goto('Login');
+      },
     },
     created() {
       const token = appSettings.getString('jwt');

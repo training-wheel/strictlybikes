@@ -50,7 +50,7 @@ export const tnsOauthLogin = (providerType, routeCallback) => {
   });
 }
 
-export const tnsOauthLogout =() => {
+export const tnsOauthLogout = () => {
   if (client) {
     client.logout();
   }
