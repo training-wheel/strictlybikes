@@ -13,10 +13,7 @@
     <Mapbox
       :accessToken="mapBoxApi" 
       mapStyle="traffic_day"
-      latitude="29.9643504"
-      longitude="-90.0816426"
       showUserLocation="true"
-      zoomLevel="12"
       @mapReady="onMapReady($event)"
       height=*
       width=*>
@@ -51,11 +48,17 @@
     methods: {
       onMapReady(eventList) {
         const markerList = [];
+        const { lat, long } = this.gameStats[this.currentGame].info;
         this.gameStats[this.currentGame].markers.forEach((marker) => {
           const indiv = {lat: marker.lat, lng: marker.long, id: marker.id};
           markerList.push(indiv);
         })
         this.mapArgs = eventList;
+        eventList.map.setCenter({ lat: Number(lat), lng: Number(long) });
+        eventList.map.setZoomLevel({
+          level: 13,
+          animated: true,
+        });
         eventList.map.addMarkers(
           markerList,
         );
