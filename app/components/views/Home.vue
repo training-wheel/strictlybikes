@@ -2,9 +2,8 @@
     <Page class="page">
         <ActionBar class="action-bar" title="Home">
         <DockLayout width="auto" height="*" stretchLastChild="false">
-            <Label text="Scatter" dock="left" width="80%" marginTop="3" fontWeight="bold" fontSize="24" />
-            <Button height="40" width="40" borderRadius="30" text="Profile" color="white" backgroundColor="#eb8100"
-                ios.position="right" @tap="$goto('Profile')" dock="right" marginRight="10"/>
+            <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
+            <Image :src="profileUrl" height="40" width="40" borderRadius="30" ios.position="right" @tap="$goto('Profile')" dock="right" marginRight="10"/>
         </DockLayout>
         </ActionBar>
            <FlexboxLayout flexDirection="column" alignItems="center" id="homeBackground">
@@ -41,9 +40,25 @@
         });
         },
     },
+    mounted(){
+      axios.get(`${this.baseUrl}/profileImage`, {
+              headers: {
+                  jwt: this.jwt,
+              }
+          }).then((response) => {
+              const url = response.data;
+              this.profileUrl = url;
+          })
+          .catch((err) => {
+              console.error(err);
+          })
+    },
+
     data() {
       return {
           baseUrl: require('../../config').SERVER_BASE_URL,
+          profileUrl: "",
+          jwt: appSettings.getString('jwt'),
       }
     },
     

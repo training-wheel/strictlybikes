@@ -15,9 +15,9 @@
                 </Mapbox>
                 <SegmentedBar :items="segmentedBarItems" v-model="selectedBarIndex" />
                 <TextField v-model="textFieldValue" hint="Name Your Game" class="text-field"/>
-                <Button text="Create Game" width="90%" height="15%"
+                <Button text="Create Game" width="60%" height="15%"
                     backgroundColor="#ff9933" marginTop="20" textAlignment="center"
-                    color="white" fontSize="15" fontWeight="bold"
+                    color="white" fontSize="22" fontWeight="bold"
                     borderRadius="20" @tap="handleCreateClick" />
         </StackLayout>
     </Page>
