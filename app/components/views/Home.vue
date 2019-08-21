@@ -2,7 +2,7 @@
     <Page class="page">
         <ActionBar class="action-bar" title="Home">
         <DockLayout width="auto" height="*" stretchLastChild="false">
-            <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
+            <Label text="Scatter" dock="left" width="80%" marginTop="3" fontWeight="bold" fontSize="24" />
             <Button height="40" width="40" borderRadius="30" text="Profile" color="white" backgroundColor="#eb8100"
                 ios.position="right" @tap="$goto('Profile')" dock="right" marginRight="10"/>
         </DockLayout>
