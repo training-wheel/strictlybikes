@@ -17,8 +17,8 @@
       showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
     </Mapbox>
 
-    <Button text="Leave Game" width="85%" height="10%" backgroundColor="#ff9933" marginTop="10" textAlignment="center"
-      color="white" fontSize="20" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+    <Button text="Leave Game" width="60%" height="10%" backgroundColor="#ff9933" marginTop="10" 
+      color="white" fontSize="22" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
     </StackLayout>
   </Page>
 </template>
@@ -150,7 +150,8 @@
           });
         },
         startTimer(duration) {
-          timerModule.setInterval(() => {
+          this.gameTime = timerModule.setInterval(() => {
+            console.log('Tock');
             let minutesInHere = parseInt(duration / 60, 10)
             let secondsInHere = parseInt(duration % 60, 10);
             this.minutes = minutesInHere < 10 ? "0" + minutesInHere : minutesInHere;
@@ -182,10 +183,17 @@
             });
         },
         onLeaveGame(){
+          this.timer.forEach((timer) => {
+            timerModule.clearInterval(timer);
+          })
+          timerModule.clearInterval(this.gameTime);
           this.$goto('Home');
         },
         endGame() {
-          timerModule.clearInterval(this.timer);
+          this.timer.forEach((timer) => {
+            timerModule.clearInterval(timer);
+          })
+          timerModule.clearInterval(this.gameTime);
           const { room, topSpeed } = this;
           const path = polyline.encode(this.playerPath);
           const options = {
@@ -215,7 +223,8 @@
             lng = lng.toPrecision(5);
             lat = lat.toPrecision(5);
 
-            this.timer = timerModule.setInterval(() => {
+            const timer = timerModule.setInterval(() => {
+              console.log('Tick');
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
@@ -255,7 +264,8 @@
                 .catch((err) => {
                   // console.error("location err in game", err);
                 })
-            }, 2500);
+            }, 1000);
+            this.timer.push(timer);
           }
         },
         onMapReady(readyEvent) {
@@ -297,7 +307,8 @@
           lon: "",
           speed: "",
           addr: "",
-          timer: null,
+          gameTime: null,
+          timer: [],
           securedMarkers: 0,
           vibrator: new Vibrate(),
           minutes: "00",

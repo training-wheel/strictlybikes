@@ -4,19 +4,14 @@
       android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
         <FlexboxLayout justifyContent="space-around">
-          <Label :text="`${game.info.code}`" />
-          <Label :text="`${game.info.mode} race`" />
-          <Label :text="` with ${game.info.markerLimit} Checkpoints`" />
+          <Label :text="`${game.info.code}: ${game.info.mode} race with ${markersHit} / ${game.info.markerLimit} hits`" />
         </FlexboxLayout>
       </CarouselItem >
     </Carousel>
     <Mapbox
       :accessToken="mapBoxApi" 
       mapStyle="traffic_day"
-      latitude="29.9643504"
-      longitude="-90.0816426"
       showUserLocation="true"
-      zoomLevel="12"
       @mapReady="onMapReady($event)"
       height=*
       width=*>
@@ -45,17 +40,24 @@
         mapArgs: null,
         currentGame: 0,
         selectedUser: '',
+        markersHit: 0,
         mapBoxApi,
       }
     },
     methods: {
       onMapReady(eventList) {
         const markerList = [];
+        const { lat, long } = this.gameStats[this.currentGame].info;
         this.gameStats[this.currentGame].markers.forEach((marker) => {
           const indiv = {lat: marker.lat, lng: marker.long, id: marker.id};
           markerList.push(indiv);
         })
         this.mapArgs = eventList;
+        eventList.map.setCenter({ lat: Number(lat), lng: Number(long) });
+        eventList.map.setZoomLevel({
+          level: 13,
+          animated: true,
+        });
         eventList.map.addMarkers(
           markerList,
         );
@@ -66,6 +68,7 @@
         this.mapArgs.map.removePolylines();
         this.gameStats[this.currentGame].info.players.forEach((player) => {
           if (player.username === selectedUser) {
+            this.markersHit = player.markerCount;
             const decodedPolyline = polyline.decode(player.polyline);
             const formattedPolyline = decodedPolyline.map((coord) => {
               const [lat, lng] = coord

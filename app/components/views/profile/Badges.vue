@@ -4,11 +4,9 @@
       android:indicatorAnimation="slide" indicatorColor="#fff"
       indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(badge, i) in userBadges" :key="i" verticalAligment="middle" >
-        <GridLayout>
-          <FlexboxLayout>
-            <img :src="`~/assets/badges/${badge.name}.png`" />
-            <Label :text="badge.description" />
-          </FlexboxLayout>
+        <GridLayout columns="*, 2*">
+          <img row="0" col="0" :src="`~/assets/badges/${badge.name}.png`" />
+          <Label row="0" col="1" :text="badge.description" />
         </GridLayout>
       </CarouselItem>
     </Carousel>
