@@ -11,7 +11,7 @@
       <StackLayout>
         <Label :text="username" color="#ff9933" flexGrow=".3" fontWeight="bold" fontSize="24" horizontalAlignment="center" />
         <FlexboxLayout justifyContent="space-around" >
-          <Image :src="imageUrl" height="20%" width="auto" />
+          <Image :src="imageUrl" height="20%" width="auto" borderRadius="60" />
           <PlayerStats fontSize="15" alignSelf="center" v-if="userMetrics.length > 0" :userMetrics="userMetrics" />
         </FlexboxLayout>
         <Label text="BADGES" fontWeight="bold" fontSize="24" textAlignment="center" />
