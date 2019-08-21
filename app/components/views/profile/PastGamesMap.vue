@@ -1,7 +1,7 @@
 <template>
   <StackLayout>
-    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent"
-      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, 0" showIndicator="true" >
+    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent" height="15%"
+      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
         <FlexboxLayout justifyContent="space-around">
           <Label :text="`${game.info.code}`" />
