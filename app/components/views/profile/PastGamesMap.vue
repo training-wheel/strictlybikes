@@ -4,9 +4,7 @@
       android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
         <FlexboxLayout justifyContent="space-around">
-          <Label :text="`${game.info.code}`" />
-          <Label :text="`${game.info.mode} race`" />
-          <Label :text="` with ${game.info.markerLimit} Checkpoints`" />
+          <Label :text="`${game.info.code}: ${game.info.mode} race with ${markersHit} / ${game.info.markerLimit} hits`" />
         </FlexboxLayout>
       </CarouselItem >
     </Carousel>
@@ -42,6 +40,7 @@
         mapArgs: null,
         currentGame: 0,
         selectedUser: '',
+        markersHit: 0,
         mapBoxApi,
       }
     },
@@ -69,6 +68,7 @@
         this.mapArgs.map.removePolylines();
         this.gameStats[this.currentGame].info.players.forEach((player) => {
           if (player.username === selectedUser) {
+            this.markersHit = player.markerCount;
             const decodedPolyline = polyline.decode(player.polyline);
             const formattedPolyline = decodedPolyline.map((coord) => {
               const [lat, lng] = coord
