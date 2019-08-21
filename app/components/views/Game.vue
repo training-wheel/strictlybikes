@@ -218,9 +218,25 @@
               }
             });
         },
-        /** 
-         * Clears all ending processes and takes back to the menu
-         */
+        displayLeaderboard(array) {
+            let newArray = [];
+            array.sort((a, b) => {
+              const user1 = a.score;
+              const user2 = b.score;
+              let comparison = 0;
+              if (user1 < user2) {
+                  comparison = 1;
+              } else if (user1 > user2) {
+                  comparison = -1;
+              }
+              return comparison;
+          })
+            array.forEach((player) => {
+              newArray.push(player.username);
+              this.scores.push(player.score);
+            })
+            return newArray;
+          },
         onLeaveGame(){
           this.timer.forEach((timer) => {
             timerModule.clearInterval(timer);
