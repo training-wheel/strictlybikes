@@ -360,6 +360,7 @@
       data() {
         return {
           totalMarkers: "",
+          results: [],
           userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
