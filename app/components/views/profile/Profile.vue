@@ -1,5 +1,12 @@
 <template>
   <Page class="page">
+    <ActionBar class="action-bar" title="Home">
+      <DockLayout width="auto" height="*" stretchLastChild="false">
+        <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
+        <Button height="40" borderRadius="30" text="Logout" color="white" backgroundColor="#eb8100"
+            ios.position="right" @tap="onLogout" dock="right" marginRight="10"/>
+      </DockLayout>
+    </ActionBar>
     <FlexboxLayout backgroundColor="#0F62AB" height="98%" flexDirection="column">
       <StackLayout>
         <Label :text="username" flexGrow=".3" fontWeight="bold" horizontalAlignment="center" />
@@ -10,22 +17,7 @@
         <Label text="Badges" fontWeight="bold" textAlignment="center" />
         <Badges :userBadges="userBadges" />
         <Label text="Previous Games" flexGrow=".3" color="#000000" fontWeight="bold" horizontalAlignment="center" />
-        <FlexboxLayout flexDirection="row" justifyContent="center">
-          <Button width="30%" @tap="chooseMap(1)" >Next Game</Button>
-          <Button width="30%" @tap="chooseMap(-1)" >Previous Game</Button>
-        </FlexboxLayout>
-        <Mapbox 
-          :accessToken="mapBoxApi" 
-          mapStyle="traffic_day" 
-          latitude="29.9643504" 
-          longitude="-90.0816426" 
-          showUserLocation="true" 
-          zoomLevel="9" 
-          @mapReady="onMapReady($event)" 
-          height=50% 
-          width=*>
-      </Mapbox>
-      
+        <PastGamesMap :gameStats="gameStats" />
       </StackLayout>
   
     </FlexboxLayout>
@@ -35,11 +27,11 @@
 <script>
   import PlayerStats from './PlayerStats';
   import Badges from './Badges';
+  import PastGamesMap from './PastGamesMap';
   import axios from 'axios';
   import * as appSettings from 'tns-core-modules/application-settings';
+  import { tnsOauthLogout } from '../../../auth/auth-service';
   import { PassThrough } from 'stream';
-  import polyline from '@mapbox/polyline';
-  const mapBoxApi = require('../../../config').MAPBOX_API;
   const geolocation = require("nativescript-geolocation");
   const {Accuracy} = require("tns-core-modules/ui/enums");
 
@@ -49,53 +41,7 @@
     components: {
       Badges,
       PlayerStats,
-    },
-    methods: {
-      onMapReady(eventList) {
-        const markerList = [];
-        this.gameStats[this.currentGame].markers.forEach((marker) => {
-          const indiv = {lat: marker.lat, lng: marker.long, id: marker.id};
-          markerList.push(indiv);
-        })
-        this.mapArgs = eventList;
-        eventList.map.addMarkers(
-          markerList,
-        );
-        this.chooseUser(this.username);
-      },
-      chooseUser(selectedUser) {
-        this.selectedUser = selectedUser;
-        this.mapArgs.map.removePolylines();
-        this.gameStats[this.currentGame].info.players.forEach((player) => {
-          if (player.username === selectedUser) {
-            const decodedPolyline = polyline.decode(player.polyline);
-            const formattedPolyline = decodedPolyline.map((coord) => {
-              const [lat, lng] = coord
-              const coordObject = { lat, lng };
-              return coordObject;
-            });
-            this.mapArgs.map.addPolyline({
-              width: 3,
-              color: 'orange',
-              points: formattedPolyline,
-            });
-          }
-        });
-      },
-      chooseMap(num) {
-        if(num > 0) {
-          if(this.currentGame < this.gameStats.length - 1) {
-            this.currentGame++;
-            this.mapArgs.map.removeMarkers();
-            this.onMapReady(this.mapArgs);
-          } 
-          } else if(num < 0 && this.currentGame > 0) {
-            this.currentGame--;
-            this.mapArgs.map.removeMarkers();
-            this.onMapReady(this.mapArgs);
-        }
-
-      }
+      PastGamesMap,
     },
     data() {
       return {
@@ -104,14 +50,17 @@
         imageUrl: '',
         userMetrics: [],
         userBadges: [],
-        mapBoxApi,
         gameStats: [],
-        mapArgs: null,
-        currentGame: 0,
-        selectedUser: '',
       }
     },
-    mounted() {
+    methods: {
+      onLogout() {
+        tnsOauthLogout();
+        appSettings.remove('jwt');
+        this.$goto('Login');
+      },
+    },
+    created() {
       const token = appSettings.getString('jwt');
       axios.get(`${this.baseUrl}/profile`, {
         headers: {
