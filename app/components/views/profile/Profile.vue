@@ -1,26 +1,27 @@
 <template>
   <Page class="page" id="homeBackground" color="white" >
-    <ActionBar class="action-bar" title="Home">
-      <DockLayout width="auto" height="*" stretchLastChild="false">
-        <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
-        <Button height="40" borderRadius="30" text="Logout" backgroundColor="#eb8100"
-            ios.position="right" @tap="onLogout" dock="right" marginRight="10"/>
-      </DockLayout>
-    </ActionBar>
-    <FlexboxLayout height="98%" flexDirection="column">
-      <StackLayout>
-        <Label :text="username" color="#ff9933" flexGrow=".3" fontWeight="bold" fontSize="24" horizontalAlignment="center" />
-        <FlexboxLayout justifyContent="space-around" >
-          <Image :src="imageUrl" height="20%" width="auto" borderRadius="60" />
-          <PlayerStats fontSize="15" alignSelf="center" v-if="userMetrics.length > 0" :userMetrics="userMetrics" />
-        </FlexboxLayout>
-        <Label text="BADGES" fontWeight="bold" fontSize="24" textAlignment="center" />
-        <Badges fontSize="15" :userBadges="userBadges" />
-        <Label text="GAMES" flexGrow=".3" fontSize="24" fontWeight="bold" horizontalAlignment="center" />
-        <PastGamesMap fontSize="15" :gameStats="gameStats" />
-      </StackLayout>
-  
-    </FlexboxLayout>
+      <ActionBar class="action-bar" title="Home">
+        <DockLayout width="auto" height="*" stretchLastChild="false">
+          <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
+          <Button height="40" borderRadius="30" text="Logout" backgroundColor="#eb8100"
+              ios.position="right" @tap="onLogout" dock="right" marginRight="10"/>
+        </DockLayout>
+      </ActionBar>
+    <ScrollView orientation="vertical" scrollBarIndicatorVisible="true">
+      <FlexboxLayout flexDirection="column">
+        <StackLayout>
+          <Label :text="username" color="#ff9933" flexGrow=".3" fontWeight="bold" fontSize="24" horizontalAlignment="center" />
+          <FlexboxLayout justifyContent="space-around" >
+            <Image :src="imageUrl" height="20%" width="auto" borderRadius="60" />
+            <PlayerStats fontSize="15" alignSelf="center" v-if="userMetrics.length > 0" :userMetrics="userMetrics" />
+          </FlexboxLayout>
+          <Label text="BADGES" fontWeight="bold" fontSize="24" textAlignment="center" />
+          <Badges fontSize="15" :userBadges="userBadges" padding="5%" />
+          <Label text="GAMES" flexGrow=".3" fontSize="24" fontWeight="bold" horizontalAlignment="center" />
+          <PastGamesMap fontSize="15" :gameStats="gameStats" />
+        </StackLayout>
+      </FlexboxLayout>
+    </ScrollView>
   </Page>
 </template>
 
