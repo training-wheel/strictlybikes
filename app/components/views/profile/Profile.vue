@@ -1,5 +1,5 @@
 <template>
-  <Page class="page">
+  <Page class="page" id="homeBackground">
     <ActionBar class="action-bar" title="Home">
       <DockLayout width="auto" height="*" stretchLastChild="false">
         <Label text="Scatter" dock="left" width="80" marginTop="3" fontWeight="bold" fontSize="24" />
