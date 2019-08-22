@@ -4,21 +4,17 @@
       <DockLayout width="auto" height="*" stretchLastChild="false">
         <StackLayout orientation="vertical" >
           <Label :text="room" class="action-label" color="white" dock="left"></Label>
-          <Label :text="'My Markers : ' + securedMarkers + '  '" class="action-label" color="white" dock="left"></Label>
+          <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" dock="left"></Label>
         </StackLayout>
-        <Label :text="minutes + ':' + seconds" dock="center"/>
-        <Button text="Leaderboard" width="32%" height="30" backgroundColor="#ff9933" marginTop="5" color="white"
-          fontSize="10" fontWeight="bold" borderRadius="20" @tap="showLeaderboard()" dock="right" />
+        <Label :text="minutes + ':' + seconds" dock="center" />
+        
       </DockLayout>
     </ActionBar>
 
     <StackLayout>
-    <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-      showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
-    </Mapbox>
-
-    <Button text="Leave Game" width="60%" height="10%" backgroundColor="#ff9933" marginTop="10" 
-      color="white" fontSize="22" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" />
+      <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
+        showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
+      </Mapbox>
     </StackLayout>
   </Page>
 </template>
@@ -151,7 +147,6 @@
         },
         startTimer(duration) {
           this.gameTime = timerModule.setInterval(() => {
-            console.log('Tock');
             let minutesInHere = parseInt(duration / 60, 10)
             let secondsInHere = parseInt(duration % 60, 10);
             this.minutes = minutesInHere < 10 ? "0" + minutesInHere : minutesInHere;
@@ -224,7 +219,6 @@
             lat = lat.toPrecision(5);
 
             const timer = timerModule.setInterval(() => {
-              console.log('Tick');
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
@@ -272,6 +266,13 @@
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
+          if(this.gameInfo.mode === "timeattack"){
+            this.totalMarkers = 15;
+          }else if(his.gameInfo.mode === "teamsprint"){
+            this.totalMarkers = 10;
+          } else {
+            this.totalMarkers = 3;
+          }
           this.playing();
         },
         getLocation() {
@@ -294,6 +295,7 @@
       },
       data() {
         return {
+          totalMarkers: "",
           userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
