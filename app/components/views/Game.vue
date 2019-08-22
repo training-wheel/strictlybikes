@@ -173,7 +173,11 @@
             this.players = players;
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
-            this.results = this.displayLeaderboard(players);
+            if(this.gameMode === 'teamsprint') {
+              this.results = this.displayLeaderboard(this.team);
+            } else {
+              this.results = this.displayLeaderboard(players);
+            }
           });
         },
 
