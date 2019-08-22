@@ -76,12 +76,14 @@
                 team.score++;
               }
               })
+              this.results = this.displayLeaderboard(this.team);
             } else {
               this.players.forEach((player) => {
               if (player.username === username) {
                 player.score++;
               }
               })
+              this.results = this.displayLeaderboard(this.players);
             }
             
             
