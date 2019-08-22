@@ -194,7 +194,7 @@
             this.players = players;
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
-            if(this.gameMode === 'teamsprint') {
+            if(this.gameInfo.mode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
             } else {
               this.results = this.displayLeaderboard(players);
