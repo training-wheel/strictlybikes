@@ -9,7 +9,6 @@
     </ActionBar>
 
     <StackLayout>
-<<<<<<< HEAD
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
@@ -22,18 +21,6 @@
           <Label v-if="players[2]" :text="`Third Place - ${this.results[2]} score: | ${this.results[2].score}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
           <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]} score: | ${this.results[3].score}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
     </StackLayout>
-=======
-    <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-      showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
-    </Mapbox>
-
-    <!-- <Button text="Leave Game" width="60%" height="10%" backgroundColor="#ff9933" marginTop="10" 
-      color="white" fontSize="22" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" /> -->
-          <StackLayout v-if="`${this.gameInfo.mode} === alleycat`">
-          
-          </StackLayout>
-
->>>>>>> removed v-else and added pipe '|'
     </StackLayout>
   </Page>
 </template>
@@ -363,8 +350,13 @@
             this.totalMarkers = 3;
           }
           this.playing();
+          
+          if(this.gameInfo.mode === 'teamsprint') {
+            this.results = this.displayLeaderboard(this.team);
+          } else {
+            this.results = this.displayLeaderboard(this.players);
+          }
 
-          this.results = this.displayLeaderboard(this.players);
           console.log('current', JSON.stringify(this.results));
         },
         getLocation() {
