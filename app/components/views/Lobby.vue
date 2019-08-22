@@ -33,6 +33,9 @@ export default {
           props: {
             socket: this.socket,
             gameInfo: game,
+            gameLength: game.timeLimit,
+            gameMode: game.mode,
+            room: game.code,
           }
         });
       });
