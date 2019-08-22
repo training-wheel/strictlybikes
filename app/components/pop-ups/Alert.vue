@@ -23,7 +23,6 @@ var timerModule = require("tns-core-modules/timer");
       test(){
         if(this.socket){
           this.socket.on('playing', (message) => {
-            console.log(message);
             this.$modal.close();
           })
         }

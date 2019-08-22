@@ -58,7 +58,6 @@ var timerModule = require("tns-core-modules/timer");
             return newArray;
           },
       leaveGame(){
-        console.log("leave now!");
         this.$modal.close();
         this.$goto('Home', {
             props: {

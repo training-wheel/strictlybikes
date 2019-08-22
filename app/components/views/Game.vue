@@ -53,7 +53,6 @@
             this.team.forEach((team) => {
               if(team.username === username) {
                 team.score++;
-                console.log('here', team);
               }
             })
 
@@ -229,6 +228,7 @@
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
+                    iconPath: 'assets/images/usermarker.png',
                   }]);
                   this.markers.push({
                     id: 10000,
@@ -257,7 +257,7 @@
                   }
                 })
                 .catch((err) => {
-                  // console.error("location err in game", err);
+                  console.error("location err in game", err);
                 })
             }, 1000);
             this.timer.push(timer);
@@ -269,7 +269,7 @@
           readyEvent.map.addMarkers(this.markers);
           if(this.gameInfo.mode === "timeattack"){
             this.totalMarkers = 15;
-          }else if(his.gameInfo.mode === "teamsprint"){
+          }else if(this.gameInfo.mode === "teamsprint"){
             this.totalMarkers = 10;
           } else {
             this.totalMarkers = 3;
@@ -290,7 +290,7 @@
               this.speed = res.speed;
             })
             .catch((error) => {
-              console.log('geolocation error', error);
+              console.error('geolocation error', error);
             });
         },
       },
