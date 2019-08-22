@@ -1,6 +1,6 @@
 <template>
   <StackLayout>
-    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent" height="15%"
+    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent" height="5%"
       android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
       <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
         <FlexboxLayout justifyContent="space-around">
