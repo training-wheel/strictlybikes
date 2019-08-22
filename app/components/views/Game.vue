@@ -76,7 +76,7 @@
         playing() {
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
-
+            this.displayLeaderboard(this.players);
             this.vibrator.vibrate(200, 200, 300);
 
             this.players.forEach((player) => {
