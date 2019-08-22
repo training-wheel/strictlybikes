@@ -3,11 +3,8 @@
     <ActionBar class="action-bar" title="Game" backgroundColor="#58B0E5">
       <DockLayout width="auto" height="*" stretchLastChild="false">
         <StackLayout orientation="vertical" >
-          <Label :text="room" class="action-label" color="white" dock="left"></Label>
-          <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" dock="left"></Label>
         </StackLayout>
-        <Label :text="minutes + ':' + seconds" dock="center" />
-        
+        <Label :text="minutes + ':' + seconds" dock="center" fontSize="22"/>
       </DockLayout>
     </ActionBar>
 
@@ -15,6 +12,10 @@
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
+    <StackLayout>
+      <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+      <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+    </StackLayout>
     </StackLayout>
   </Page>
 </template>
