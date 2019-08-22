@@ -50,8 +50,10 @@
       onMapReady(eventList) {
         const markerList = [];
         const { lat, long } = this.gameStats[this.currentGame].info;
+        const iconPath = 'assets/images/checkpoints.png';
         this.gameStats[this.currentGame].markers.forEach((marker) => {
-          const indiv = {lat: marker.lat, lng: marker.long, id: marker.id};
+          const { lat, long: lng, id } = marker
+          const indiv = {lat: lat, lng: long, id: id, iconPath};
           markerList.push(indiv);
         })
         this.mapArgs = eventList;
