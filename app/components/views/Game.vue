@@ -173,7 +173,7 @@
             this.players = players;
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
-            this.results = this.displayLeaderboard(this.players);
+             this.results = this.displayLeaderboard(players);
             console.log('current', JSON.stringify(this.results));
           });
         },
