@@ -1,8 +1,8 @@
 <template>
-  <GridLayout rows="*" columns="auto">
-    <img row="0" width="100%" :src="`~/assets/badges/${badge.name}.png`" />
-    <Label row="1" width="100%" :text="badge.description" />
-  </GridLayout>
+  <StackLayout class="badge" >
+    <Label class="badge-text" :text="badge.description" />
+    <img :src="`~/assets/badges/${badge.name}.png`" />
+  </StackLayout>
 </template>
 
 <script>
@@ -10,7 +10,17 @@ export default {
   name: 'BadgeItem',
   props: {
     badge: Object,
-    index: Number,
   }
 }
 </script>
+
+<style scoped>
+  .badge {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+  }
+  .badge-text {
+    display: block;
+  }
+</style>
