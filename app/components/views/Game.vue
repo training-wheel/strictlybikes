@@ -180,7 +180,6 @@
             this.checkUserMarkerLocation();
             if(this.gameMode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
-              console.log('yes its team');
             } else {
               this.results = this.displayLeaderboard(players);
             }
