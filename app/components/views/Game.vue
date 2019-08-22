@@ -76,12 +76,14 @@
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 }])
                 this.markers.push({
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 })
               })
               this.socket.on('update markers', (wave) => {
@@ -94,12 +96,14 @@
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     }])
                     this.markers.push({
                       id: marker.id,
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     })
                   })
                 }
@@ -112,31 +116,35 @@
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     }])
                     this.markers.push({
                       id: marker.id,
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     })
                   })
                 }
               });
             } else if(this.gameMode === "teamsprint"){
 
-            }else {
+            } else {
               markersArray.forEach((marker) => {
                 this.mapArgs.map.addMarkers([{
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 }])
                 this.markers.push({
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 })
               })
             }
@@ -235,6 +243,7 @@
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
+                    iconPath: 'assets/images/usermarker.png',
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
                     && userLocation.longitude.toPrecision(5) == lng
