@@ -9,13 +9,31 @@
     </ActionBar>
 
     <StackLayout>
+<<<<<<< HEAD
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
     <StackLayout>
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+
+          <Label v-if="players[0]" :text="`First Place - ${this.results[0].name} | score: ${this.results[0].score}`" class="h2 description-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" />
+          <Label v-if="players[1]" :text="`Second Place - ${this.results[1].name} | score: ${this.results[1].score}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
+          <Label v-if="players[2]" :text="`Third Place - ${this.results[2]} score: | ${this.results[2].score}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
+          <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]} score: | ${this.results[3].score}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
     </StackLayout>
+=======
+    <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
+      showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
+    </Mapbox>
+
+    <!-- <Button text="Leave Game" width="60%" height="10%" backgroundColor="#ff9933" marginTop="10" 
+      color="white" fontSize="22" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" /> -->
+          <StackLayout v-if="`${this.gameInfo.mode} === alleycat`">
+          
+          </StackLayout>
+
+>>>>>>> removed v-else and added pipe '|'
     </StackLayout>
   </Page>
 </template>
@@ -175,6 +193,7 @@
             this.checkUserMarkerLocation();
             if(this.gameMode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
+              console.log('yes its team');
             } else {
               this.results = this.displayLeaderboard(players);
             }
@@ -236,6 +255,8 @@
               return comparison;
           })
             array.forEach((player) => {
+              // newArray.push(player.username);
+              // this.scores.push(player.score);
               newArray.push({name: player.username, score: player.score});
             })
             return newArray;
@@ -342,6 +363,7 @@
             this.totalMarkers = 3;
           }
           this.playing();
+
           this.results = this.displayLeaderboard(this.players);
           console.log('current', JSON.stringify(this.results));
         },
