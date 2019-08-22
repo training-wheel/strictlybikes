@@ -93,7 +93,6 @@
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let gameInfo = this.getGameInfo();
-            console.log('gameInfo', gameInfo);
             axios.post(`${this.baseUrl}/createGame`, gameInfo, {
                 headers: {
                 jwt: this.jwt,
@@ -109,7 +108,6 @@
                         });
                 });
                 socket.on('join', (response) => {
-                    console.log('response', response);
                     this.$goto('Game', {
                         props: {
                             socket: socket,
@@ -119,7 +117,6 @@
                             gameInfo: gameInfo
                         }
                     });
-                    console.log('response', response);
                 })
             })
             .catch((err)=>{
@@ -128,7 +125,6 @@
         },
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
-                console.log('picker', picker.selectedValue)
             },
             onMapReady(readyEvent) {
             },
@@ -145,11 +141,9 @@
                         this.lon = res.longitude;
                         this.speed = res.speed;
 
-                        console.log('longitude', this.lon);
-                        console.log('latitude', this.lati);
                     })
                     .catch((error) => {
-                        console.log('geolocation error', error);
+                        console.error('geolocation error', error);
                     });
             },
         },
