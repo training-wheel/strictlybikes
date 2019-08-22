@@ -175,7 +175,6 @@
             this.checkUserMarkerLocation();
             if(this.gameMode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
-              console.log('yes its team');
             } else {
               this.results = this.displayLeaderboard(players);
             }
@@ -237,8 +236,6 @@
               return comparison;
           })
             array.forEach((player) => {
-              // newArray.push(player.username);
-              // this.scores.push(player.score);
               newArray.push({name: player.username, score: player.score});
             })
             return newArray;
