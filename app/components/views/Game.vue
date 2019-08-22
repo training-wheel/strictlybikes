@@ -68,16 +68,21 @@
             Toast.makeText(`${username} hit a marker!`).show();
             this.vibrator.vibrate(200, 200, 300);
 
-            this.players.forEach((player) => {
-              if (player.username === username) {
-                player.score++;
-              }
-            })
-            this.team.forEach((team) => {
+            if(this.gameInfo.mode === 'teamsprint') {
+              this.team.forEach((team) => {
               if(team.username === username) {
                 team.score++;
               }
-            })
+              })
+            } else {
+              this.players.forEach((player) => {
+              if (player.username === username) {
+                player.score++;
+              }
+              })
+            }
+            
+            
           })
           this.socket.on('end', () => {
             this.endGame();
