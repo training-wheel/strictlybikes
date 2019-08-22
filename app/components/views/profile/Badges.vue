@@ -2,7 +2,7 @@
   <GridLayout height="10%" >
     <ScrollView orientation="horizontal" >
       <StackLayout orientation="horizontal" >
-        <template v-for="(badge, index) in testBadges" >
+        <template v-for="(badge, index) in userBadges" >
           <BadgeItem :badge="badge" :key="index" />
         </template>
       </StackLayout>
@@ -34,14 +34,17 @@
           {
             description: "5 wins",
             name: "5WinBadge",
+            goal: 5,
           },
           {
             description: "10 wins",
-            name: "10WinBadge"
+            name: "10WinBadge",
+            goal: 10,
           },
           {
             description: "15 wins",
-            name: "15WinBadge"
+            name: "15WinBadge",
+            goal: 15,
           }
         ]
       }
