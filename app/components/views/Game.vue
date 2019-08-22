@@ -242,8 +242,6 @@
               return comparison;
           })
             array.forEach((player) => {
-              // newArray.push(player.username);
-              // this.scores.push(player.score);
               newArray.push({name: player.username, score: player.score});
             })
             return newArray;
