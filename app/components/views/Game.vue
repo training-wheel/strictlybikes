@@ -173,6 +173,8 @@
             this.players = players;
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
+            this.results = this.displayLeaderboard(this.players);
+            console.log('current', JSON.stringify(this.results));
           });
         },
 
@@ -342,7 +344,6 @@
             this.totalMarkers = 3;
           }
           this.playing();
-          
         },
         getLocation() {
           geolocation.enableLocationRequest();
