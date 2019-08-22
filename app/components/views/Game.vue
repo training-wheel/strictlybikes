@@ -281,6 +281,10 @@
             lat = lat.toPrecision(5);
 
             const timer = timerModule.setInterval(() => {
+<<<<<<< HEAD
+=======
+              // console.log('Tick');
+>>>>>>> Calling displayLeaderboard in onmapready
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
                   timeout: 20000
@@ -338,6 +342,8 @@
             this.totalMarkers = 3;
           }
           this.playing();
+          this.results = this.displayLeaderboard(this.players);
+          console.log('current', JSON.stringify(this.results));
         },
         getLocation() {
           geolocation.enableLocationRequest();
