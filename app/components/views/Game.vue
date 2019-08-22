@@ -9,7 +9,6 @@
     </ActionBar>
 
     <StackLayout>
-<<<<<<< HEAD
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
@@ -17,20 +16,6 @@
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
     </StackLayout>
-=======
-    <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-      showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height=85% width=*>
-    </Mapbox>
-
-    <!-- <Button text="Leave Game" width="60%" height="10%" backgroundColor="#ff9933" marginTop="10" 
-      color="white" fontSize="22" fontWeight="bold" borderRadius="20" @tap="onLeaveGame()" /> -->
-
-          <Label v-if="players[0]" :text="`First Place - ${this.results[0]} score: ${this.scores[0]}`" class="h2 description-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" />
-          <Label v-if="players[1]" :text="`Second Place - ${this.results[1]} score: ${this.scores[1]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
-          <Label v-if="players[2]" :text="`Third Place - ${this.results[2]} score: ${this.scores[2]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
-          <Label v-if="players[3]" :text="`Fourth Place - ${this.results[3]} score: ${this.scores[3]}`" class="h2 description-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" />
-
->>>>>>> Added score to leaderboard template
     </StackLayout>
   </Page>
 </template>
@@ -76,25 +61,19 @@
         playing() {
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
+
             this.vibrator.vibrate(200, 200, 300);
 
-
-          if(username === 'blue' || username ==='orange') {
-            this.team.forEach((team) => {
-              if(team.username === username) {
-                team.score++;
-              }
-            });
-            this.results = this.displayLeaderboard(this.team);
-          } else {
             this.players.forEach((player) => {
               if (player.username === username) {
                 player.score++;
               }
             })
-            this.results = this.displayLeaderboard(this.players);
-          }
-            
+            this.team.forEach((team) => {
+              if(team.username === username) {
+                team.score++;
+              }
+            })
           })
           this.socket.on('end', () => {
             this.endGame();
