@@ -342,8 +342,7 @@
             this.totalMarkers = 3;
           }
           this.playing();
-          this.results = this.displayLeaderboard(this.players);
-          console.log('current', JSON.stringify(this.results));
+          
         },
         getLocation() {
           geolocation.enableLocationRequest();
