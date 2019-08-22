@@ -29,7 +29,6 @@ export default {
         jwt
       });
       this.socket.on("join", message => {
-        console.log("joined");
         this.$goto("Game", {
           props: {
             socket: this.socket,
