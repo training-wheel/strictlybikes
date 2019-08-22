@@ -1,13 +1,15 @@
 <template>
   <StackLayout>
-    <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent" height="15%"
-      android:indicatorAnimation="slide" indicatorColor="white" indicatorOffset="0, -10" showIndicator="true" >
-      <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
-        <FlexboxLayout justifyContent="space-around">
-          <Label :text="`${game.info.code}: ${game.info.mode} race with ${markersHit} / ${game.info.markerLimit} hits`" />
-        </FlexboxLayout>
-      </CarouselItem >
-    </Carousel>
+    <GridLayout height="10%">
+      <Carousel v-if="gameStats.length > 0" @pageChanged="changeGameEvent"
+        android:indicatorAnimation="drop" indicatorColor="white" indicatorOffset="0, 10" showIndicator="true" >
+        <CarouselItem v-for="(game, i) in gameStats" :key="i" verticalAlignment="middle" >
+          <Label horizontalAlignment="center"
+            :text="`${game.info.code}: ${game.info.mode} race with ${markersHit} / ${game.info.markerLimit} hits`"
+          />
+        </CarouselItem >
+      </Carousel>
+    </GridLayout>
     <Mapbox
       :accessToken="mapBoxApi" 
       mapStyle="traffic_day"
