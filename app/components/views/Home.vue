@@ -54,16 +54,14 @@
               console.error(err);
           })
     },
-
     data() {
       return {
           baseUrl: require('../../config').SERVER_BASE_URL,
           profileUrl: "",
           jwt: appSettings.getString('jwt'),
           username: '',
-      },
+      };
     },
-    
   }
 </script>
 
