@@ -7,7 +7,7 @@
         </DockLayout>
         </ActionBar>
            <FlexboxLayout flexDirection="column" alignItems="center" id="homeBackground">
-               <Button text="Create Game" height="40%" backgroundColor="#58B0E5" marginTop="20" width="65%" borderRadius="20" textAlignment="center" color="white" fontWeight="bold" fontSize="30" @tap="$goto('CreateGame')"/>
+               <Button text="Create Game" height="40%" backgroundColor="#58B0E5" marginTop="20" width="65%" borderRadius="20" textAlignment="center" color="white" fontWeight="bold" fontSize="30" @tap="handleCreateGameClick"/>
                <Button text="Join Game" height="40%" backgroundColor="#58B0E5" marginTop="20" width="65%" borderRadius="20" textAlignment="center" color="white" fontWeight="bold" fontSize="30" @tap="handleLobbyClick"/>
            </FlexboxLayout>
     </Page>
@@ -36,6 +36,13 @@
         this.$goto('Lobby', {
             props : {
                 socket
+            }
+        });
+        },
+        handleCreateGameClick(){
+        this.$goto('CreateGame', {
+            props : {
+                username: this.username,
             }
         });
         },
