@@ -51,7 +51,7 @@
        * Passed down props
        * @type {Array}
        */
-      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength', 'username'],
 
       /**
        * Holds all methods and functions
@@ -344,6 +344,7 @@
           }
         },
         onMapReady(readyEvent) {
+          console.log('current', this.username)
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
@@ -384,6 +385,7 @@
       },
       data() {
         return {
+          testarray = [{username: 'D', score: 0}, {username: 'mareado', score: 5}, {username: 'mak', score: 4}, {username: 'alex', score: 2}],
           totalMarkers: "",
           results: [],
           userCount: 0,
