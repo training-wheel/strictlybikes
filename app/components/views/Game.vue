@@ -51,7 +51,7 @@
        * Passed down props
        * @type {Array}
        */
-      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength', 'username'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength', 'profileName'],
 
       /**
        * Holds all methods and functions
