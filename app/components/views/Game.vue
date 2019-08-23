@@ -10,7 +10,7 @@
 
     <StackLayout>
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-        showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
+        showUserLocation="true" zoomLevel="13" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
       <ScrollView>
     <StackLayout>
