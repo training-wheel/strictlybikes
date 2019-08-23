@@ -49,8 +49,8 @@
  * @name CreateGame
  * 
  */
-
     export default {
+        props: ['username'],
         methods: {
             /**
              * Acquires the gamemode and options when a gamemode is selected
@@ -135,7 +135,8 @@
                             room: this.textFieldValue,
                             gameMode: this.gameMode,
                             gameLength: gameInfo.timeLimit,
-                            gameInfo: gameInfo
+                            gameInfo: gameInfo,
+                            username: this.username,
                         }
                     });
                 })
