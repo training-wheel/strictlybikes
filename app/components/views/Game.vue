@@ -12,10 +12,17 @@
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
         showUserLocation="true" zoomLevel="11" @mapReady="onMapReady($event)" height="90%" width="*">
       </Mapbox>
+      <ScrollView>
     <StackLayout>
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+
+          <Label v-if="players[0]" :text="`1st - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`2nd - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[2]" :text="`3rd - ${this.results[2].name} | score: ${this.results[2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[3]" :text="`4th - ${this.results[3].name} | score: ${this.results[3].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
     </StackLayout>
+    </ScrollView>
     </StackLayout>
   </Page>
 </template>
@@ -61,20 +68,25 @@
         playing() {
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
-
             this.vibrator.vibrate(200, 200, 300);
 
-            this.players.forEach((player) => {
-              if (player.username === username) {
-                player.score++;
-              }
-            })
-            this.team.forEach((team) => {
+            if(this.gameInfo.mode === 'teamsprint') {
+              this.team.forEach((team) => {
               if(team.username === username) {
                 team.score++;
               }
-            })
-
+              })
+              this.results = this.displayLeaderboard(this.team);
+            } else {
+              this.players.forEach((player) => {
+              if (player.username === username) {
+                player.score++;
+              }
+              })
+              this.results = this.displayLeaderboard(this.players);
+            }
+            
+            
           })
           this.socket.on('end', () => {
             this.endGame();
@@ -174,6 +186,11 @@
             this.players = players;
             geolocation.enableLocationRequest();
             this.checkUserMarkerLocation();
+            if(this.gameInfo.mode === 'teamsprint') {
+              this.results = this.displayLeaderboard(this.team);
+            } else {
+              this.results = this.displayLeaderboard(players);
+            }
           });
         },
 
@@ -218,9 +235,24 @@
               }
             });
         },
-        /** 
-         * Clears all ending processes and takes back to the menu
-         */
+        displayLeaderboard(array) {
+            let newArray = [];
+            array.sort((a, b) => {
+              const user1 = a.score;
+              const user2 = b.score;
+              let comparison = 0;
+              if (user1 < user2) {
+                  comparison = 1;
+              } else if (user1 > user2) {
+                  comparison = -1;
+              }
+              return comparison;
+          })
+            array.forEach((player) => {
+              newArray.push({name: player.username, score: player.score});
+            })
+            return newArray;
+          },
         onLeaveGame(){
           this.timer.forEach((timer) => {
             timerModule.clearInterval(timer);
@@ -323,6 +355,14 @@
             this.totalMarkers = 3;
           }
           this.playing();
+          
+          if(this.gameInfo.mode === 'teamsprint') {
+            this.results = this.displayLeaderboard(this.team);
+          } else {
+            this.results = this.displayLeaderboard(this.players);
+          }
+
+          console.log('current', JSON.stringify(this.results));
         },
         getLocation() {
           geolocation.enableLocationRequest();
@@ -345,6 +385,7 @@
       data() {
         return {
           totalMarkers: "",
+          results: [],
           userCount: 0,
           warningShown: null,
           mapBoxApi: require('../../config').MAPBOX_API,
