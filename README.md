@@ -1,22 +1,32 @@
-# Strictly Bikes
+# Scatter
 
 > Native Bike App
 
-Strictly Bikes is an app that's made with exclusively bicycle riders and mind. We allow for pathing to locations based on traffic, road conditions and hazards, or other criteria as well as keep track of user milestones(literally and figuratively)
-
 ## Usage
+Scatter is an alley-cat-style bicycle racing game. Players choose a game mode, being classic Alley Cat, Time Attack, or Team games and collect markers around the area. Collect badges and challenge other racers.
 
-``` bash
+
 # Install dependencies
 npm install
 
-Acquire Google OAuth2 credentials for Android and/or iOS 
+# Globally install NativeScript
+npm install -g nativescript
 
-Create a file in `app/auth` named `config.js`
-# 
-Define and export `ANDROID_CLIENT_ID` `ANDROID_REDIRECT_URI` and `ANDROID_URL_SCHEME` using the client ID given by Google.
+# Follow the remaining setup at https://docs.nativescript.org/start/quick-setup
+
+
+# Acquire Google OAuth2 credentials for Android and/or iOS 
+
+Create a file in `app` directory named `config.js`
+
+Define and export `ANDROID_CLIENT_ID` `ANDROID_REDIRECT_URI` and `ANDROID_URL_SCHEME` using the client ID given by Google Developer
 
 https://console.developers.google.com/
+
+# Mapbox Setup
+Acquire an API key from https://www.mapbox.com/
+
+Set the API key as a variable in the `config.js` file 
 
 # Build for production
 tns build <platform> --bundle

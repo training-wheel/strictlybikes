@@ -16,7 +16,7 @@ platforms
 
 # Android build
 local.properties
-.gradle
+
 strictlybikes.iml
 
 # VSCode

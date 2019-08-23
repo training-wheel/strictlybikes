@@ -46,8 +46,9 @@
                   jwt: this.jwt,
               }
           }).then((response) => {
-              const url = response.data;
-              this.profileUrl = url;
+              const { imageUrl, username } = response.data;
+              this.profileUrl = imageUrl;
+              this.username = username;
           })
           .catch((err) => {
               console.error(err);
@@ -59,7 +60,8 @@
           baseUrl: require('../../config').SERVER_BASE_URL,
           profileUrl: "",
           jwt: appSettings.getString('jwt'),
-      }
+          username: '',
+      },
     },
     
   }

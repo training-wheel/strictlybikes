@@ -1,3 +1,4 @@
+
 <template>
     <Page class="page" id="homeBackground">
         <ActionBar class="action-bar" title="Create Game"></ActionBar>
@@ -27,6 +28,7 @@
 
 
 <script>
+
     import * as utils from "utils/utils";
     import Vue from "nativescript-vue";
     import RadDataForm from "nativescript-ui-dataform/vue";
@@ -41,9 +43,20 @@
     Vue.use(PickerField);
     Vue.use(RadDataForm);
 
+/** 
+ * Class that contains all the methods and variables of CreateGame view
+ * @class
+ * @name CreateGame
+ * 
+ */
 
     export default {
         methods: {
+            /**
+             * Acquires the gamemode and options when a gamemode is selected
+             * @name getGameInfo 
+             * 
+             */
             getGameInfo() {
                 if (this.selectedBarIndex === 0) {
                     //Alley-Cat
@@ -90,6 +103,14 @@
                     }
                 }
             },
+
+            /**
+             * On the click of Create Game, Socket.io creates a room for players in the server
+             * then connects the creator to the new game instance and routes to
+             * the Game view
+             */
+
+
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let gameInfo = this.getGameInfo();
@@ -126,8 +147,23 @@
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
             },
+
+            /**
+             * onMapReady is a Mapbox function triggered on the mapReady listener
+             * any events/functions that need to be passed when the map loads is inserted here
+             * @name onMapReady
+             * @param {Object} readyEvent The event instance when the map loads that is passed in.
+             * readyEvent gives access to the map options and methods.
+             */
             onMapReady(readyEvent) {
             },
+
+            /**
+             * getLocation calls the device native location request and saves that 
+             * location to the state as well as the current speed.
+             * @name getLocation
+             * 
+             */
             getLocation() {
                 geolocation.enableLocationRequest();
                 geolocation
@@ -147,11 +183,26 @@
                     });
             },
         },
+        /**
+         * Called on the successful creation of the game. Acquires user
+         * location
+         *  
+         */    
     created() {
     this.getLocation();
     },
+        /**
+         * Holds all view-specific variables
+         * @type {function}
+         */
         data() {
             return {
+                /**
+                 * Returns a list of gamemodes for the segmented bar
+                 * @type {function} 
+                 * @name segmentedBarItems
+                 * @returns {Array} List of all gamemodes
+                 */
                 segmentedBarItems: (function() {
                     var segmentedBarModule = require(
                         "tns-core-modules/ui/segmented-bar");
@@ -167,15 +218,55 @@
                         segmentedBarItem3
                     ];
                 })(),
+                /**
+                 * Current latitude. Given by getLocation
+                 * @type {Number}
+                 */
                 lati: "",
+                /**
+                 * Current longitude. Given by getLocation
+                 * @type {Number}
+                 */
                 lon: "",
+                /**
+                 * Current speed. Given by getLocation
+                 * @type {Number}
+                 */
                 speed: "",
+                /**
+                 * Current address
+                 */
                 addr: "",
+                /**
+                 * Holds value of text field to name the game lobby
+                 * @type {String}
+                 */
                 textFieldValue: "",
+                /**
+                 * JSON Web Token used for user Authentification. Read from appSettings.
+                 * @type {String}
+                 */
                 jwt: appSettings.getString('jwt'),
+                /**
+                 * Base URL. Defined in config file as SERVER_BASE_URL
+                 * @type {String}
+                 */
                 baseUrl: require('../../config').SERVER_BASE_URL,
+                /**
+                 * Mapbox API key. Required for map to render properly. In config as 
+                 * MAPBOX_API
+                 * @type {String}
+                 */
                 mapBoxApi: require('../../config').MAPBOX_API,
+                /**
+                 * Keeps track of the game mode selected on create game.
+                 * @type {Number}
+                 */
                 selectedBarIndex: 0,
+                /**
+                 * Marked on selecting a bar index
+                 * @type {String}
+                 */
                 gameMode: "",
             };
         },

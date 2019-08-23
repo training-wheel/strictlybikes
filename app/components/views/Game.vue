@@ -35,10 +35,29 @@
     const Toast = require("nativescript-toast");
     const Vibrate = require("nativescript-vibrate").Vibrate;
 
+    /**
+     * Storing all values and methods for Game View
+     * @type {Object}
+     */
     export default {
+      /**
+       * Passed down props
+       * @type {Array}
+       */
       props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
 
+      /**
+       * Holds all methods and functions
+       * @type {Object}
+       */
       methods: {
+
+        /**
+         * Starts the game for all users when game is ready. Creates
+         * socket listener for when users hit markers that trigger points given
+         * and popups. Also creates socket listener for game ending conditions.
+         * @tutorial socket socket.on('hit) is a trigger for hitting markers, 'end' for game end
+         */
         playing() {
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
@@ -59,7 +78,8 @@
           })
           this.socket.on('end', () => {
             this.endGame();
-          })
+          }) 
+          //Changes gamestate to playing
           this.socket.on('playing', (results) => {
             this.startTimer(this.gameLength);
             const {
@@ -70,20 +90,25 @@
               var round1 = markersArray.slice(0, 5);
               var round2 = markersArray.slice(5, 10);
               var round3 = markersArray.slice(10, 15);
+              //Adds the markers to the map instance
               round1.forEach((marker) => {
                 this.mapArgs.map.addMarkers([{
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 }])
+                //Saves the specific markers to "data"
                 this.markers.push({
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 })
               })
+              //Removes the marker when receiving ping that the "wave" is over
               this.socket.on('update markers', (wave) => {
                 if (wave === 2) {
                 const oldMarkers = round1.map(x => x.id);
@@ -94,12 +119,14 @@
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     }])
                     this.markers.push({
                       id: marker.id,
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     })
                   })
                 }
@@ -112,31 +139,35 @@
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     }])
                     this.markers.push({
                       id: marker.id,
                       lat: marker.lat,
                       lng: marker.long,
                       title: "Checkpoint",
+                      iconPath: 'assets/images/checkpoints.png',
                     })
                   })
                 }
               });
             } else if(this.gameMode === "teamsprint"){
 
-            }else {
+            } else {
               markersArray.forEach((marker) => {
                 this.mapArgs.map.addMarkers([{
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 }])
                 this.markers.push({
                   id: marker.id,
                   lat: marker.lat,
                   lng: marker.long,
                   title: "Checkpoint",
+                  iconPath: 'assets/images/checkpoints.png',
                 })
               })
             }
@@ -145,6 +176,12 @@
             this.checkUserMarkerLocation();
           });
         },
+
+        /**
+         * startTimer starts a timer and keeps track of the time, converting milliseconds to minutes and
+         * seconds. At 0, the game stops
+         * @param {Number} duration A time limit in milliseconds
+         */
         startTimer(duration) {
           this.gameTime = timerModule.setInterval(() => {
             let minutesInHere = parseInt(duration / 60, 10)
@@ -156,6 +193,7 @@
             }
           }, 1000);
         },
+
         openAlertModal() {
           if (!this.warningShown) {
             this.$showModal(router.Alert, {
@@ -167,6 +205,9 @@
             this.warningShown = true;
           }
         },
+        /**
+         * Shows the leaderboard with names and points
+         */
         showLeaderboard(){
             this.$showModal(router.Leaderboard, {
                 props: {
@@ -177,6 +218,9 @@
               }
             });
         },
+        /** 
+         * Clears all ending processes and takes back to the menu
+         */
         onLeaveGame(){
           this.timer.forEach((timer) => {
             timerModule.clearInterval(timer);
@@ -184,6 +228,9 @@
           timerModule.clearInterval(this.gameTime);
           this.$goto('Home');
         },
+        /** 
+         * Clears all ending processes and saves game info to database for all players
+         */
         endGame() {
           this.timer.forEach((timer) => {
             timerModule.clearInterval(timer);
@@ -235,6 +282,7 @@
                     lat: userLocation.latitude,
                     lng: userLocation.longitude,
                     title: "Current Location",
+                    iconPath: 'assets/images/usermarker.png',
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
                     && userLocation.longitude.toPrecision(5) == lng
