@@ -8,6 +8,12 @@ import Alert from '../components/pop-ups/Alert'
 import Summary from '../components/pop-ups/Summary'
 import Leaderboard from '../components/pop-ups/Leaderboard'
 
+/**
+ * Keeps reference to view locations to be exported
+ * to a router
+ * @name router
+ *
+ */
 const router = {
   Login,
   Home,
