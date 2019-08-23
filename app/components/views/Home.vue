@@ -42,7 +42,7 @@
         handleCreateGameClick(){
         this.$goto('CreateGame', {
             props : {
-                username: this.username,
+                profileName: this.username,
             }
         });
         },
