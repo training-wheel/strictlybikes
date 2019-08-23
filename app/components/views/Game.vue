@@ -17,9 +17,9 @@
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
 
-          <Label v-if="players[0]" :text="`1st - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[1]" :text="`2nd - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[2]" :text="`3rd - ${this.results[2].name} | score: ${this.results[2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[0]" :text="`1st - ${this.results[0][0].name} | score: ${this.results[0][0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`2nd - ${this.results[0][1].name} | score: ${this.results[0][1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[2]" :text="`3rd - ${this.results[0][2].name} | score: ${this.results[0][2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
     </StackLayout>
     </ScrollView>
     </StackLayout>
@@ -287,7 +287,7 @@
               newArray.push({name: player.username, score: player.score});
             })
 
-            let finalArray = check(newArray, profileName);
+            let finalArray = check(newArray, this.profileName);
             return finalArray;
           },
         onLeaveGame(){
