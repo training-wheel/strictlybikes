@@ -19,6 +19,7 @@ export default {
     display: inline-block;
     vertical-align: top;
     text-align: center;
+    padding: 5%;
   }
   .badge-text {
     display: block;
