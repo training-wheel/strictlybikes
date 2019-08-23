@@ -344,7 +344,6 @@
           }
         },
         onMapReady(readyEvent) {
-          console.log('current', this.username)
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
