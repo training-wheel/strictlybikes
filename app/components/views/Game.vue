@@ -77,9 +77,9 @@
               this.results = this.displayLeaderboard(this.team);
             } else {
               this.players.forEach((player) => {
-              if (player.username === username) {
-                player.score++;
-              }
+                if (player.username === username) {
+                  player.score++;
+                }
               })
               this.results = this.displayLeaderboard(this.players);
             } 
@@ -399,7 +399,7 @@
           if(this.gameInfo.mode === 'teamsprint') {
             this.results = this.displayLeaderboard(this.team);
           } else {
-            this.results = this.displayLeaderboard(this.testarray);
+            this.results = this.displayLeaderboard(this.players);
           }
         },
       },
