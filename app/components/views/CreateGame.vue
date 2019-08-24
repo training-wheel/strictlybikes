@@ -65,7 +65,7 @@ Vue.use(RadDataForm);
 
 export default {
     props: ['profileName'],
-    
+
   methods: {
     /**
      * Acquires the gamemode and options when a gamemode is selected
