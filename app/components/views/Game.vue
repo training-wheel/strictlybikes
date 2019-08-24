@@ -372,21 +372,6 @@
             this.results = this.displayLeaderboard(this.players);
           }
         },
-        getLocation() {
-          geolocation.getCurrentLocation({
-              desiredAccuracy: Accuracy.high,
-              maximumAge: 5000,
-              timeout: 20000
-            })
-            .then(res => {
-              this.lati = res.latitude;
-              this.lon = res.longitude;
-              this.speed = res.speed;
-            })
-            .catch((error) => {
-              console.error('geolocation error', error);
-            });
-        },
       },
       data() {
         return {
@@ -401,10 +386,7 @@
           mapArgs: null,
           playerPath: [],
           topSpeed: 0,
-          lati: "",
-          lon: "",
           speed: "",
-          addr: "",
           gameTime: null,
           timer: [],
           securedMarkers: 0,
