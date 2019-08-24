@@ -202,6 +202,12 @@ export default {
         })
         .then(res => {
           const { latitude, longitude } = res;
+          this.mapArgs.map.addMarkers([{
+            id: 1,
+            lat: latitude,
+            lng: longitude,
+            iconPath: 'assets/images/usermarker.png',
+          }]);
           this.mapArgs.map.setCenter({ lat: Number(latitude), lng: Number(longitude) });
           this.mapArgs.map.setZoomLevel({
             level: 13,
