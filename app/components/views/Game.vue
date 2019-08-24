@@ -35,8 +35,8 @@
     import router from '../../router'
     import * as appSettings from 'tns-core-modules/application-settings';
     import polyline from '@mapbox/polyline';
-    const geolocation = require("nativescript-geolocation");
-    const {Accuracy} = require("tns-core-modules/ui/enums");
+    import * as geolocation from "nativescript-geolocation";
+    import { Accuracy } from "tns-core-modules/ui/enums";
     const timerModule = require("tns-core-modules/timer");
     const jwt = appSettings.getString('jwt');
     const Toast = require("nativescript-toast");
@@ -184,8 +184,17 @@
               })
             }
             this.players = players;
-            geolocation.enableLocationRequest();
-            this.checkUserMarkerLocation();
+            if (geolocation.isEnabled()) {
+              this.checkUserMarkerLocation();
+            } else {
+              geolocation.enableLocationRequest(true)
+                .then(() => {
+                  this.checkUserMarkerLocation();
+                })
+                .catch((err) => {
+                  console.error(`Failed to enable location: ${err}`);
+                })
+            }
             if(this.gameInfo.mode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
             } else {
@@ -300,8 +309,10 @@
             const timer = timerModule.setInterval(() => {
               geolocation.getCurrentLocation({
                   maximumAge: 5000,
-                  timeout: 20000
+                  timeout: 20000,
+                  updateTime: 1000,
                 }).then((userLocation) => {
+                  this.mapArgs.map.removeMarkers([10000]);
                   this.mapArgs.map.addMarkers([{
                     id: 10000,
                     lat: userLocation.latitude,
@@ -318,7 +329,7 @@
                   });
                   if (userLocation.latitude.toPrecision(5) == lat
                     && userLocation.longitude.toPrecision(5) == lng
-                    && !deletedMarkers.includes(id) && id!== 10000) {
+                    && !deletedMarkers.includes(id) && id !== 10000) {
                     deletedMarkers.push(id);
                     this.securedMarkers += 1;
                     this.mapArgs.map.removeMarkers([id]);
@@ -327,7 +338,6 @@
                       jwt,
                     })
                   }
-                  this.mapArgs.map.removeMarkers([10000]);
                   const currentLocation = [userLocation.latitude, userLocation.longitude];
                   this.playerPath.push(currentLocation);
 
@@ -339,7 +349,7 @@
                 .catch((err) => {
                   console.error("location err in game", err);
                 })
-            }, 1000);
+            }, 2000);
             this.timer.push(timer);
           }
         },
@@ -361,13 +371,9 @@
           } else {
             this.results = this.displayLeaderboard(this.players);
           }
-
-          console.log('current', JSON.stringify(this.results));
         },
         getLocation() {
-          geolocation.enableLocationRequest();
-          geolocation
-            .getCurrentLocation({
+          geolocation.getCurrentLocation({
               desiredAccuracy: Accuracy.high,
               maximumAge: 5000,
               timeout: 20000
@@ -407,9 +413,7 @@
           seconds: "00",
         };
       },
-
     };
-    
 </script>
 
 <style scoped>
