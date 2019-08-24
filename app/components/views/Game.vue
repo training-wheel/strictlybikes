@@ -63,11 +63,24 @@
        */
       methods: {
 
+        teamColor() {
+          const team = this.players.filter((player) => {
+            return player.playerName = this.playerName;
+          });
+
+          if(team === 'orange') {
+            return '#eb8100';
+          } else {
+            return '#58B0E5';
+          }
+        }
+        
+
         /**
          * Starts the game for all users when game is ready. Creates
          * socket listener for when users hit markers that trigger points given
          * and popups. Also creates socket listener for game ending conditions.
-         * @tutorial socket socket.on('hit) is a trigger for hitting markers, 'end' for game end
+         * @tutorial socket socket.on('hit') is a trigger for hitting markers, 'end' for game end
          */
         playing() {
           this.socket.on('hit', (username) => {
