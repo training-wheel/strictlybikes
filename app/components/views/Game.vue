@@ -17,10 +17,9 @@
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
 
-          <Label v-if="players[0]" :text="`1st - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[1]" :text="`2nd - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[2]" :text="`3rd - ${this.results[2].name} | score: ${this.results[2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[3]" :text="`4th - ${this.results[3].name} | score: ${this.results[3].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[0]" :text="`1st - ${this.results[0][0].name} | score: ${this.results[0][0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`2nd - ${this.results[0][1].name} | score: ${this.results[0][1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[2]" :text="`3rd - ${this.results[0][2].name} | score: ${this.results[0][2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
     </StackLayout>
     </ScrollView>
     </StackLayout>
@@ -51,7 +50,7 @@
        * Passed down props
        * @type {Array}
        */
-      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength'],
+      props: ['socket', 'room', 'gameMode', 'gameInfo', 'gameLength', 'profileName'],
 
       /**
        * Holds all methods and functions
@@ -198,7 +197,7 @@
             if(this.gameInfo.mode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
             } else {
-              this.results = this.displayLeaderboard(players);
+              this.results = this.displayLeaderboard(this.testarray);
             }
           });
         },
@@ -244,6 +243,33 @@
               }
             });
         },
+        checkTop3(array, name) {
+        let top3 = false;
+        let me = '';
+        let place = 1;
+        array.forEach((obj, index) => {
+          if(obj.name === name){
+            console.log(array, index);
+              me = obj;
+            place = index + 1;
+            }
+        })
+        array = array.slice(0, 3);
+        array.forEach((obj) => {
+          if(obj.name === name){
+              top3 = true;
+              return [array, place];
+            }
+        })
+        if(!top3){
+          array[2] = me;
+          }
+        if(place > 3) {
+          place = place + 'th';
+        }
+        return [array, place];
+        
+        },
         displayLeaderboard(array) {
             let newArray = [];
             array.sort((a, b) => {
@@ -260,7 +286,10 @@
             array.forEach((player) => {
               newArray.push({name: player.username, score: player.score});
             })
-            return newArray;
+            // console.log('here', newArray);
+
+            let finalArray = this.checkTop3(newArray, this.profileName);
+            return finalArray;
           },
         onLeaveGame(){
           this.timer.forEach((timer) => {
@@ -348,13 +377,14 @@
                   }
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                  // console.error("location err in game", err);
                 })
             }, 2000);
             this.timer.push(timer);
           }
         },
         onMapReady(readyEvent) {
+          console.log('this.profileName', this.profileName);
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
@@ -370,12 +400,13 @@
           if(this.gameInfo.mode === 'teamsprint') {
             this.results = this.displayLeaderboard(this.team);
           } else {
-            this.results = this.displayLeaderboard(this.players);
+            this.results = this.displayLeaderboard(this.testarray);
           }
         },
       },
       data() {
         return {
+          testarray: [{username: 'D', score: 0}, {username: 'mareado', score: 5}, {username: 'mak', score: 4}, {username: 'alex', score: 2}],
           totalMarkers: "",
           results: [],
           userCount: 0,
