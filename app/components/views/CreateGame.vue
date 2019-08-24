@@ -186,7 +186,7 @@ export default {
                             gameMode: this.gameMode,
                             gameLength: gameInfo.timeLimit,
                             gameInfo: gameInfo,
-                            username: this.username,
+                            profileName: this.profileName,
                         }
                     });
                 })
