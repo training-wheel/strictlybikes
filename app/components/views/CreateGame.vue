@@ -82,7 +82,7 @@ export default {
           radius: 2,
           markerLimit: 3,
           timeLimit: 60 * 60,
-          playerLimit: 2,
+          playerLimit: 1,
           mode: "alleycat"
         };
       } else if (this.selectedBarIndex === 1) {
@@ -96,7 +96,7 @@ export default {
           radius: 1,
           markerLimit: 15,
           timeLimit: 60 * 15,
-          playerLimit: 1,
+          playerLimit: 2,
           mode: "timeattack"
         };
       } else {
@@ -160,7 +160,6 @@ export default {
       let picker = this.$refs.apiPicker.nativeView;
     },
 
-<<<<<<< HEAD
             handleCreateClick(){
             var socket = new SocketIO(this.baseUrl);
             let gameInfo = this.getGameInfo();
@@ -198,16 +197,6 @@ export default {
             onViewButtonClick() {
                 let picker = this.$refs.apiPicker.nativeView;
             },
-=======
-    /**
-     * onMapReady is a Mapbox function triggered on the mapReady listener
-     * any events/functions that need to be passed when the map loads is inserted here
-     * @name onMapReady
-     * @param {Object} readyEvent The event instance when the map loads that is passed in.
-     * readyEvent gives access to the map options and methods.
-     */
-    onMapReady(readyEvent) {},
->>>>>>> 51632975330e17f161682e224c1028006cc342fa
 
     checkLocation() {
       if (geolocation.isEnabled()) {
