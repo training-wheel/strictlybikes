@@ -9,7 +9,7 @@
         latitude="29.9643504"
         longitude="-90.0816426"
         showUserLocation="true"
-        zoomLevel="9"
+        zoomLevel="13"
         @mapReady="onMapReady($event)"
         height="50%"
         width="*"
