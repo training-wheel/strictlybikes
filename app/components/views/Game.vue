@@ -245,7 +245,7 @@
         },
         checkTop3(array, name) {
         let top3 = false;
-        let me = "";
+        let me = '';
         let place = 1;
         array.forEach((obj, index) => {
           if(obj.name === name){
@@ -286,6 +286,7 @@
             array.forEach((player) => {
               newArray.push({name: player.username, score: player.score});
             })
+            // console.log('here', newArray);
 
             let finalArray = this.checkTop3(newArray, this.profileName);
             return finalArray;
@@ -376,13 +377,14 @@
                   }
                 })
                 .catch((err) => {
-                  console.error("location err in game", err);
+                  // console.error("location err in game", err);
                 })
             }, 2000);
             this.timer.push(timer);
           }
         },
         onMapReady(readyEvent) {
+          console.log('this.profileName', this.profileName);
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
