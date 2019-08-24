@@ -287,7 +287,7 @@
               newArray.push({name: player.username, score: player.score});
             })
 
-            let finalArray = checkTop3(newArray, this.profileName);
+            let finalArray = this.checkTop3(newArray, this.profileName);
             return finalArray;
           },
         onLeaveGame(){
