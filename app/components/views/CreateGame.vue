@@ -158,6 +158,20 @@
             onMapReady(readyEvent) {
             },
 
+            checkLocation() {
+                if (geolocation.isEnabled()) {
+                    this.getLocation();
+                } else {
+                    geolocation.enableLocationRequest(true)
+                        .then(() => {
+                            this.getLocation();
+                        })
+                        .catch((err) => {
+                            console.error(`Failed to enable location: ${err}`);
+                        })
+                }
+            },
+
             /**
              * getLocation calls the device native location request and saves that 
              * location to the state as well as the current speed.
@@ -165,18 +179,15 @@
              * 
              */
             getLocation() {
-                geolocation.enableLocationRequest();
-                geolocation
-                    .getCurrentLocation({
-                        desiredAccuracy: Accuracy.high,
-                        maximumAge: 5000,
-                        timeout: 20000
-                    })
+                return geolocation.getCurrentLocation({
+                    maximumAge: 5000,
+                    timeout: 20000
+                })
                     .then(res => {
                         this.lati = res.latitude;
                         this.lon = res.longitude;
                         this.speed = res.speed;
-
+                        console.log(`result: ${res}`);
                     })
                     .catch((error) => {
                         console.error('geolocation error', error);
@@ -188,8 +199,8 @@
          * location
          *  
          */    
-    created() {
-    this.getLocation();
+    mounted() {
+        this.checkLocation();
     },
         /**
          * Holds all view-specific variables
