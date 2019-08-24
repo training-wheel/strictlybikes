@@ -64,6 +64,8 @@ Vue.use(RadDataForm);
  */
 
 export default {
+    props: ['profileName'],
+
   methods: {
     /**
      * Acquires the gamemode and options when a gamemode is selected
@@ -82,7 +84,7 @@ export default {
           radius: 2,
           markerLimit: 3,
           timeLimit: 60 * 60,
-          playerLimit: 1,
+          playerLimit: 2,
           mode: "alleycat"
         };
       } else if (this.selectedBarIndex === 1) {
@@ -96,7 +98,7 @@ export default {
           radius: 1,
           markerLimit: 15,
           timeLimit: 60 * 15,
-          playerLimit: 2,
+          playerLimit: 1,
           mode: "timeattack"
         };
       } else {
@@ -147,7 +149,8 @@ export default {
                 room: this.textFieldValue,
                 gameMode: this.gameMode,
                 gameLength: gameInfo.timeLimit,
-                gameInfo: gameInfo
+                gameInfo: gameInfo,
+                profileName: this.profileName,
               }
             });
           });
@@ -160,43 +163,14 @@ export default {
       let picker = this.$refs.apiPicker.nativeView;
     },
 
-            handleCreateClick(){
-            var socket = new SocketIO(this.baseUrl);
-            let gameInfo = this.getGameInfo();
-            axios.post(`${this.baseUrl}/createGame`, gameInfo, {
-                headers: {
-                jwt: this.jwt,
-                }
-            })
-            .then((result) => {
-                socket.connect();
-                socket.on('connect', () => {
-                    socket.emit('joinGame', {
-                        userId: result.data.userId,
-                        room: this.textFieldValue,
-                        jwt: this.jwt,
-                        });
-                });
-                socket.on('join', (response) => {
-                    this.$goto('Game', {
-                        props: {
-                            socket: socket,
-                            room: this.textFieldValue,
-                            gameMode: this.gameMode,
-                            gameLength: gameInfo.timeLimit,
-                            gameInfo: gameInfo,
-                            profileName: this.profileName,
-                        }
-                    });
-                })
-            })
-            .catch((err)=>{
-                console.error(err);
-            })
-        },
-            onViewButtonClick() {
-                let picker = this.$refs.apiPicker.nativeView;
-            },
+    /**
+     * onMapReady is a Mapbox function triggered on the mapReady listener
+     * any events/functions that need to be passed when the map loads is inserted here
+     * @name onMapReady
+     * @param {Object} readyEvent The event instance when the map loads that is passed in.
+     * readyEvent gives access to the map options and methods.
+     */
+    onMapReady(readyEvent) {},
 
     checkLocation() {
       if (geolocation.isEnabled()) {

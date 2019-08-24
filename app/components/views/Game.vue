@@ -10,16 +10,21 @@
 
     <StackLayout>
       <Mapbox :accessToken="mapBoxApi" mapStyle="traffic_day" latitude="29.9643504" longitude="-90.0816426"
-        showUserLocation="true" zoomLevel="13" @mapReady="onMapReady($event)" height="90%" width="*">
+        showUserLocation="true" zoomLevel="13" @mapReady="onMapReady($event)" height="70%" width="*">
       </Mapbox>
       <ScrollView>
-    <StackLayout>
+        <StackLayout v-if="gameInfo.mode === 'teamsprint'">
+          <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+          <Label v-if="players[0]" :text="`${this.results[0].place} - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`${this.results[1].place} - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          </StackLayout>
+
+    <StackLayout v-else>
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
-
-          <Label v-if="players[0]" :text="`1st - ${this.results[0][0].name} | score: ${this.results[0][0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[1]" :text="`2nd - ${this.results[0][1].name} | score: ${this.results[0][1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
-          <Label v-if="players[2]" :text="`3rd - ${this.results[0][2].name} | score: ${this.results[0][2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[0]" :text="`${this.results[0].place} - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`${this.results[1].place} - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[2]" :text="`${this.results[2].place} - ${this.results[2].name} | score: ${this.results[2].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
     </StackLayout>
     </ScrollView>
     </StackLayout>
@@ -78,14 +83,12 @@
               this.results = this.displayLeaderboard(this.team);
             } else {
               this.players.forEach((player) => {
-              if (player.username === username) {
-                player.score++;
-              }
+                if (player.username === username) {
+                  player.score++;
+                }
               })
               this.results = this.displayLeaderboard(this.players);
-            }
-            
-            
+            } 
           })
           this.socket.on('end', () => {
             this.endGame();
@@ -183,6 +186,7 @@
               })
             }
             this.players = players;
+            console.log('players', JSON.stringify(this.players))
             if (geolocation.isEnabled()) {
               this.checkUserMarkerLocation();
             } else {
@@ -197,7 +201,7 @@
             if(this.gameInfo.mode === 'teamsprint') {
               this.results = this.displayLeaderboard(this.team);
             } else {
-              this.results = this.displayLeaderboard(this.testarray);
+              this.results = this.displayLeaderboard(this.players);
             }
           });
         },
@@ -258,7 +262,7 @@
         array.forEach((obj) => {
           if(obj.name === name){
               top3 = true;
-              return [array, place];
+              return array;
             }
         })
         if(!top3){
@@ -267,11 +271,11 @@
         if(place > 3) {
           place = place + 'th';
         }
-        return [array, place];
-        
+        return array
         },
         displayLeaderboard(array) {
             let newArray = [];
+            let place = 1;
             array.sort((a, b) => {
               const user1 = a.score;
               const user2 = b.score;
@@ -284,9 +288,10 @@
               return comparison;
           })
             array.forEach((player) => {
-              newArray.push({name: player.username, score: player.score});
+              newArray.push({name: player.username, score: player.score, place: place});
+              place += 1;
             })
-            // console.log('here', newArray);
+            console.log('here', newArray);
 
             let finalArray = this.checkTop3(newArray, this.profileName);
             return finalArray;
@@ -399,14 +404,14 @@
           
           if(this.gameInfo.mode === 'teamsprint') {
             this.results = this.displayLeaderboard(this.team);
+            console.log('TEAMSPRINT')
           } else {
-            this.results = this.displayLeaderboard(this.testarray);
+            this.results = this.displayLeaderboard(this.players);
           }
         },
       },
       data() {
         return {
-          testarray: [{username: 'D', score: 0}, {username: 'mareado', score: 5}, {username: 'mak', score: 4}, {username: 'alex', score: 2}],
           totalMarkers: "",
           results: [],
           userCount: 0,
