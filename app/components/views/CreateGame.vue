@@ -6,8 +6,6 @@
       <Mapbox
         :accessToken="mapBoxApi"
         mapStyle="traffic_day"
-        latitude="29.9643504"
-        longitude="-90.0816426"
         showUserLocation="true"
         zoomLevel="13"
         @mapReady="onMapReady($event)"
@@ -127,8 +125,7 @@ export default {
     handleCreateClick() {
       var socket = new SocketIO(this.baseUrl);
       let gameInfo = this.getGameInfo();
-      axios
-        .post(`${this.baseUrl}/createGame`, gameInfo, {
+      axios.post(`${this.baseUrl}/createGame`, gameInfo, {
           headers: {
             jwt: this.jwt
           }
@@ -170,7 +167,10 @@ export default {
      * @param {Object} readyEvent The event instance when the map loads that is passed in.
      * readyEvent gives access to the map options and methods.
      */
-    onMapReady(readyEvent) {},
+    onMapReady(readyEvent) {
+      this.mapArgs = readyEvent;
+      this.checkLocation();
+    },
 
     checkLocation() {
       if (geolocation.isEnabled()) {
@@ -201,24 +201,17 @@ export default {
           desiredAccuracy: Accuracy.high,
         })
         .then(res => {
-          this.lati = res.latitude;
-          this.lon = res.longitude;
-          this.speed = res.speed;
-          console.log(`result: ${res}`);
+          const { latitude, longitude } = res;
+          this.mapArgs.map.setCenter({ lat: Number(latitude), lng: Number(longitude) });
+          this.mapArgs.map.setZoomLevel({
+            level: 13,
+            animated: true,
+          });
         })
         .catch(error => {
           console.error("geolocation error", error);
         });
     }
-  },
-  /**
-   * Called on the successful creation of the game. Acquires user
-   * location
-   *
-   */
-
-  mounted() {
-    this.checkLocation();
   },
   /**
    * Holds all view-specific variables
@@ -242,25 +235,6 @@ export default {
         segmentedBarItem3.title = "Team Sprint";
         return [segmentedBarItem1, segmentedBarItem2, segmentedBarItem3];
       })(),
-      /**
-       * Current latitude. Given by getLocation
-       * @type {Number}
-       */
-      lati: "",
-      /**
-       * Current longitude. Given by getLocation
-       * @type {Number}
-       */
-      lon: "",
-      /**
-       * Current speed. Given by getLocation
-       * @type {Number}
-       */
-      speed: "",
-      /**
-       * Current address
-       */
-      addr: "",
       /**
        * Holds value of text field to name the game lobby
        * @type {String}
@@ -291,7 +265,8 @@ export default {
        * Marked on selecting a bar index
        * @type {String}
        */
-      gameMode: ""
+      gameMode: "",
+      mapArgs: {},
     };
   }
 };
