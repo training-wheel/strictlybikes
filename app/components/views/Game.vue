@@ -13,7 +13,13 @@
         showUserLocation="true" zoomLevel="13" @mapReady="onMapReady($event)" height="70%" width="*">
       </Mapbox>
       <ScrollView>
-    <StackLayout>
+        <StackLayout v-if="gameInfo.mode === 'teamsprint'">
+          <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
+          <Label v-if="players[0]" :text="`${this.results[0].place} - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          <Label v-if="players[1]" :text="`${this.results[1].place} - ${this.results[1].name} | score: ${this.results[1].score}`"  class="action-label" color="#58B0E5" backgroundColor="white" borderColor="#58B0E5"  borderWidth="1" borderRadius="5" textAlignment="center" />
+          </StackLayout>
+
+    <StackLayout v-else>
       <Label :text="room" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
       <Label :text="'My Markers : ' + securedMarkers + '/' + totalMarkers +'  '" class="action-label" color="white" marginLeft="10" fontWeight="bold"></Label>
           <Label v-if="players[0]" :text="`${this.results[0].place} - ${this.results[0].name} | score: ${this.results[0].score}`"  class="action-label" color="#eb8100" backgroundColor="white" borderColor="#eb8100"  borderWidth="1" borderRadius="5" textAlignment="center" />
@@ -398,6 +404,7 @@
           
           if(this.gameInfo.mode === 'teamsprint') {
             this.results = this.displayLeaderboard(this.team);
+            console.log('TEAMSPRINT')
           } else {
             this.results = this.displayLeaderboard(this.players);
           }
