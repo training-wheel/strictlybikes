@@ -311,6 +311,7 @@
                   maximumAge: 5000,
                   timeout: 20000,
                   updateTime: 1000,
+                  desiredAccuracy: Accuracy.high,
                 }).then((userLocation) => {
                   this.mapArgs.map.removeMarkers([10000]);
                   this.mapArgs.map.addMarkers([{

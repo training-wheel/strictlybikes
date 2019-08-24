@@ -194,7 +194,8 @@ export default {
       return geolocation
         .getCurrentLocation({
           maximumAge: 5000,
-          timeout: 20000
+          timeout: 20000,
+          desiredAccuracy: Accuracy.high,
         })
         .then(res => {
           this.lati = res.latitude;
