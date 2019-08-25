@@ -1,6 +1,6 @@
 <template>
   <Page class="page" id="homeBackground">
-    <ActionBar class="action-bar" title="Game" backgroundColor="#58B0E5">
+    <ActionBar class="action-bar" title="Game" :backgroundColor="color">
       <DockLayout width="auto" height="*" stretchLastChild="false">
         <StackLayout orientation="vertical" >
         </StackLayout>
@@ -63,13 +63,33 @@
        */
       methods: {
 
+        teamColor() {
+          if(this.gameMode === "teamsprint") {
+            const team = this.players.filter((player) => {
+              console.log(player.username, this.profileName);
+              return player.username === this.profileName;
+            });
+            console.log(team);
+            
+
+            if(team[0].team === 'orange') {
+              this.color = '#eb8100';
+            } else {
+              this.color = '#58B0E5';
+            }
+          }
+          console.log(this.color);
+        },
+        
+
         /**
          * Starts the game for all users when game is ready. Creates
          * socket listener for when users hit markers that trigger points given
          * and popups. Also creates socket listener for game ending conditions.
-         * @tutorial socket socket.on('hit) is a trigger for hitting markers, 'end' for game end
+         * @tutorial socket socket.on('hit') is a trigger for hitting markers, 'end' for game end
          */
         playing() {
+          
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
             this.vibrator.vibrate(200, 200, 300);
@@ -94,8 +114,10 @@
             this.endGame();
           }) 
           //Changes gamestate to playing
+          
           this.socket.on('playing', (results) => {
             this.startTimer(this.gameLength);
+            
             const {
               markersArray,
               players,
@@ -186,7 +208,7 @@
               })
             }
             this.players = players;
-            console.log('players', JSON.stringify(this.players))
+            
             if (geolocation.isEnabled()) {
               this.checkUserMarkerLocation();
             } else {
@@ -203,6 +225,7 @@
             } else {
               this.results = this.displayLeaderboard(this.players);
             }
+            this.teamColor(this.profileName);
           });
         },
 
@@ -253,12 +276,12 @@
         let place = 1;
         array.forEach((obj, index) => {
           if(obj.name === name){
-            console.log(array, index);
+          
               me = obj;
             place = index + 1;
             }
         })
-        array = array.slice(0, 3);
+        this.gameMode === 'teamsprint' ? array = array.slice(0, 2) : array = array.slice(0, 3);
         array.forEach((obj) => {
           if(obj.name === name){
               top3 = true;
@@ -291,7 +314,7 @@
               newArray.push({name: player.username, score: player.score, place: place});
               place += 1;
             })
-            console.log('here', newArray);
+            
 
             let finalArray = this.checkTop3(newArray, this.profileName);
             return finalArray;
@@ -389,7 +412,7 @@
           }
         },
         onMapReady(readyEvent) {
-          console.log('this.profileName', this.profileName);
+         
           this.openAlertModal();
           this.mapArgs = readyEvent;
           readyEvent.map.addMarkers(this.markers);
@@ -402,9 +425,10 @@
           }
           this.playing();
           
+          
           if(this.gameInfo.mode === 'teamsprint') {
             this.results = this.displayLeaderboard(this.team);
-            console.log('TEAMSPRINT')
+            
           } else {
             this.results = this.displayLeaderboard(this.players);
           }
@@ -430,6 +454,7 @@
           vibrator: new Vibrate(),
           minutes: "00",
           seconds: "00",
+          color: "#58B0E5"
         };
       },
     };
