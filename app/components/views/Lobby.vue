@@ -14,7 +14,7 @@ import axios from "axios";
 
 
 export default {
-  props: ["socket"],
+  props: ["socket", "profileName"],
   components: {
     LobbyGame,
   },
@@ -36,6 +36,7 @@ export default {
             gameLength: game.timeLimit,
             gameMode: game.mode,
             room: game.code,
+            profileName: this.profileName
           }
         });
       });
