@@ -400,6 +400,7 @@
                   this.playerPath.push(currentLocation);
 
                   const { speed } = userLocation;
+                  speed = Math.round(speed * 2.236936 );
                   if (speed > this.topSpeed) {
                     this.topSpeed = speed;
                   }
