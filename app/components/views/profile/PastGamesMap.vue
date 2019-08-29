@@ -22,6 +22,7 @@
 </template>
 
 <script>
+//Map component that renders in the profile page as a carousel with the markers and the
   import carousel from 'nativescript-carousel';
   import polyline from '@mapbox/polyline';
   const mapBoxApi = require('../../../config').MAPBOX_API;
@@ -39,14 +40,39 @@
     },
     data() {
       return {
+        /**
+         * Instance of the mapbox map to apply map markers/options
+         * @type {object}
+         */
         mapArgs: null,
+        /**
+         * The index of the games array that the carousel has selected
+         * @type {String}
+         */
         currentGame: 0,
+        /**
+         * User's name
+         * @type {String}
+         */
         selectedUser: '',
+        /**
+         * Number of markers hit in the selected game
+         * @type {Number}
+         */
         markersHit: 0,
+        /**
+         * Mapbox API key. Is imported from the config file
+         * @type {String}
+         */
         mapBoxApi,
       }
     },
     methods: {
+      /**
+       * Functions to be called on finished render of the map. 
+       * @param {Object} eventList Pass in $event from the mapbox ready listener
+       * @type {Fucntion}
+       */
       onMapReady(eventList) {
         const markerList = [];
         const { lat, long } = this.gameStats[this.currentGame].info;
@@ -67,6 +93,10 @@
         );
         this.chooseUser(this.username);
       },
+      /**
+       * Gets the polylines for a specific player in a previous game
+       * @param {String} selectedUser Username of logged in user
+       */
       chooseUser(selectedUser) {
         this.selectedUser = selectedUser;
         this.mapArgs.map.removePolylines();
@@ -87,6 +117,10 @@
           }
         });
       },
+      /**
+       * Clears markers from the map instance
+       * @param {Object} event Index of c
+       */
       changeGameEvent(event) {
         const { index } = event;
         this.currentGame = index;
