@@ -55,6 +55,10 @@
       }
     },
     methods: {
+      /**
+       * Logs out user on logout buttlon click. Removes JWT from headers  To preven loggingin through Bio.....
+       * @type {Function} 
+       */
       onLogout() {
         tnsOauthLogout();
         appSettings.remove('jwt');
