@@ -53,7 +53,7 @@
         const iconPath = 'assets/images/checkpoints.png';
         this.gameStats[this.currentGame].markers.forEach((marker) => {
           const { lat, long: lng, id } = marker
-          const indiv = {lat: lat, lng: long, id: id, iconPath};
+          const indiv = {lat, lng, id, iconPath};
           markerList.push(indiv);
         })
         this.mapArgs = eventList;
