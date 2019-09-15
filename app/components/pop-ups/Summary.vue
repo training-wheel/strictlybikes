@@ -30,6 +30,8 @@
 </template>
 
 <script>
+
+//View for modal at end of game
 const Vue = require('nativescript-vue');
 var timerModule = require("tns-core-modules/timer");
 
@@ -38,6 +40,11 @@ var timerModule = require("tns-core-modules/timer");
     },
     props: ['socket', 'players', 'topSpeed', 'team', 'gameMode'],
     methods: {
+      /**
+       * Function called at the end of a game to sort the players by the number of points acquired
+       * @param {Array} array Array of current players in the game.
+       * @returns {Array} Array of players sorted by the most points acquired 
+       */
       showLeaderboard(array) {
             let newArray = [];
             array.sort((a, b) => {
@@ -57,6 +64,10 @@ var timerModule = require("tns-core-modules/timer");
             })
             return newArray;
           },
+      /**
+       * Function attached to the click of the lobby button. Returns view to the main menu
+       * 
+       */
       leaveGame(){
         this.$modal.close();
         this.$goto('Home', {
@@ -66,6 +77,9 @@ var timerModule = require("tns-core-modules/timer");
           });
       },
     },
+    /**
+     * Dynamically calls showLeaderboard on the team or the players based on the
+     */
     created() {
           if(this.gameMode === 'teamsprint') {
             this.results = this.showLeaderboard(this.team);  

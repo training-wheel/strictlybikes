@@ -14,6 +14,7 @@
 </template>
 
 <script>
+//View for modal before game start.
 const Vue = require('nativescript-vue');
 var timerModule = require("tns-core-modules/timer");
 

@@ -11,6 +11,7 @@
 </template>
 
 <script>
+//User badges view thats held within an area on the profile page where acquired badges and badge descriptions are held
   import BadgeItem from './BadgeItem';
   import carousel from 'nativescript-carousel';
 

@@ -6,6 +6,7 @@
 </template>
 
 <script>
+//Each badge is passed as a badgeitem and given it's image and its description to be used in the badges page
 export default {
   name: 'BadgeItem',
   props: {
