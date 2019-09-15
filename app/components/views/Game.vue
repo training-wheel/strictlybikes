@@ -66,21 +66,15 @@
         teamColor() {
           if(this.gameMode === "teamsprint") {
             const team = this.players.filter((player) => {
-              console.log(player.username, this.profileName);
               return player.username === this.profileName;
             });
-            console.log(team);
-            
-
             if(team[0].team === 'orange') {
               this.color = '#eb8100';
             } else {
               this.color = '#58B0E5';
             }
           }
-          console.log(this.color);
         },
-        
 
         /**
          * Starts the game for all users when game is ready. Creates
@@ -89,7 +83,6 @@
          * @tutorial socket socket.on('hit') is a trigger for hitting markers, 'end' for game end
          */
         playing() {
-          
           this.socket.on('hit', (username) => {
             Toast.makeText(`${username} hit a marker!`).show();
             this.vibrator.vibrate(200, 200, 300);

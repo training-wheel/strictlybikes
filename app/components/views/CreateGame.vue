@@ -79,7 +79,7 @@ export default {
           long: "-90.080559",
           startTime: 20,
           code: this.textFieldValue,
-          radius: 2,
+          radius: 1,
           markerLimit: 3,
           timeLimit: 60 * 60,
           playerLimit: 2,
@@ -107,10 +107,10 @@ export default {
           long: "-90.080559",
           startTime: 20,
           code: this.textFieldValue,
-          radius: 5,
+          radius: 1,
           markerLimit: 10,
           timeLimit: 60 * 30,
-          playerLimit: 4,
+          playerLimit: 2,
           mode: "teamsprint"
         };
       }
